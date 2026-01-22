@@ -1,18 +1,11 @@
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-
-// Используем тот же интерфейс, что и в professions.ts
-interface Profession {
-  id: number;
-  name: string;
-  questionCount: number;
-}
+import { IProfession } from "../types/profession";
 
 interface ProfessionStore {
-  selectedProfession: Profession | null;
-  setSelectedProfession: (profession: Profession | null) => void;
-  clearProfession: () => void;
+  selectedProfession: IProfession | null;
+  setSelectedProfession: (profession: IProfession | null) => void;
 }
 
 export const useProfessionStore = create<ProfessionStore>()(
@@ -21,7 +14,6 @@ export const useProfessionStore = create<ProfessionStore>()(
       selectedProfession: null,
       setSelectedProfession: (profession) =>
         set({ selectedProfession: profession }),
-      clearProfession: () => set({ selectedProfession: null }),
     }),
     {
       name: "profession-storage",
