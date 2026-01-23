@@ -1,106 +1,130 @@
-// app/components/ExamTimer.tsx
-import React, { useState, useEffect } from "react";
-import { View, Text, StyleSheet } from "react-native";
-import { Clock } from "lucide-react-native";
+// components/ExamTimer.tsx
+import React, { useEffect, useRef, useState } from "react";
+import { StyleSheet, Text, View } from "react-native";
+import Svg, { Circle } from "react-native-svg";
 
 interface ExamTimerProps {
-  initialTime: number; // в секундах
+  isActive: boolean;
   onTimeUp: () => void;
+  onExamComplete: (timeSpent: number) => void;
 }
 
-export default function ExamTimer({ initialTime, onTimeUp }: ExamTimerProps) {
-  const [timeLeft, setTimeLeft] = useState(initialTime);
+const EXAM_DURATION = 10 * 60; // 10 минут
+
+export default function ExamTimer({
+  isActive,
+  onTimeUp,
+  onExamComplete,
+}: ExamTimerProps) {
+  const [remainingTime, setRemainingTime] = useState(EXAM_DURATION);
+  const [elapsedTime, setElapsedTime] = useState(0);
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const startTimeRef = useRef<number>(0);
 
   useEffect(() => {
-    if (timeLeft <= 0) {
-      onTimeUp();
-      return;
+    if (isActive) {
+      startTimeRef.current = Date.now();
+
+      const tick = () => {
+        const now = Date.now();
+        const timePassed = Math.floor((now - startTimeRef.current) / 1000);
+        const newRemaining = Math.max(0, EXAM_DURATION - timePassed);
+
+        setRemainingTime(newRemaining);
+        setElapsedTime(timePassed);
+
+        if (newRemaining <= 0) {
+          onTimeUp();
+          return;
+        }
+
+        timerRef.current = setTimeout(tick, 1000);
+      };
+
+      timerRef.current = setTimeout(tick, 1000);
+    } else {
+      if (timerRef.current) {
+        clearTimeout(timerRef.current);
+        timerRef.current = null;
+      }
+
+      if (elapsedTime > 0) {
+        onExamComplete(elapsedTime);
+      }
     }
 
-    const timer = setInterval(() => {
-      setTimeLeft((prev) => prev - 1);
-    }, 1000);
+    return () => {
+      if (timerRef.current) {
+        clearTimeout(timerRef.current);
+      }
+    };
+  }, [isActive, onTimeUp, onExamComplete]);
 
-    return () => clearInterval(timer);
-  }, [timeLeft, onTimeUp]);
+  const progress = elapsedTime / EXAM_DURATION; // Теперь progress = прошедшее время
+  const radius = 22;
+  const circumference = 2 * Math.PI * radius;
 
-  // Форматирование времени MM:SS
+  // Инвертируем: strokeDashoffset растет по мере прохождения времени
+  const strokeDashoffset = circumference * progress;
+
+  // Цвет меняется от зеленого к красному по мере убывания времени
+  const getTimerColor = () => {
+    const timeProgress = remainingTime / EXAM_DURATION;
+    if (timeProgress > 0.66) return "#34C759"; // зеленый
+    if (timeProgress > 0.33) return "#FF9500"; // оранжевый
+    return "#FF3B30"; // красный
+  };
+
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
-    return `${mins.toString().padStart(2, "0")}:${secs
-      .toString()
-      .padStart(2, "0")}`;
+    return `${mins}:${secs < 10 ? "0" : ""}${secs}`;
   };
-
-  // Процент оставшегося времени
-  const progress = (timeLeft / initialTime) * 100;
-
-  // Определяем цвет в зависимости от оставшегося времени
-  let timerColor = "#34C759"; // зеленый
-  if (timeLeft < initialTime * 0.3) timerColor = "#FF9500"; // оранжевый
-  if (timeLeft < initialTime * 0.1) timerColor = "#FF3B30"; // красный
 
   return (
     <View style={styles.container}>
-      <View style={styles.timerHeader}>
-        <Clock size={20} color={timerColor} />
-        <Text style={[styles.timeText, { color: timerColor }]}>
-          {formatTime(timeLeft)}
-        </Text>
-      </View>
-
-      <View style={styles.progressBar}>
-        <View
-          style={[
-            styles.progressFill,
-            {
-              width: `${progress}%`,
-              backgroundColor: timerColor,
-            },
-          ]}
+      <Svg width="50" height="50" viewBox="0 0 50 50">
+        {/* Зеленый фон - начальное состояние */}
+        <Circle
+          cx="25"
+          cy="25"
+          r={radius}
+          stroke="#E5E5EA"
+          strokeWidth="3"
+          fill="none"
         />
-      </View>
 
-      <Text style={styles.hint}>
-        {timeLeft > 300 ? "Времени достаточно" : "Время заканчивается!"}
-      </Text>
+        {/* Инвертированный прогресс: "тает" по часовой стрелке */}
+        <Circle
+          cx="25"
+          cy="25"
+          r={radius}
+          stroke={getTimerColor()}
+          strokeWidth="3"
+          fill="none"
+          strokeDasharray={circumference}
+          strokeDashoffset={strokeDashoffset}
+          strokeLinecap="round"
+          transform="rotate(-90 25 25)" // Начинаем с верхней точки
+        />
+      </Svg>
+      <Text style={styles.timeText}>{formatTime(remainingTime)}</Text>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "#FFFFFF",
-    padding: 16,
-    borderRadius: 12,
-    borderWidth: 1,
-    borderColor: "#E5E5EA",
-  },
-  timerHeader: {
-    flexDirection: "row",
+    width: 50,
+    height: 50,
     alignItems: "center",
-    marginBottom: 12,
+    justifyContent: "center",
+    position: "relative",
   },
   timeText: {
-    fontSize: 28,
-    fontWeight: "700",
-    marginLeft: 8,
-  },
-  progressBar: {
-    height: 4,
-    backgroundColor: "#F2F2F7",
-    borderRadius: 2,
-    overflow: "hidden",
-    marginBottom: 8,
-  },
-  progressFill: {
-    height: "100%",
-    borderRadius: 2,
-  },
-  hint: {
-    fontSize: 14,
-    color: "#8E8E93",
-    textAlign: "center",
+    position: "absolute",
+    fontSize: 12,
+    fontWeight: "600",
+    color: "#1C1C1E",
   },
 });
