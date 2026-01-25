@@ -1,14 +1,13 @@
+import { useRouter } from "expo-router";
+import { AlertCircle, Award, Clock, Play } from "lucide-react-native";
 import React, { useState } from "react";
 import {
-  View,
+  ScrollView,
+  StyleSheet,
   Text,
   TouchableOpacity,
-  StyleSheet,
-  ScrollView,
+  View,
 } from "react-native";
-import { useRouter } from "expo-router";
-import { Clock, AlertCircle, Award, Play } from "lucide-react-native";
-import ProfessionSelector from "@/components/ProfessionSelector";
 import { useProfessionStore } from "../store/useProfessionStore";
 
 export default function ExamScreen() {
@@ -35,8 +34,6 @@ export default function ExamScreen() {
       </View>
 
       <View style={styles.content}>
-        {/* Выбор профессии */}
-        <ProfessionSelector />
 
         {/* Информация о профессии (если выбрана) */}
         {selectedProfession && (
