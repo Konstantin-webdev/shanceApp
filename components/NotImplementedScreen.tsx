@@ -1,38 +1,23 @@
+import { useRouter } from "expo-router";
+import { Construction } from "lucide-react-native";
 import React from "react";
 import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
   SafeAreaView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
 } from "react-native";
-import { useRouter } from "expo-router";
-import { ArrowLeft, Construction } from "lucide-react-native";
 
 const NotImplementedScreen = () => {
   const router = useRouter();
 
   const handleGoBack = () => {
-    // Возвращаемся на экран выбора профессии
-    // В вашей структуре это скорее всего корень табов или training
-    router.push("../components/NotImplementedScreen");
-    // ИЛИ если это модальное окно:
-    // router.back();
+    router.back();
   };
 
   return (
     <SafeAreaView style={styles.container}>
-      {/* Шапка */}
-      <View style={styles.header}>
-        <TouchableOpacity
-          onPress={() => router.back()}
-          style={styles.backButton}
-        >
-          <ArrowLeft size={24} color="#007AFF" />
-        </TouchableOpacity>
-        <Text style={styles.title}>В разработке</Text>
-      </View>
-
       {/* Контент */}
       <View style={styles.content}>
         <View style={styles.iconContainer}>
@@ -47,7 +32,7 @@ const NotImplementedScreen = () => {
         </Text>
 
         <TouchableOpacity style={styles.button} onPress={handleGoBack}>
-          <Text style={styles.buttonText}>Выбрать другую профессию</Text>
+          <Text style={styles.buttonText}>Назад</Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>

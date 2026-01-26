@@ -9,5 +9,4 @@ export interface IQuestion {
   options: IQuestionOption[]; // Варианты ответов (1-5)
   correctAnswer: string; // ID правильного ответа ('a'-'e')
   explanation?: string; // Объяснение (можно добавить позже)
-  professionId: number; // ID профессии
 }

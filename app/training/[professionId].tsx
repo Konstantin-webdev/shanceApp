@@ -1,24 +1,28 @@
-import React, { useState, useEffect, useRef, useCallback } from "react";
+import { useLocalSearchParams, useRouter } from "expo-router";
+import { ArrowLeft, Check, X } from "lucide-react-native";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import {
-  View,
-  Text,
-  TouchableOpacity,
-  StyleSheet,
+  ActivityIndicator,
   Dimensions,
   ScrollView,
   StatusBar,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
 } from "react-native";
-import { useLocalSearchParams, useRouter } from "expo-router";
-import { ArrowLeft, Check, X } from "lucide-react-native";
+import NotImplementedScreen from "../../components/NotImplementedScreen";
 import { getProfessionById } from "../data/professions";
 import {
   getQuestionsByProfessionId,
   hasQuestionsForProfession,
 } from "../data/questions";
-import NotImplementedScreen from "../../components/NotImplementedScreen";
 import type { IQuestion } from "../types/questions";
 
 const { width } = Dimensions.get("window");
+const QUESTION_PAGE_WIDTH = width;
+const PRELOAD_COUNT = 2; // Загружаем текущий + 2 вперед и назад
+const INITIAL_BATCH_SIZE = 5; // Первая партия вопросов
 
 // Оптимизированный компонент вопроса
 interface QuestionItemProps {
@@ -110,7 +114,19 @@ const QuestionItem = React.memo(
         </ScrollView>
       </View>
     );
-  }
+  },
+);
+
+// Компонент-плейсхолдер для вопросов вне видимой области
+const QuestionPlaceholder = ({ index }: { index: number }) => (
+  <View style={styles.questionPage}>
+    <View style={styles.placeholderContainer}>
+      <ActivityIndicator size="small" color="#8E8E93" />
+      <Text style={styles.placeholderText}>
+        Загрузка вопроса {index + 1}...
+      </Text>
+    </View>
+  </View>
 );
 
 export default function TrainingSessionScreen() {
@@ -119,27 +135,34 @@ export default function TrainingSessionScreen() {
 
   const scrollViewRef = useRef<ScrollView>(null);
   const [profession, setProfession] = useState<any>(null);
-  const [questions, setQuestions] = useState<IQuestion[]>([]);
+  const [allQuestions, setAllQuestions] = useState<IQuestion[]>([]);
+  const [loadedQuestions, setLoadedQuestions] = useState<{
+    [key: number]: IQuestion;
+  }>({});
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedAnswers, setSelectedAnswers] = useState<
     Record<number, string>
   >({});
   const [isLoading, setIsLoading] = useState(true);
+  const [isInitializing, setIsInitializing] = useState(false);
+  const [visibleRange, setVisibleRange] = useState({ start: 0, end: 0 });
 
+  // Загрузка данных
   useEffect(() => {
     loadData();
   }, [professionId]);
 
   // Прокручиваем к текущему вопросу при изменении индекса
   useEffect(() => {
-    if (scrollViewRef.current && questions.length > 0) {
+    if (scrollViewRef.current && allQuestions.length > 0) {
       scrollViewRef.current.scrollTo({
-        x: currentQuestionIndex * width,
+        x: currentQuestionIndex * QUESTION_PAGE_WIDTH,
         animated: true,
       });
     }
-  }, [currentQuestionIndex, questions.length]);
+  }, [currentQuestionIndex, allQuestions.length]);
 
+  // Загрузка данных
   const loadData = async () => {
     if (!professionId) {
       router.back();
@@ -147,33 +170,86 @@ export default function TrainingSessionScreen() {
     }
 
     setIsLoading(true);
+    setIsInitializing(true);
 
-    const id = parseInt(professionId);
-    const prof = getProfessionById(id);
-    setProfession(prof);
+    try {
+      const id = parseInt(professionId);
+      const prof = getProfessionById(id);
+      setProfession(prof);
 
-    // Проверяем наличие вопросов
-    if (!hasQuestionsForProfession(id)) {
+      if (!hasQuestionsForProfession(id)) {
+        setIsLoading(false);
+        setIsInitializing(false);
+        return;
+      }
+
+      // Получаем все вопросы
+      const questions = getQuestionsByProfessionId(id);
+      setAllQuestions(questions);
+
+      // Загружаем первую партию вопросов
+      const initialBatch: { [key: number]: IQuestion } = {};
+      const endIndex = Math.min(INITIAL_BATCH_SIZE - 1, questions.length - 1);
+
+      for (let i = 0; i <= endIndex; i++) {
+        initialBatch[i] = questions[i];
+      }
+
+      setLoadedQuestions(initialBatch);
+      setVisibleRange({ start: 0, end: endIndex });
+    } catch (error) {
+      console.error("Ошибка загрузки вопросов:", error);
+    } finally {
       setIsLoading(false);
-      return;
+      // Даем время на рендер первых вопросов
+      setTimeout(() => {
+        setIsInitializing(false);
+      }, 100);
     }
-
-    // Загружаем вопросы
-    const loadedQuestions = getQuestionsByProfessionId(id);
-    setQuestions(loadedQuestions);
-    setIsLoading(false);
   };
 
+  // Загрузка вопросов в видимой области
+  const loadVisibleQuestions = useCallback(
+    (centerIndex: number) => {
+      const start = Math.max(0, centerIndex - PRELOAD_COUNT);
+      const end = Math.min(
+        allQuestions.length - 1,
+        centerIndex + PRELOAD_COUNT,
+      );
+
+      setVisibleRange({ start, end });
+
+      // Загружаем вопросы в видимой области
+      const newLoadedQuestions = { ...loadedQuestions };
+      let needsUpdate = false;
+
+      for (let i = start; i <= end; i++) {
+        if (!newLoadedQuestions[i] && allQuestions[i]) {
+          newLoadedQuestions[i] = allQuestions[i];
+          needsUpdate = true;
+        }
+      }
+
+      if (needsUpdate) {
+        setLoadedQuestions(newLoadedQuestions);
+      }
+    },
+    [allQuestions, loadedQuestions],
+  );
+
+  // Обработка скролла
   const handleScrollEnd = useCallback(
     (event: any) => {
-      const page = Math.round(event.nativeEvent.contentOffset.x / width);
+      const page = Math.round(
+        event.nativeEvent.contentOffset.x / QUESTION_PAGE_WIDTH,
+      );
 
       // Проверяем, что ответ выбран (если переходим вперед)
       const hasAnswered = selectedAnswers[currentQuestionIndex] !== undefined;
       if (page > currentQuestionIndex && !hasAnswered) {
         // Откатываем назад, если не ответил
         scrollViewRef.current?.scrollTo({
-          x: currentQuestionIndex * width,
+          x: currentQuestionIndex * QUESTION_PAGE_WIDTH,
           animated: true,
         });
         return;
@@ -181,11 +257,14 @@ export default function TrainingSessionScreen() {
 
       if (page !== currentQuestionIndex) {
         setCurrentQuestionIndex(page);
+        // Загружаем вопросы вокруг новой позиции
+        loadVisibleQuestions(page);
       }
     },
-    [currentQuestionIndex, selectedAnswers]
+    [currentQuestionIndex, selectedAnswers, loadVisibleQuestions],
   );
 
+  // Выбор ответа
   const handleAnswerSelect = useCallback(
     (questionIndex: number, answerId: string) => {
       setSelectedAnswers((prev) => ({
@@ -193,44 +272,78 @@ export default function TrainingSessionScreen() {
         [questionIndex]: answerId,
       }));
     },
-    []
+    [],
   );
 
-  const finishTraining = () => {
-    const correctAnswers = calculateCorrectAnswers();
+  // Завершение тренировки
+  const finishTraining = useCallback(() => {
+    const correctAnswers = allQuestions.reduce((count, question, index) => {
+      const userAnswer = selectedAnswers[index];
+      return userAnswer === question.correctAnswer ? count + 1 : count;
+    }, 0);
+
     router.push({
       pathname: "/training/completion",
       params: {
         correctAnswers: correctAnswers.toString(),
-        totalQuestions: questions.length.toString(),
+        totalQuestions: allQuestions.length.toString(),
         professionName: profession?.name || "",
       },
     });
-  };
-
-  const calculateCorrectAnswers = () => {
-    return questions.reduce((count, question, index) => {
-      const userAnswer = selectedAnswers[index];
-      return userAnswer === question.correctAnswer ? count + 1 : count;
-    }, 0);
-  };
+  }, [selectedAnswers, allQuestions, profession, router]);
 
   // Если вопросы в разработке
-  if (!isLoading && questions.length === 0) {
+  if (!isLoading && allQuestions.length === 0) {
     return <NotImplementedScreen />;
   }
 
-  if (isLoading || !profession) {
+  // Экран загрузки
+  if (isLoading) {
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color="#007AFF" />
+        <Text style={styles.loadingText}>Загрузка вопросов...</Text>
+      </View>
+    );
+  }
+
+  // Экран инициализации (рендеринг первых вопросов)
+  if (isInitializing) {
     return (
       <View style={styles.container}>
-        <Text>Загрузка...</Text>
+        <StatusBar barStyle="dark-content" />
+
+        {/* Шапка */}
+        <View style={styles.header}>
+          <TouchableOpacity
+            onPress={() => router.back()}
+            style={styles.backButton}
+          >
+            <ArrowLeft size={24} color="#007AFF" />
+          </TouchableOpacity>
+          <View style={styles.headerInfo}>
+            <Text style={styles.professionName} numberOfLines={1}>
+              {profession.name}
+            </Text>
+            <Text style={styles.progressText}>
+              Подготовка {allQuestions.length} вопросов...
+            </Text>
+          </View>
+        </View>
+
+        <View style={styles.initializingContainer}>
+          <ActivityIndicator size="large" color="#007AFF" />
+          <Text style={styles.initializingText}>
+            Загружаем первые {INITIAL_BATCH_SIZE} вопросов...
+          </Text>
+        </View>
       </View>
     );
   }
 
   // Прогресс (от 0 до 1)
-  const progress = (currentQuestionIndex + 1) / questions.length;
-  const isLastQuestion = currentQuestionIndex === questions.length - 1;
+  const progress = (currentQuestionIndex + 1) / allQuestions.length;
+  const isLastQuestion = currentQuestionIndex === allQuestions.length - 1;
 
   return (
     <View style={styles.container}>
@@ -249,7 +362,7 @@ export default function TrainingSessionScreen() {
             {profession.name}
           </Text>
           <Text style={styles.progressText}>
-            Вопрос {currentQuestionIndex + 1} из {questions.length}
+            Вопрос {currentQuestionIndex + 1} из {allQuestions.length}
           </Text>
         </View>
       </View>
@@ -274,19 +387,32 @@ export default function TrainingSessionScreen() {
         style={styles.horizontalScrollView}
         contentContainerStyle={styles.horizontalScrollContent}
       >
-        {questions.map((question, index) => (
-          <QuestionItem
-            key={question.id}
-            question={question}
-            index={index}
-            userAnswer={selectedAnswers[index]}
-            onAnswerSelect={handleAnswerSelect}
-            isCurrentQuestion={index === currentQuestionIndex}
-          />
-        ))}
+        {allQuestions.map((_, index) => {
+          // Показываем загруженные вопросы или плейсхолдер
+          if (
+            index >= visibleRange.start &&
+            index <= visibleRange.end &&
+            loadedQuestions[index]
+          ) {
+            return (
+              <QuestionItem
+                key={`question-${index}`}
+                question={loadedQuestions[index]}
+                index={index}
+                userAnswer={selectedAnswers[index]}
+                onAnswerSelect={handleAnswerSelect}
+                isCurrentQuestion={index === currentQuestionIndex}
+              />
+            );
+          }
+
+          return (
+            <QuestionPlaceholder key={`placeholder-${index}`} index={index} />
+          );
+        })}
       </ScrollView>
 
-      {/* Кнопка завершения (только для текущего вопроса если он последний) */}
+      {/* Кнопка завершения */}
       {isLastQuestion && selectedAnswers[currentQuestionIndex] && (
         <View style={styles.footer}>
           <TouchableOpacity
@@ -306,6 +432,30 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#F8F9FA",
     paddingTop: 50,
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#F8F9FA",
+  },
+  loadingText: {
+    marginTop: 16,
+    fontSize: 16,
+    color: "#8E8E93",
+  },
+  initializingContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#F8F9FA",
+  },
+  initializingText: {
+    marginTop: 16,
+    fontSize: 16,
+    color: "#8E8E93",
+    textAlign: "center",
+    paddingHorizontal: 20,
   },
   header: {
     flexDirection: "row",
@@ -356,14 +506,26 @@ const styles = StyleSheet.create({
     flexDirection: "row",
   },
   questionPage: {
-    width: width,
+    width: QUESTION_PAGE_WIDTH,
+    flex: 1,
+  },
+  placeholderContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#F8F9FA",
+  },
+  placeholderText: {
+    marginTop: 12,
+    fontSize: 14,
+    color: "#8E8E93",
   },
   verticalScrollView: {
     flex: 1,
   },
   verticalScrollContent: {
     padding: 20,
-    paddingBottom: 100, // Больше места для кнопки завершения
+    paddingBottom: 100,
   },
   questionCard: {
     backgroundColor: "#FFFFFF",
@@ -445,7 +607,7 @@ const styles = StyleSheet.create({
     right: 0,
     backgroundColor: "#F8F9FA",
     padding: 20,
-    paddingBottom: 30, // Safe area для нижней границы
+    paddingBottom: 30,
     borderTopWidth: 1,
     borderTopColor: "#E5E5EA",
   },

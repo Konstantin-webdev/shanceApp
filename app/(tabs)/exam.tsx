@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { useProfessionStore } from "../store/useProfessionStore";
 
 export default function ExamScreen() {
@@ -27,90 +28,94 @@ export default function ExamScreen() {
   };
 
   return (
-    <ScrollView style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.title}>Экзамен</Text>
-        <Text style={styles.subtitle}>Режим проверки знаний</Text>
-      </View>
+    <SafeAreaView style={styles.safeArea}>
+      <ScrollView style={styles.container}>
+        <View style={styles.header}>
+          <Text style={styles.title}>Экзамен</Text>
+          <Text style={styles.subtitle}>Режим проверки знаний</Text>
+        </View>
 
-      <View style={styles.content}>
+        <View style={styles.content}>
+          {selectedProfession && (
+            <View style={styles.professionInfo}>
+              <Text style={styles.professionName}>
+                {selectedProfession.name}
+              </Text>
+              <Text style={styles.professionStats}>
+                {selectedProfession.questionCount} вопросов доступно
+              </Text>
+            </View>
+          )}
 
-        {/* Информация о профессии (если выбрана) */}
-        {selectedProfession && (
-          <View style={styles.professionInfo}>
-            <Text style={styles.professionName}>{selectedProfession.name}</Text>
-            <Text style={styles.professionStats}>
-              {selectedProfession.questionCount} вопросов доступно
+          <TouchableOpacity
+            style={[
+              styles.startButton,
+              (!selectedProfession || isLoading) && styles.disabledButton,
+            ]}
+            onPress={handleStartExam}
+            disabled={!selectedProfession || isLoading}
+            activeOpacity={0.8}
+          >
+            <Play size={24} color="#FFFFFF" />
+            <Text style={styles.startButtonText}>
+              {isLoading ? "Загрузка..." : "Начать экзамен"}
             </Text>
-          </View>
-        )}
+          </TouchableOpacity>
 
-        {/* Кнопка начала экзамена */}
-        <TouchableOpacity
-          style={[
-            styles.startButton,
-            (!selectedProfession || isLoading) && styles.disabledButton,
-          ]}
-          onPress={handleStartExam}
-          disabled={!selectedProfession || isLoading}
-          activeOpacity={0.8}
-        >
-          <Play size={24} color="#FFFFFF" />
-          <Text style={styles.startButtonText}>
-            {isLoading ? "Загрузка..." : "Начать экзамен"}
-          </Text>
-        </TouchableOpacity>
+          <View style={styles.featuresCard}>
+            <Text style={styles.featuresTitle}>Особенности экзамена:</Text>
 
-        {/* Карточка с особенностями экзамена */}
-        <View style={styles.featuresCard}>
-          <Text style={styles.featuresTitle}>Особенности экзамена:</Text>
-
-          <View style={styles.featureItem}>
-            <Clock size={20} color="#FF3B30" />
-            <View style={styles.featureTextContainer}>
-              <Text style={styles.featureTitle}>Ограничение по времени</Text>
-              <Text style={styles.featureDescription}>
-                20 минут на 10 вопросов
-              </Text>
+            <View style={styles.featureItem}>
+              <Clock size={20} color="#FF3B30" />
+              <View style={styles.featureTextContainer}>
+                <Text style={styles.featureTitle}>Ограничение по времени</Text>
+                <Text style={styles.featureDescription}>
+                  20 минут на 10 вопросов
+                </Text>
+              </View>
             </View>
-          </View>
 
-          <View style={styles.featureItem}>
-            <AlertCircle size={20} color="#FF9500" />
-            <View style={styles.featureTextContainer}>
-              <Text style={styles.featureTitle}>Без подсказок</Text>
-              <Text style={styles.featureDescription}>
-                Проверка реальных знаний
-              </Text>
+            <View style={styles.featureItem}>
+              <AlertCircle size={20} color="#FF9500" />
+              <View style={styles.featureTextContainer}>
+                <Text style={styles.featureTitle}>Без подсказок</Text>
+                <Text style={styles.featureDescription}>
+                  Проверка реальных знаний
+                </Text>
+              </View>
             </View>
-          </View>
 
-          <View style={styles.featureItem}>
-            <Award size={20} color="#007AFF" />
-            <View style={styles.featureTextContainer}>
-              <Text style={styles.featureTitle}>Сертификат</Text>
-              <Text style={styles.featureDescription}>
-                Результат сохраняется в истории
-              </Text>
+            <View style={styles.featureItem}>
+              <Award size={20} color="#007AFF" />
+              <View style={styles.featureTextContainer}>
+                <Text style={styles.featureTitle}>Сертификат</Text>
+                <Text style={styles.featureDescription}>
+                  Результат сохраняется в истории
+                </Text>
+              </View>
             </View>
-          </View>
 
-          <View style={styles.rules}>
-            <Text style={styles.rulesTitle}>Правила:</Text>
-            <Text style={styles.ruleText}>• 10 случайных вопросов</Text>
-            <Text style={styles.ruleText}>• Таймер 20 минут</Text>
-            <Text style={styles.ruleText}>
-              • Нет возможности исправить ответ
-            </Text>
-            <Text style={styles.ruleText}>• Минимальный балл: 70%</Text>
+            <View style={styles.rules}>
+              <Text style={styles.rulesTitle}>Правила:</Text>
+              <Text style={styles.ruleText}>• 10 случайных вопросов</Text>
+              <Text style={styles.ruleText}>• Таймер 20 минут</Text>
+              <Text style={styles.ruleText}>
+                • Нет возможности исправить ответ
+              </Text>
+              <Text style={styles.ruleText}>• Минимальный балл: 70%</Text>
+            </View>
           </View>
         </View>
-      </View>
-    </ScrollView>
+      </ScrollView>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+    backgroundColor: "#F8F9FA",
+  },
   container: {
     flex: 1,
     backgroundColor: "#F8F9FA",

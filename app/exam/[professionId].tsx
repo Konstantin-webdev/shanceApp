@@ -40,6 +40,7 @@ export default function ExamSessionScreen() {
   const [examStarted, setExamStarted] = useState(false);
   const [timerActive, setTimerActive] = useState(false);
   const [timeSpent, setTimeSpent] = useState<number | null>(null);
+  const showCorrectAnswers = professionId === "38" || professionId === "78";
 
   // Загрузка данных
   useEffect(() => {
@@ -73,7 +74,7 @@ export default function ExamSessionScreen() {
       Alert.alert(
         "Недостаточно вопросов",
         `Для экзамена нужно минимум ${EXAM_QUESTIONS_COUNT} вопросов, доступно ${allQuestions.length}`,
-        [{ text: "OK" }]
+        [{ text: "OK" }],
       );
       return;
     }
@@ -116,7 +117,7 @@ export default function ExamSessionScreen() {
       // Показываем результаты с потраченным временем
       showExamResults(selectedAnswers, spentTime);
     },
-    [selectedAnswers]
+    [selectedAnswers],
   );
 
   // Навигация назад
@@ -171,7 +172,7 @@ export default function ExamSessionScreen() {
         },
       });
     },
-    [examQuestions, profession, professionId, router]
+    [examQuestions, profession, professionId, router],
   );
 
   // Проверка, отвечен ли текущий вопрос
@@ -185,7 +186,7 @@ export default function ExamSessionScreen() {
       Alert.alert(
         "Выберите ответ",
         "Пожалуйста, выберите вариант ответа на текущий вопрос перед переходом к следующему.",
-        [{ text: "Хорошо" }]
+        [{ text: "Хорошо" }],
       );
       return;
     }
@@ -204,7 +205,7 @@ export default function ExamSessionScreen() {
       Alert.alert(
         "Выберите ответ",
         "Пожалуйста, выберите вариант ответа на текущий вопрос перед завершением экзамена.",
-        [{ text: "Хорошо" }]
+        [{ text: "Хорошо" }],
       );
       return;
     }
@@ -310,6 +311,7 @@ export default function ExamSessionScreen() {
           }
           questionNumber={currentQuestionIndex + 1}
           totalQuestions={examQuestions.length}
+          showCorrectAnswers={showCorrectAnswers}
         />
 
         {/* Кнопка навигации внутри ScrollView */}

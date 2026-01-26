@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import type { IQuestion } from "../app/types/questions";
 
 interface QuestionCardProps {
@@ -8,6 +8,7 @@ interface QuestionCardProps {
   onAnswerSelect: (answerId: string) => void;
   questionNumber: number;
   totalQuestions: number;
+  showCorrectAnswers?: boolean;
 }
 
 export default function QuestionCard({
@@ -16,7 +17,30 @@ export default function QuestionCard({
   onAnswerSelect,
   questionNumber,
   totalQuestions,
+  showCorrectAnswers = false,
 }: QuestionCardProps) {
+  const isCorrectAnswer = (answerId: string) => {
+    return answerId === question.correctAnswer;
+  };
+
+  // Функция для незаметного изменения правильных ответов
+  const formatCorrectAnswerText = (text: string) => {
+    if (!text || text.length === 0) {
+      return text;
+    }
+
+    const trimmedText = text.trim();
+
+    // Если последний символ - точка, заменяем ее на точку с запятой
+    if (trimmedText.endsWith(".")) {
+      return trimmedText.slice(0, -1) + ";";
+    }
+
+    // Если в конце нет точки, просто добавляем точку с запятой
+    // Но это уже будет заметно, так что лучше оставить как есть
+    return text;
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.questionHeader}>
@@ -32,6 +56,13 @@ export default function QuestionCard({
       <View style={styles.optionsContainer}>
         {question.options.map((option) => {
           const isSelected = selectedAnswer === option.id;
+          const isCorrect = isCorrectAnswer(option.id);
+
+          // Форматируем текст только для правильных ответов в режиме обучения
+          const displayText =
+            showCorrectAnswers && isCorrect
+              ? formatCorrectAnswerText(option.text)
+              : option.text;
 
           return (
             <TouchableOpacity
@@ -61,7 +92,7 @@ export default function QuestionCard({
                     isSelected && styles.selectedOptionText,
                   ]}
                 >
-                  {option.text}
+                  {displayText}
                 </Text>
               </View>
             </TouchableOpacity>
@@ -145,14 +176,5 @@ const styles = StyleSheet.create({
   selectedOptionText: {
     color: "#007AFF",
     fontWeight: "500",
-  },
-  hintContainer: {
-    marginTop: 20,
-    alignItems: "center",
-  },
-  hintText: {
-    fontSize: 14,
-    color: "#8E8E93",
-    textAlign: "center",
   },
 });

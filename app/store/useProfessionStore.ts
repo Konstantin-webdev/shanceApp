@@ -18,6 +18,6 @@ export const useProfessionStore = create<ProfessionStore>()(
     {
       name: "profession-storage",
       storage: createJSONStorage(() => AsyncStorage),
-    }
-  )
+    },
+  ),
 );

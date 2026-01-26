@@ -1,16 +1,11 @@
 import { IQuestion } from "../../types/questions";
-import { questionsProfession78 } from "./profession78";
 import { questionsProfession38 } from "./profession38";
+import { questionsProfession78 } from "./profession78";
 
 // Структура данных: ID профессии -> массив вопросов
 export const questionsByProfession: Record<number, IQuestion[]> = {
-  78: questionsProfession78,
   38: questionsProfession38,
-
-  // Здесь будут добавляться другие профессии:
-  // 79: questionsProfession79,
-  // 80: questionsProfession80,
-  // ...
+  78: questionsProfession78,
 };
 
 /**
@@ -19,7 +14,7 @@ export const questionsByProfession: Record<number, IQuestion[]> = {
  * @returns Массив вопросов или пустой массив
  */
 export const getQuestionsByProfessionId = (
-  professionId: number
+  professionId: number,
 ): IQuestion[] => {
   return questionsByProfession[professionId] || [];
 };
