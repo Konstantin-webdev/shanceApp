@@ -1,63 +1,42 @@
 // hooks/useTrainingProgress.ts
 import { useTrainingProgressStore } from "@/app/store/trainingProgress";
-import { useState, useCallback, useEffect } from "react";
+import { useCallback } from "react";
 
 export function useTrainingProgress(professionId?: string) {
-  const [hasCheckedProgress, setHasCheckedProgress] = useState(false);
-  const [showContinueModal, setShowContinueModal] = useState(false);
-
   const { saveProgress, getProgress, clearProgress, hasProgress } =
     useTrainingProgressStore();
 
-  const checkSavedProgress = useCallback(() => {
-    if (!professionId) return;
-
-    const id = parseInt(professionId);
-    if (hasProgress(id)) {
-      setShowContinueModal(true);
-    }
-
-    setHasCheckedProgress(true);
-  }, [professionId, hasProgress]);
-
-  const handleContinue = useCallback(() => {
+  // Получить сохраненный прогресс
+  const getSavedProgress = useCallback(() => {
     if (!professionId) return null;
-
-    const id = parseInt(professionId);
-    return getProgress(id);
+    return getProgress(parseInt(professionId));
   }, [professionId, getProgress]);
 
-  const handleRestart = useCallback(() => {
-    if (!professionId) return;
-
-    const id = parseInt(professionId);
-    clearProgress(id);
-  }, [professionId, clearProgress]);
-
-  const saveCurrentProgress = useCallback(
-    (questionIndex: number, selectedAnswers: Record<number, string>) => {
-      if (!professionId || !hasCheckedProgress) return;
-
-      const id = parseInt(professionId);
-      saveProgress(id, questionIndex, selectedAnswers);
-    },
-    [professionId, hasCheckedProgress, saveProgress],
-  );
-
+  // Проверить есть ли сохраненный прогресс
   const hasSavedProgress = useCallback(() => {
     if (!professionId) return false;
     return hasProgress(parseInt(professionId));
   }, [professionId, hasProgress]);
 
+  // Сохранить текущий прогресс
+  const saveCurrentProgress = useCallback(
+    (questionIndex: number, selectedAnswers: Record<number, string>) => {
+      if (!professionId) return;
+      saveProgress(parseInt(professionId), questionIndex, selectedAnswers);
+    },
+    [professionId, saveProgress],
+  );
+
+  // Очистить прогресс
+  const clearCurrentProgress = useCallback(() => {
+    if (!professionId) return;
+    clearProgress(parseInt(professionId));
+  }, [professionId, clearProgress]);
+
   return {
-    hasCheckedProgress,
-    showContinueModal,
-    setShowContinueModal,
-    checkSavedProgress,
-    handleContinue,
-    handleRestart,
-    saveCurrentProgress,
+    getSavedProgress,
     hasSavedProgress,
-    clearProgress,
+    saveCurrentProgress,
+    clearCurrentProgress,
   };
 }

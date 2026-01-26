@@ -1,5 +1,5 @@
 // app/exam/results.tsx
-import React from "react";
+import React, { useEffect } from "react";
 import {
   View,
   Text,
@@ -20,6 +20,7 @@ import {
   BookOpen,
   ChevronRight,
 } from "lucide-react-native";
+import { saveExamResult } from "../data/examResults";
 
 interface QuestionData {
   id: string;
@@ -38,8 +39,10 @@ export default function ExamResultsScreen() {
     professionId: string;
     score: string;
     passed: string;
+    timeSpent?: string;
     questionsData?: string;
     answersData?: string;
+    saved?: string; // Флаг, что результат уже сохранен
   }>();
 
   const correctAnswers = parseInt(params.correctAnswers || "0");
@@ -48,6 +51,7 @@ export default function ExamResultsScreen() {
   const professionId = params.professionId || "";
   const score = parseInt(params.score || "0");
   const passed = params.passed === "true";
+  const timeSpent = parseInt(params.timeSpent || "600");
 
   // Парсим данные вопросов и ответов
   const questionsData: QuestionData[] = params.questionsData
@@ -57,10 +61,43 @@ export default function ExamResultsScreen() {
     ? JSON.parse(params.answersData)
     : {};
 
+  // Сохраняем результат при первом открытии экрана
+  useEffect(() => {
+    const saveResult = async () => {
+      // Проверяем, не сохранен ли уже результат
+      if (params.saved !== "true") {
+        try {
+          await saveExamResult({
+            professionId: professionId,
+            professionName: professionName,
+            correctAnswers: correctAnswers,
+            totalQuestions: totalQuestions,
+            score: score,
+            passed: passed,
+            timeSpent: timeSpent,
+          });
+
+          console.log("Результат экзамена сохранен");
+
+          // Если хотите, можно обновить URL с флагом сохранения
+          // Но обычно это не требуется, так как пользователь редко возвращается к результатам
+        } catch (error) {
+          console.error("Ошибка при сохранении результата:", error);
+        }
+      }
+    };
+
+    saveResult();
+  }, []);
+
   const handleShare = async () => {
     try {
+      const message = passed
+        ? `🎉 Я успешно сдал экзамен по профессии "${professionName}" с результатом ${score}%! Правильных ответов: ${correctAnswers} из ${totalQuestions}.`
+        : `📝 Я прошел экзамен по профессии "${professionName}" с результатом ${score}% (${correctAnswers} из ${totalQuestions} правильных ответов).`;
+
       await Share.share({
-        message: `Я сдал экзамен по профессии "${professionName}" с результатом ${score}%!`,
+        message,
       });
     } catch (error) {
       console.log("Ошибка при шаринге:", error);
@@ -81,6 +118,10 @@ export default function ExamResultsScreen() {
   const handleViewDetails = (questionIndex: number) => {
     // Можно сделать модальное окно с деталями вопроса
     // Пока просто показываем скролл
+  };
+
+  const handleViewStats = () => {
+    router.push("/(tabs)/stats");
   };
 
   return (
@@ -143,9 +184,12 @@ export default function ExamResultsScreen() {
             <View style={styles.statDivider} />
 
             <View style={styles.statItem}>
-              <BookOpen size={24} color="#007AFF" />
-              <Text style={styles.statNumber}>{totalQuestions}</Text>
-              <Text style={styles.statLabel}>Всего</Text>
+              <Clock size={24} color="#007AFF" />
+              <Text style={styles.statNumber}>
+                {Math.floor(timeSpent / 60)}:
+                {String(timeSpent % 60).padStart(2, "0")}
+              </Text>
+              <Text style={styles.statLabel}>Время</Text>
             </View>
           </View>
 
@@ -167,86 +211,105 @@ export default function ExamResultsScreen() {
         </View>
 
         {/* Детали по вопросам */}
-        <View style={styles.detailsCard}>
-          <Text style={styles.detailsTitle}>Детали по вопросам:</Text>
+        {questionsData.length > 0 && (
+          <View style={styles.detailsCard}>
+            <Text style={styles.detailsTitle}>Детали по вопросам:</Text>
 
-          <View style={styles.questionsList}>
-            {questionsData.map((question, index) => {
-              const userAnswer = answersData[index];
-              const isCorrect = userAnswer === question.correctAnswer;
-              const correctOption = question.options.find(
-                (opt) => opt.id === question.correctAnswer
-              );
-              const userOption = question.options.find(
-                (opt) => opt.id === userAnswer
-              );
+            <View style={styles.questionsList}>
+              {questionsData.map((question, index) => {
+                const userAnswer = answersData[index];
+                const isCorrect = userAnswer === question.correctAnswer;
+                const correctOption = question.options.find(
+                  (opt) => opt.id === question.correctAnswer,
+                );
+                const userOption = question.options.find(
+                  (opt) => opt.id === userAnswer,
+                );
 
-              return (
-                <TouchableOpacity
-                  key={question.id}
-                  style={styles.questionItem}
-                  onPress={() => handleViewDetails(index)}
-                >
-                  <View style={styles.questionItemHeader}>
-                    <Text style={styles.questionItemNumber}>
-                      Вопрос {index + 1}
-                    </Text>
-                    <View
-                      style={[
-                        styles.questionItemStatus,
-                        isCorrect
-                          ? styles.questionItemCorrect
-                          : styles.questionItemIncorrect,
-                      ]}
-                    >
-                      <Text style={styles.questionItemStatusText}>
-                        {isCorrect ? "✓" : "✗"}
+                return (
+                  <TouchableOpacity
+                    key={question.id}
+                    style={styles.questionItem}
+                    onPress={() => handleViewDetails(index)}
+                  >
+                    <View style={styles.questionItemHeader}>
+                      <Text style={styles.questionItemNumber}>
+                        Вопрос {index + 1}
                       </Text>
-                    </View>
-                  </View>
-
-                  <Text style={styles.questionItemText} numberOfLines={2}>
-                    {question.text}
-                  </Text>
-
-                  <View style={styles.questionItemAnswers}>
-                    <View style={styles.answerRow}>
-                      <Text style={styles.answerLabel}>Ваш ответ:</Text>
-                      <Text
+                      <View
                         style={[
-                          styles.answerValue,
+                          styles.questionItemStatus,
                           isCorrect
-                            ? styles.correctAnswerValue
-                            : styles.incorrectAnswerValue,
+                            ? styles.questionItemCorrect
+                            : styles.questionItemIncorrect,
                         ]}
                       >
-                        {userOption?.text || "Не ответил"}
-                      </Text>
-                    </View>
-
-                    {!isCorrect && correctOption && (
-                      <View style={styles.answerRow}>
-                        <Text style={styles.answerLabel}>Правильный:</Text>
-                        <Text style={styles.correctAnswerValue}>
-                          {correctOption.text}
+                        <Text
+                          style={[
+                            styles.questionItemStatusText,
+                            isCorrect
+                              ? styles.questionItemCorrectText
+                              : styles.questionItemIncorrectText,
+                          ]}
+                        >
+                          {isCorrect ? "✓" : "✗"}
                         </Text>
                       </View>
-                    )}
-                  </View>
+                    </View>
 
-                  <ChevronRight
-                    size={16}
-                    color="#8E8E93"
-                    style={styles.chevronIcon}
-                  />
-                </TouchableOpacity>
-              );
-            })}
+                    <Text style={styles.questionItemText} numberOfLines={2}>
+                      {question.text}
+                    </Text>
+
+                    <View style={styles.questionItemAnswers}>
+                      <View style={styles.answerRow}>
+                        <Text style={styles.answerLabel}>Ваш ответ:</Text>
+                        <Text
+                          style={[
+                            styles.answerValue,
+                            isCorrect
+                              ? styles.correctAnswerValue
+                              : styles.incorrectAnswerValue,
+                          ]}
+                        >
+                          {userOption?.text || "Не ответил"}
+                        </Text>
+                      </View>
+
+                      {!isCorrect && correctOption && (
+                        <View style={styles.answerRow}>
+                          <Text style={styles.answerLabel}>Правильный:</Text>
+                          <Text style={styles.correctAnswerValue}>
+                            {correctOption.text}
+                          </Text>
+                        </View>
+                      )}
+                    </View>
+
+                    <ChevronRight
+                      size={16}
+                      color="#8E8E93"
+                      style={styles.chevronIcon}
+                    />
+                  </TouchableOpacity>
+                );
+              })}
+            </View>
           </View>
-        </View>
+        )}
 
         {/* Кнопки действий */}
         <View style={styles.actionsContainer}>
+          <TouchableOpacity
+            style={[styles.actionButton, styles.statsButton]}
+            onPress={handleViewStats}
+          >
+            <Award size={20} color="#34C759" />
+            <Text style={[styles.actionButtonText, styles.statsButtonText]}>
+              Посмотреть статистику
+            </Text>
+          </TouchableOpacity>
+
           <TouchableOpacity style={styles.actionButton} onPress={handleShare}>
             <Share2 size={20} color="#007AFF" />
             <Text style={styles.actionButtonText}>Поделиться</Text>
@@ -270,7 +333,7 @@ export default function ExamResultsScreen() {
           >
             <Home size={20} color="#FFFFFF" />
             <Text style={[styles.actionButtonText, styles.homeButtonText]}>
-              На главную
+              К списку экзаменов
             </Text>
           </TouchableOpacity>
         </View>
@@ -521,6 +584,12 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "600",
     color: "#007AFF",
+  },
+  statsButton: {
+    borderColor: "#34C759",
+  },
+  statsButtonText: {
+    color: "#34C759",
   },
   retryButton: {
     backgroundColor: "#FF9500",
