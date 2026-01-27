@@ -23,19 +23,18 @@ export default function QuestionItem({
   const { colors } = useTheme();
   const hasAnswered = userAnswer !== undefined;
 
-  // Определяем, правильный ли был ответ пользователя
-  const isUserAnswerCorrect = userAnswer === question.correctAnswer;
-
   const styles = StyleSheet.create({
     container: {
       flex: 1,
+      paddingHorizontal: 16, // Добавляем отступы по бокам
+      paddingTop: 16,
     },
     questionCard: {
       backgroundColor: colors.card,
       padding: 20,
       borderRadius: 12,
       marginBottom: 20,
-      borderWidth: 1,
+      borderWidth: 1, // Фиксированная ширина границы
       borderColor: colors.border,
     },
     questionText: {
@@ -52,12 +51,12 @@ export default function QuestionItem({
       backgroundColor: colors.card,
       padding: 16,
       borderRadius: 12,
-      borderWidth: 1,
+      borderWidth: 1, // Фиксированная ширина границы!
       borderColor: colors.border,
     },
     selectedOption: {
       borderColor: colors.primary,
-      backgroundColor: colors.primary + "10", // 10% opacity
+      backgroundColor: colors.primary + "10",
     },
     correctOption: {
       borderColor: colors.success,
@@ -115,6 +114,7 @@ export default function QuestionItem({
         {question.options.map((option) => {
           const isSelected = userAnswer === option.id;
           const isActuallyCorrect = option.id === question.correctAnswer;
+          const isWrongSelected = isSelected && !isActuallyCorrect;
 
           return (
             <TouchableOpacity
@@ -123,10 +123,7 @@ export default function QuestionItem({
                 styles.optionButton,
                 isSelected && styles.selectedOption,
                 hasAnswered && isActuallyCorrect && styles.correctOption,
-                hasAnswered &&
-                  isSelected &&
-                  !isActuallyCorrect &&
-                  styles.wrongOption,
+                hasAnswered && isWrongSelected && styles.wrongOption,
               ]}
               onPress={() => onAnswerSelect(index, option.id)}
               disabled={hasAnswered}
@@ -138,17 +135,17 @@ export default function QuestionItem({
                   </Text>
                 </View>
                 <Text style={styles.optionText}>{option.text}</Text>
-              </View>
 
-              {hasAnswered && (
-                <View style={styles.optionStatus}>
-                  {isActuallyCorrect ? (
-                    <Check size={20} color={colors.success} />
-                  ) : isSelected ? (
-                    <X size={20} color={colors.danger} />
-                  ) : null}
-                </View>
-              )}
+                {hasAnswered && (
+                  <View style={styles.optionStatus}>
+                    {isActuallyCorrect ? (
+                      <Check size={20} color={colors.success} />
+                    ) : isSelected ? (
+                      <X size={20} color={colors.danger} />
+                    ) : null}
+                  </View>
+                )}
+              </View>
             </TouchableOpacity>
           );
         })}

@@ -6,7 +6,9 @@ import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import ExamTimer from "./ExamTimer";
 
 interface ExamHeaderProps {
-  professionName: string;
+  currentQuestion: number;
+  totalQuestions: number;
+  remainingTime: number; // <-- ДОБАВЛЕНО
   onBack: () => void;
   timerActive: boolean;
   onTimeUp: () => void;
@@ -14,7 +16,9 @@ interface ExamHeaderProps {
 }
 
 export default function ExamHeader({
-  professionName,
+  currentQuestion,
+  totalQuestions,
+  remainingTime,
   onBack,
   timerActive,
   onTimeUp,
@@ -26,7 +30,7 @@ export default function ExamHeader({
     container: {
       backgroundColor: colors.card,
       paddingTop: 5,
-      paddingHorizontal: 16,
+      paddingHorizontal: 7, // Уменьшили отступы до 7px
       paddingBottom: 12,
       borderBottomWidth: 1,
       borderBottomColor: colors.border,
@@ -38,16 +42,16 @@ export default function ExamHeader({
     },
     backButton: {
       padding: 8,
-      marginRight: 12,
     },
-    professionContainer: {
+    progressContainer: {
       flex: 1,
       marginHorizontal: 12,
     },
-    professionText: {
+    progressText: {
       fontSize: 16,
       fontWeight: "500",
       color: colors.text,
+      textAlign: "center",
     },
   });
 
@@ -58,15 +62,16 @@ export default function ExamHeader({
           <ArrowLeft size={24} color={colors.danger} />
         </TouchableOpacity>
 
-        <View style={styles.professionContainer}>
-          <Text style={styles.professionText} numberOfLines={1}>
-            {professionName}
+        <View style={styles.progressContainer}>
+          <Text style={styles.progressText} numberOfLines={1}>
+            Вопрос {currentQuestion}/{totalQuestions}
           </Text>
         </View>
 
         <ExamTimer
           isActive={timerActive}
           onTimeUp={onTimeUp}
+          remainingTime={remainingTime}
           onExamComplete={onExamComplete}
         />
       </View>

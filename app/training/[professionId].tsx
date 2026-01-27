@@ -1,5 +1,4 @@
-// app/training/[professionId].tsx
-import { useTheme } from "@/components/ThemeProvider"; // Добавьте импорт
+import { useTheme } from "@/components/ThemeProvider";
 import { useTrainingProgress } from "@/hooks/useTrainingProgress";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { ArrowLeft } from "lucide-react-native";
@@ -22,14 +21,15 @@ import {
   getQuestionsByProfessionId,
   hasQuestionsForProfession,
 } from "../data/questions";
+import type { IProfession } from "../types/profession";
 import type { IQuestion } from "../types/questions";
 
 export default function TrainingSessionScreen() {
   const router = useRouter();
   const { professionId } = useLocalSearchParams<{ professionId: string }>();
-  const { colors, isDark } = useTheme(); // Получаем тему
+  const { colors } = useTheme();
 
-  const [profession, setProfession] = useState<any>(null);
+  const [profession, setProfession] = useState<IProfession | null>(null);
   const [questions, setQuestions] = useState<IQuestion[]>([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedAnswers, setSelectedAnswers] = useState<
@@ -39,12 +39,8 @@ export default function TrainingSessionScreen() {
   const [showContinueModal, setShowContinueModal] = useState(false);
   const [hasLoadedSavedProgress, setHasLoadedSavedProgress] = useState(false);
 
-  const {
-    getSavedProgress,
-    hasSavedProgress,
-    saveCurrentProgress,
-    clearCurrentProgress,
-  } = useTrainingProgress(professionId);
+  const { getSavedProgress, saveCurrentProgress, clearCurrentProgress } =
+    useTrainingProgress(professionId);
 
   useEffect(() => {
     loadData();
@@ -74,7 +70,7 @@ export default function TrainingSessionScreen() {
 
     try {
       const id = parseInt(professionId);
-      const prof = getProfessionById(id);
+      const prof = getProfessionById(id) as IProfession;
       setProfession(prof);
 
       if (!hasQuestionsForProfession(id)) {
@@ -209,8 +205,7 @@ export default function TrainingSessionScreen() {
   const isLastQuestion = currentQuestionIndex === questions.length - 1;
   const progress = (currentQuestionIndex + 1) / questions.length;
 
-  // Создаем стили динамически
-  const styles = StyleSheet.create({
+  /*   const styles = StyleSheet.create({
     container: {
       flex: 1,
       backgroundColor: colors.background,
@@ -260,10 +255,17 @@ export default function TrainingSessionScreen() {
     },
     contentScroll: {
       flex: 1,
+      paddingBottom: 160,
     },
     navigationContainer: {
-      marginTop: 24,
-      paddingVertical: 16,
+      position: "absolute",
+      bottom: 0,
+      left: 0,
+      right: 0,
+      backgroundColor: colors.background,
+      paddingTop: 16,
+      paddingBottom: 20, // Отступ для меню телефона
+      paddingHorizontal: 16,
       borderTopWidth: 1,
       borderTopColor: colors.border,
     },
@@ -307,8 +309,118 @@ export default function TrainingSessionScreen() {
       color: colors.danger,
       fontSize: 14,
     },
+  }); */
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: colors.background,
+      paddingTop: 50,
+    },
+    header: {
+      flexDirection: "row",
+      alignItems: "center",
+      paddingHorizontal: 16,
+      paddingBottom: 12,
+      backgroundColor: colors.card,
+      borderBottomWidth: 1,
+      borderBottomColor: colors.border,
+    },
+    backButton: {
+      padding: 8,
+    },
+    headerInfo: {
+      flex: 1,
+      marginHorizontal: 12,
+    },
+    professionName: {
+      fontSize: 16,
+      fontWeight: "600",
+      color: colors.text,
+    },
+    progressText: {
+      fontSize: 14,
+      color: colors.muted,
+      marginTop: 2,
+    },
+    progressBarContainer: {
+      paddingHorizontal: 20,
+      paddingVertical: 12,
+      backgroundColor: colors.card,
+    },
+    progressBarBackground: {
+      height: 4,
+      backgroundColor: colors.border,
+      borderRadius: 2,
+      overflow: "hidden",
+    },
+    progressBarFill: {
+      height: "100%",
+      backgroundColor: colors.primary,
+      borderRadius: 2,
+    },
+    mainContainer: {
+      flex: 1,
+    },
+    contentScroll: {
+      flex: 1,
+    },
+    scrollContent: {
+      flexGrow: 1,
+      paddingBottom: 160, // Место для кнопок навигации
+    },
+    navigationContainer: {
+      position: "absolute",
+      bottom: 0,
+      left: 0,
+      right: 0,
+      backgroundColor: colors.background,
+      paddingTop: 16,
+      paddingBottom: 20,
+      paddingHorizontal: 16,
+      borderTopWidth: 1,
+      borderTopColor: colors.border,
+    },
+    navigationButtons: {
+      flexDirection: "row",
+      justifyContent: "space-between",
+      marginBottom: 16,
+    },
+    navButton: {
+      flex: 1,
+      paddingVertical: 16,
+      borderRadius: 12,
+      alignItems: "center",
+    },
+    prevButton: {
+      backgroundColor: colors.border,
+      marginRight: 8,
+    },
+    nextButton: {
+      backgroundColor: colors.primary,
+      marginLeft: 8,
+    },
+    completeButton: {
+      backgroundColor: colors.success,
+      marginLeft: 8,
+    },
+    disabledButton: {
+      backgroundColor: colors.muted,
+      opacity: 0.6,
+    },
+    navButtonText: {
+      color: "#FFFFFF",
+      fontSize: 16,
+      fontWeight: "600",
+    },
+    clearProgressLink: {
+      paddingVertical: 12,
+      alignItems: "center",
+    },
+    clearProgressText: {
+      color: colors.danger,
+      fontSize: 14,
+    },
   });
-
   return (
     <SafeAreaView
       style={{ flex: 1, backgroundColor: colors.background, marginTop: -30 }}
@@ -346,16 +458,22 @@ export default function TrainingSessionScreen() {
         </View>
 
         {/* Основной контент */}
-        <ScrollView style={styles.contentScroll}>
-          {currentQuestion && (
-            <QuestionItem
-              question={currentQuestion}
-              index={currentQuestionIndex}
-              userAnswer={selectedAnswers[currentQuestionIndex]}
-              onAnswerSelect={handleAnswerSelect}
-              isCurrentQuestion={true}
-            />
-          )}
+        <View style={styles.mainContainer}>
+          <ScrollView
+            style={styles.contentScroll}
+            contentContainerStyle={styles.scrollContent}
+            showsVerticalScrollIndicator={true}
+          >
+            {currentQuestion && (
+              <QuestionItem
+                question={currentQuestion}
+                index={currentQuestionIndex}
+                userAnswer={selectedAnswers[currentQuestionIndex]}
+                onAnswerSelect={handleAnswerSelect}
+                isCurrentQuestion={true}
+              />
+            )}
+          </ScrollView>
 
           {/* Навигация */}
           <View style={styles.navigationContainer}>
@@ -400,7 +518,7 @@ export default function TrainingSessionScreen() {
               )}
             </View>
           </View>
-        </ScrollView>
+        </View>
       </View>
     </SafeAreaView>
   );

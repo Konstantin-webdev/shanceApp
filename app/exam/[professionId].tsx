@@ -1,7 +1,7 @@
 import { useLocalSearchParams, useRouter } from "expo-router";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import {
-  Alert,
+  ActivityIndicator,
   ScrollView,
   StatusBar,
   StyleSheet,
@@ -19,16 +19,19 @@ import {
 import type { IQuestion } from "../types/questions";
 
 // Компоненты
+import { useTheme } from "@/components/ThemeProvider";
 import ExamHeader from "../../components/ExamHeader";
 import QuestionCard from "../../components/QuestionCard";
+import type { IProfession } from "../types/profession";
 
 const EXAM_QUESTIONS_COUNT = 10;
+const EXAM_DURATION = 10 * 60; // 10 минут в секундах
 
 export default function ExamSessionScreen() {
   const router = useRouter();
   const { professionId } = useLocalSearchParams<{ professionId: string }>();
-
-  const [profession, setProfession] = useState<any>(null);
+  const { colors, isDark } = useTheme();
+  const [profession, setProfession] = useState<IProfession | null>(null);
   const [allQuestions, setAllQuestions] = useState<IQuestion[]>([]);
   const [examQuestions, setExamQuestions] = useState<IQuestion[]>([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
@@ -36,103 +39,117 @@ export default function ExamSessionScreen() {
     Record<number, string>
   >({});
   const [isLoading, setIsLoading] = useState(true);
-  const [examStarted, setExamStarted] = useState(false);
   const [timerActive, setTimerActive] = useState(false);
+  const [remainingTime, setRemainingTime] = useState(EXAM_DURATION); // <-- ДОБАВЛЕНО
   const [timeSpent, setTimeSpent] = useState<number | null>(null);
+  const [isFinishing, setIsFinishing] = useState(false);
+  const timerIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null); // <-- ДОБАВЛЕНО
   const showCorrectAnswers = professionId === "38" || professionId === "78";
 
-  // Загрузка данных
+  // Таймер экзамена
   useEffect(() => {
-    loadData();
+    if (timerActive) {
+      // Очищаем предыдущий интервал на всякий случай
+      if (timerIntervalRef.current) {
+        clearInterval(timerIntervalRef.current);
+      }
+
+      timerIntervalRef.current = setInterval(() => {
+        setRemainingTime((prev) => {
+          if (prev <= 1) {
+            // Время вышло
+            if (timerIntervalRef.current) {
+              clearInterval(timerIntervalRef.current);
+              timerIntervalRef.current = null;
+            }
+            setTimerActive(false);
+            handleTimeUp();
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+    } else {
+      // Останавливаем таймер
+      if (timerIntervalRef.current) {
+        clearInterval(timerIntervalRef.current);
+        timerIntervalRef.current = null;
+      }
+    }
+
+    return () => {
+      if (timerIntervalRef.current) {
+        clearInterval(timerIntervalRef.current);
+        timerIntervalRef.current = null;
+      }
+    };
+  }, [timerActive]);
+
+  // Загрузка данных и автоматический старт экзамена
+  useEffect(() => {
+    const initializeExam = async () => {
+      if (!professionId) {
+        router.back();
+        return;
+      }
+
+      setIsLoading(true);
+      const id = parseInt(professionId);
+      const prof = getProfessionById(id) as IProfession;
+      setProfession(prof);
+
+      if (!hasQuestionsForProfession(id)) {
+        setIsLoading(false);
+        return;
+      }
+
+      const loadedQuestions = getQuestionsByProfessionId(id);
+      setAllQuestions(loadedQuestions);
+
+      if (loadedQuestions.length >= EXAM_QUESTIONS_COUNT) {
+        startExam(loadedQuestions);
+      } else {
+        router.back();
+      }
+    };
+
+    initializeExam();
   }, [professionId]);
 
-  const loadData = async () => {
-    if (!professionId) {
-      router.back();
-      return;
-    }
-
-    setIsLoading(true);
-    const id = parseInt(professionId);
-    const prof = getProfessionById(id);
-    setProfession(prof);
-
-    if (!hasQuestionsForProfession(id)) {
-      setIsLoading(false);
-      return;
-    }
-
-    const loadedQuestions = getQuestionsByProfessionId(id);
-    setAllQuestions(loadedQuestions);
-    setIsLoading(false);
-  };
-
   // Запуск экзамена
-  const startExam = () => {
-    if (allQuestions.length < EXAM_QUESTIONS_COUNT) {
-      Alert.alert(
-        "Недостаточно вопросов",
-        `Для экзамена нужно минимум ${EXAM_QUESTIONS_COUNT} вопросов, доступно ${allQuestions.length}`,
-        [{ text: "OK" }],
-      );
-      return;
-    }
-
-    // Выбираем случайные вопросы
-    const shuffled = [...allQuestions]
+  const startExam = (questions: IQuestion[] = allQuestions) => {
+    const shuffled = [...questions]
       .sort(() => Math.random() - 0.5)
       .slice(0, EXAM_QUESTIONS_COUNT);
 
     setExamQuestions(shuffled);
-    setExamStarted(true);
     setTimerActive(true);
+    setRemainingTime(EXAM_DURATION); // <-- СБРАСЫВАЕМ ТАЙМЕР
     setTimeSpent(null);
     setSelectedAnswers({});
     setCurrentQuestionIndex(0);
+    setIsLoading(false);
   };
 
   // Колбэк когда время истекло (10 минут)
   const handleTimeUp = useCallback(() => {
+    const spentTime = EXAM_DURATION - remainingTime;
+    setTimeSpent(spentTime);
     setTimerActive(false);
-
-    // Помечаем все неотвеченные вопросы как "не отвечено"
-    const finalAnswers = { ...selectedAnswers };
-    examQuestions.forEach((_, index) => {
-      if (!finalAnswers[index]) {
-        finalAnswers[index] = ""; // Пустая строка = не отвечен
-      }
-    });
-
-    // Переходим к результатам
-    showExamResults(finalAnswers);
-  }, [examQuestions, selectedAnswers]);
+    finishExam(spentTime);
+  }, [examQuestions, selectedAnswers, remainingTime]);
 
   // Колбэк когда работник сам завершил экзамен
-  const handleExamComplete = useCallback(
-    (spentTime: number) => {
-      setTimeSpent(spentTime);
-      setTimerActive(false);
-
-      // Показываем результаты с потраченным временем
-      showExamResults(selectedAnswers, spentTime);
-    },
-    [selectedAnswers],
-  );
+  const handleExamComplete = useCallback(() => {
+    const spentTime = EXAM_DURATION - remainingTime;
+    setTimeSpent(spentTime);
+    setTimerActive(false);
+    finishExam(spentTime);
+  }, [remainingTime]);
 
   // Навигация назад
   const handleBack = () => {
-    if (examStarted && timerActive) {
-      Alert.alert("Выйти из экзамена?", "Весь прогресс будет потерян", [
-        { text: "Отмена", style: "cancel" },
-        {
-          text: "Выйти",
-          style: "destructive",
-          onPress: () => router.back(),
-        },
-      ]);
-    } else {
-      router.back();
-    }
+    router.back();
   };
 
   // Выбор ответа
@@ -143,11 +160,12 @@ export default function ExamSessionScreen() {
     }));
   };
 
-  // Показ результатов
+  // Оптимизированная функция показа результатов
   const showExamResults = useCallback(
     (finalAnswers: Record<number, string>, spentTime?: number) => {
       if (!examQuestions.length) return;
 
+      // Быстрый расчет результатов
       const correctAnswers = examQuestions.reduce((count, question, index) => {
         const userAnswer = finalAnswers[index];
         return userAnswer === question.correctAnswer ? count + 1 : count;
@@ -156,22 +174,50 @@ export default function ExamSessionScreen() {
       const score = Math.round((correctAnswers / examQuestions.length) * 100);
       const passed = score >= 70;
 
-      router.push({
-        pathname: "/exam/results",
-        params: {
-          correctAnswers: correctAnswers.toString(),
-          totalQuestions: examQuestions.length.toString(),
-          professionName: profession?.name || "",
-          professionId: professionId || "",
-          score: score.toString(),
-          passed: passed.toString(),
-          timeSpent: spentTime ? spentTime.toString() : "600", // Если время вышло - 10 минут
-          questionsData: JSON.stringify(examQuestions),
-          answersData: JSON.stringify(finalAnswers),
-        },
-      });
+      // Готовим данные для перехода
+      const params = {
+        correctAnswers: correctAnswers.toString(),
+        totalQuestions: examQuestions.length.toString(),
+        professionName: profession?.name || "",
+        professionId: professionId || "",
+        score: score.toString(),
+        passed: passed.toString(),
+        timeSpent: spentTime
+          ? spentTime.toString()
+          : (EXAM_DURATION - remainingTime).toString(),
+        questionsData: JSON.stringify(examQuestions),
+        answersData: JSON.stringify(finalAnswers),
+      };
+
+      setTimeout(() => {
+        router.push({
+          pathname: "/exam/results",
+          params,
+        });
+      }, 50);
     },
-    [examQuestions, profession, professionId, router],
+    [examQuestions, profession, professionId, router, remainingTime],
+  );
+
+  // Функция завершения экзамена
+  const finishExam = useCallback(
+    (spentTime?: number) => {
+      if (examQuestions.length === 0) return;
+
+      setIsFinishing(true);
+
+      // Быстрое завершение без проверки всех ответов
+      const finalAnswers = { ...selectedAnswers };
+      examQuestions.forEach((_, index) => {
+        if (!finalAnswers[index]) {
+          finalAnswers[index] = "";
+        }
+      });
+
+      // Немедленный показ результатов
+      showExamResults(finalAnswers, spentTime);
+    },
+    [examQuestions, selectedAnswers, showExamResults],
   );
 
   // Проверка, отвечен ли текущий вопрос
@@ -181,15 +227,6 @@ export default function ExamSessionScreen() {
 
   // Переход к следующему вопросу
   const handleNextQuestion = () => {
-    if (!isCurrentQuestionAnswered()) {
-      Alert.alert(
-        "Выберите ответ",
-        "Пожалуйста, выберите вариант ответа на текущий вопрос перед переходом к следующему.",
-        [{ text: "Хорошо" }],
-      );
-      return;
-    }
-
     if (currentQuestionIndex < examQuestions.length - 1) {
       setCurrentQuestionIndex((prev) => prev + 1);
     }
@@ -199,34 +236,12 @@ export default function ExamSessionScreen() {
   const handleFinishExam = () => {
     if (examQuestions.length === 0) return;
 
-    // Проверяем, ответил ли на последний вопрос
     if (!isCurrentQuestionAnswered()) {
-      Alert.alert(
-        "Выберите ответ",
-        "Пожалуйста, выберите вариант ответа на текущий вопрос перед завершением экзамена.",
-        [{ text: "Хорошо" }],
-      );
       return;
     }
 
-    const unansweredCount = examQuestions.reduce((count, _, index) => {
-      return !selectedAnswers[index] ? count + 1 : count;
-    }, 0);
-
-    let message = "Вы уверены, что хотите завершить экзамен?";
-    if (unansweredCount > 0) {
-      message = `У вас осталось ${unansweredCount} неотвеченных вопросов. Завершить экзамен?`;
-    }
-
-    Alert.alert("Завершить экзамен?", message, [
-      { text: "Отмена", style: "cancel" },
-      {
-        text: "Завершить",
-        onPress: () => {
-          setTimerActive(false);
-        },
-      },
-    ]);
+    setIsFinishing(true);
+    handleExamComplete(); // <-- Используем существующий колбэк
   };
 
   // Если вопросы в разработке
@@ -236,48 +251,9 @@ export default function ExamSessionScreen() {
 
   if (isLoading || !profession) {
     return (
-      <View style={styles.container}>
-        <Text>Загрузка...</Text>
+      <View style={[styles.container, { backgroundColor: colors.background }]}>
+        <Text style={{ color: colors.text }}>Загрузка...</Text>
       </View>
-    );
-  }
-
-  // Экран начала экзамена
-  if (!examStarted) {
-    return (
-      <SafeAreaView style={styles.container}>
-        <StatusBar barStyle="dark-content" />
-
-        <ExamHeader
-          professionName={profession.name}
-          onBack={() => router.back()}
-          timerActive={false}
-          onTimeUp={() => {}}
-          onExamComplete={() => {}}
-        />
-
-        <View style={styles.examIntro}>
-          <Text style={styles.examTitle}>Экзамен по профессии:</Text>
-          <Text style={styles.professionName}>{profession.name}</Text>
-
-          <View style={styles.examRules}>
-            <Text style={styles.rulesTitle}>Правила экзамена:</Text>
-            <Text style={styles.rule}>
-              • {EXAM_QUESTIONS_COUNT} случайных вопросов
-            </Text>
-            <Text style={styles.rule}>• Время: 10 минут</Text>
-            <Text style={styles.rule}>• Минимальный балл: 70%</Text>
-            <Text style={styles.rule}>• Можно менять ответы</Text>
-            <Text style={styles.rule}>
-              • Обязательно отвечать на каждый вопрос
-            </Text>
-          </View>
-
-          <TouchableOpacity style={styles.startExamButton} onPress={startExam}>
-            <Text style={styles.startExamButtonText}>Начать экзамен</Text>
-          </TouchableOpacity>
-        </View>
-      </SafeAreaView>
     );
   }
 
@@ -287,9 +263,15 @@ export default function ExamSessionScreen() {
   const isAnswered = isCurrentQuestionAnswered();
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView
+      style={[styles.container, { backgroundColor: colors.background }]}
+    >
+      <StatusBar barStyle={isDark ? "light-content" : "dark-content"} />
+
       <ExamHeader
-        professionName={profession.name}
+        currentQuestion={currentQuestionIndex + 1}
+        totalQuestions={examQuestions.length}
+        remainingTime={remainingTime} // <-- ПЕРЕДАЕМ ВРЕМЯ
         onBack={handleBack}
         timerActive={timerActive}
         onTimeUp={handleTimeUp}
@@ -311,22 +293,40 @@ export default function ExamSessionScreen() {
           totalQuestions={examQuestions.length}
           showCorrectAnswers={showCorrectAnswers}
         />
+      </ScrollView>
 
-        <View style={styles.navigationContainer}>
+      {/* Фиксированная кнопка навигации с учетом safe area */}
+      <View style={styles.navigationContainer}>
+        <View
+          style={[
+            styles.navigationContent,
+            { backgroundColor: colors.background },
+          ]}
+        >
           {isLastQuestion ? (
             <TouchableOpacity
               style={[
                 styles.finishButton,
+                { backgroundColor: colors.danger },
                 !isAnswered && styles.disabledButton,
+                isFinishing && styles.processingButton,
               ]}
               onPress={handleFinishExam}
-              disabled={!isAnswered}
+              disabled={!isAnswered || isFinishing}
             >
-              <Text style={styles.finishButtonText}>Завершить экзамен</Text>
+              {isFinishing ? (
+                <ActivityIndicator color="#FFFFFF" size="small" />
+              ) : (
+                <Text style={styles.finishButtonText}>Завершить экзамен</Text>
+              )}
             </TouchableOpacity>
           ) : (
             <TouchableOpacity
-              style={[styles.nextButton, !isAnswered && styles.disabledButton]}
+              style={[
+                styles.nextButton,
+                { backgroundColor: colors.danger },
+                !isAnswered && styles.disabledButton,
+              ]}
               onPress={handleNextQuestion}
               disabled={!isAnswered}
             >
@@ -334,7 +334,7 @@ export default function ExamSessionScreen() {
             </TouchableOpacity>
           )}
         </View>
-      </ScrollView>
+      </View>
     </SafeAreaView>
   );
 }
@@ -342,74 +342,40 @@ export default function ExamSessionScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#F8F9FA",
-  },
-  examIntro: {
-    flex: 1,
-    padding: 24,
-  },
-  examTitle: {
-    fontSize: 16,
-    color: "#8E8E93",
-    marginBottom: 8,
-    textAlign: "center",
-  },
-  professionName: {
-    fontSize: 24,
-    fontWeight: "700",
-    color: "#1C1C1E",
-    marginBottom: 32,
-    textAlign: "center",
-  },
-  examRules: {
-    backgroundColor: "#FFFFFF",
-    padding: 20,
-    borderRadius: 12,
-    marginBottom: 32,
-  },
-  rulesTitle: {
-    fontSize: 16,
-    fontWeight: "600",
-    color: "#1C1C1E",
-    marginBottom: 12,
-  },
-  rule: {
-    fontSize: 15,
-    color: "#8E8E93",
-    marginBottom: 6,
-  },
-  startExamButton: {
-    backgroundColor: "#FF3B30",
-    paddingVertical: 16,
-    borderRadius: 12,
-    alignItems: "center",
-    marginTop: "auto",
-  },
-  startExamButtonText: {
-    color: "#FFFFFF",
-    fontSize: 18,
-    fontWeight: "600",
   },
   scrollView: {
     flex: 1,
   },
   scrollContent: {
-    paddingBottom: 40,
+    paddingHorizontal: 16,
+    paddingTop: 16,
+    paddingBottom: 100,
   },
   navigationContainer: {
-    paddingHorizontal: 20,
-    marginTop: 24,
-    marginBottom: 40,
+    position: "absolute",
+    bottom: 0,
+    left: 0,
+    right: 0,
+  },
+  navigationContent: {
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    paddingBottom: 34,
+    borderTopWidth: 1,
+    borderTopColor: "rgba(0,0,0,0.1)",
   },
   nextButton: {
-    backgroundColor: "#FF3B30",
-    paddingVertical: 16,
     borderRadius: 12,
     alignItems: "center",
+    padding: 16,
     marginBottom: 16,
   },
   disabledButton: {
-    backgroundColor: "#C7C7CC",
+    opacity: 0.5,
+    marginBottom: 16,
+  },
+  processingButton: {
+    opacity: 0.7,
   },
   nextButtonText: {
     color: "#FFFFFF",
@@ -417,27 +383,14 @@ const styles = StyleSheet.create({
     fontWeight: "600",
   },
   finishButton: {
-    backgroundColor: "#FF3B30",
-    paddingVertical: 16,
+    padding: 16,
+    marginBottom: 16,
     borderRadius: 12,
     alignItems: "center",
-    marginBottom: 16,
   },
   finishButtonText: {
     color: "#FFFFFF",
     fontSize: 16,
     fontWeight: "600",
-  },
-  pageIndicator: {
-    fontSize: 14,
-    color: "#8E8E93",
-    textAlign: "center",
-    marginBottom: 8,
-  },
-  hintText: {
-    fontSize: 14,
-    color: "#FF3B30",
-    textAlign: "center",
-    fontStyle: "italic",
   },
 });

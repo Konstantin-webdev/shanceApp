@@ -1,10 +1,11 @@
 // components/ExamTimer.tsx
 import { useTheme } from "@/components/ThemeProvider";
-import React, { useEffect, useRef, useState } from "react";
+import React from "react";
 import { StyleSheet, Text, View } from "react-native";
 import Svg, { Circle } from "react-native-svg";
 
 interface ExamTimerProps {
+  remainingTime: number; // Оставшееся время в секундах
   isActive: boolean;
   onTimeUp: () => void;
   onExamComplete: (timeSpent: number) => void;
@@ -13,61 +14,24 @@ interface ExamTimerProps {
 const EXAM_DURATION = 10 * 60; // 10 минут
 
 export default function ExamTimer({
+  remainingTime, // Получаем время сверху
   isActive,
   onTimeUp,
   onExamComplete,
 }: ExamTimerProps) {
   const { colors } = useTheme();
-  const [remainingTime, setRemainingTime] = useState(EXAM_DURATION);
-  const [elapsedTime, setElapsedTime] = useState(0);
-  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const startTimeRef = useRef<number>(0);
 
-  useEffect(() => {
-    if (isActive) {
-      startTimeRef.current = Date.now();
+  // Прогресс: сколько времени уже прошло
+  const elapsedTime = EXAM_DURATION - remainingTime;
+  const progress = elapsedTime / EXAM_DURATION;
 
-      const tick = () => {
-        const now = Date.now();
-        const timePassed = Math.floor((now - startTimeRef.current) / 1000);
-        const newRemaining = Math.max(0, EXAM_DURATION - timePassed);
-
-        setRemainingTime(newRemaining);
-        setElapsedTime(timePassed);
-
-        if (newRemaining <= 0) {
-          onTimeUp();
-          return;
-        }
-
-        timerRef.current = setTimeout(tick, 1000);
-      };
-
-      timerRef.current = setTimeout(tick, 1000);
-    } else {
-      if (timerRef.current) {
-        clearTimeout(timerRef.current);
-        timerRef.current = null;
-      }
-
-      if (elapsedTime > 0) {
-        onExamComplete(elapsedTime);
-      }
-    }
-
-    return () => {
-      if (timerRef.current) {
-        clearTimeout(timerRef.current);
-      }
-    };
-  }, [isActive, onTimeUp, onExamComplete]);
-
-  const progress = elapsedTime / EXAM_DURATION; // Теперь progress = прошедшее время
   const radius = 22;
   const circumference = 2 * Math.PI * radius;
 
-  // Инвертируем: strokeDashoffset растет по мере прохождения времени
-  const strokeDashoffset = circumference * progress;
+  // Для движения ПО часовой стрелке: strokeDashoffset уменьшается
+  // Когда прогресс = 0 (время не прошло) → offset = полная окружность
+  // Когда прогресс = 1 (время вышло) → offset = 0
+  const strokeDashoffset = circumference - circumference * progress;
 
   // Цвет меняется от зеленого к красному по мере убывания времени
   const getTimerColor = () => {
@@ -102,7 +66,7 @@ export default function ExamTimer({
   return (
     <View style={styles.container}>
       <Svg width="50" height="50" viewBox="0 0 50 50">
-        {/* Зеленый фон - начальное состояние */}
+        {/* Фон круга */}
         <Circle
           cx="25"
           cy="25"
@@ -112,7 +76,7 @@ export default function ExamTimer({
           fill="none"
         />
 
-        {/* Инвертированный прогресс: "тает" по часовой стрелке */}
+        {/* Прогресс, движется ПО часовой стрелке */}
         <Circle
           cx="25"
           cy="25"

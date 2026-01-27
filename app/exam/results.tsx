@@ -1,25 +1,23 @@
 // app/exam/results.tsx
-import React, { useEffect } from "react";
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  StyleSheet,
-  ScrollView,
-  StatusBar,
-  Share,
-} from "react-native";
+import { useTheme } from "@/components/ThemeProvider";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import {
-  CheckCircle,
-  XCircle,
-  Home,
   Award,
-  Share2,
+  CheckCircle,
   Clock,
-  BookOpen,
-  ChevronRight,
+  Home,
+  RotateCcw,
+  XCircle,
 } from "lucide-react-native";
+import React, { useEffect } from "react";
+import {
+  ScrollView,
+  StatusBar,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { saveExamResult } from "../data/examResults";
 
 interface QuestionData {
@@ -32,6 +30,7 @@ interface QuestionData {
 
 export default function ExamResultsScreen() {
   const router = useRouter();
+  const { colors, isDark } = useTheme();
   const params = useLocalSearchParams<{
     correctAnswers: string;
     totalQuestions: string;
@@ -42,7 +41,7 @@ export default function ExamResultsScreen() {
     timeSpent?: string;
     questionsData?: string;
     answersData?: string;
-    saved?: string; // Флаг, что результат уже сохранен
+    saved?: string;
   }>();
 
   const correctAnswers = parseInt(params.correctAnswers || "0");
@@ -51,9 +50,14 @@ export default function ExamResultsScreen() {
   const professionId = params.professionId || "";
   const score = parseInt(params.score || "0");
   const passed = params.passed === "true";
-  const timeSpent = parseInt(params.timeSpent || "600");
+  const timeSpent = parseInt(params.timeSpent || "0");
 
-  // Парсим данные вопросов и ответов
+  const formatTime = (seconds: number) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins}:${secs.toString().padStart(2, "0")}`;
+  };
+
   const questionsData: QuestionData[] = params.questionsData
     ? JSON.parse(params.questionsData)
     : [];
@@ -61,10 +65,8 @@ export default function ExamResultsScreen() {
     ? JSON.parse(params.answersData)
     : {};
 
-  // Сохраняем результат при первом открытии экрана
   useEffect(() => {
     const saveResult = async () => {
-      // Проверяем, не сохранен ли уже результат
       if (params.saved !== "true") {
         try {
           await saveExamResult({
@@ -76,11 +78,6 @@ export default function ExamResultsScreen() {
             passed: passed,
             timeSpent: timeSpent,
           });
-
-          console.log("Результат экзамена сохранен");
-
-          // Если хотите, можно обновить URL с флагом сохранения
-          // Но обычно это не требуется, так как пользователь редко возвращается к результатам
         } catch (error) {
           console.error("Ошибка при сохранении результата:", error);
         }
@@ -89,20 +86,6 @@ export default function ExamResultsScreen() {
 
     saveResult();
   }, []);
-
-  const handleShare = async () => {
-    try {
-      const message = passed
-        ? `🎉 Я успешно сдал экзамен по профессии "${professionName}" с результатом ${score}%! Правильных ответов: ${correctAnswers} из ${totalQuestions}.`
-        : `📝 Я прошел экзамен по профессии "${professionName}" с результатом ${score}% (${correctAnswers} из ${totalQuestions} правильных ответов).`;
-
-      await Share.share({
-        message,
-      });
-    } catch (error) {
-      console.log("Ошибка при шаринге:", error);
-    }
-  };
 
   const handleGoHome = () => {
     router.push("/(tabs)/exam");
@@ -115,242 +98,318 @@ export default function ExamResultsScreen() {
     });
   };
 
-  const handleViewDetails = (questionIndex: number) => {
-    // Можно сделать модальное окно с деталями вопроса
-    // Пока просто показываем скролл
-  };
-
   const handleViewStats = () => {
     router.push("/(tabs)/stats");
   };
 
   return (
-    <ScrollView style={styles.container}>
-      <StatusBar barStyle="dark-content" />
+    <View style={[styles.container, { backgroundColor: colors.background }]}>
+      <StatusBar barStyle={isDark ? "light-content" : "dark-content"} />
 
-      <View style={styles.content}>
-        {/* Иконка результата */}
-        <View
-          style={[
-            styles.resultIconContainer,
-            passed ? styles.passedIcon : styles.failedIcon,
-          ]}
-        >
-          {passed ? (
-            <Award size={80} color="#34C759" />
-          ) : (
-            <XCircle size={80} color="#FF3B30" />
-          )}
-        </View>
-
-        {/* Заголовок */}
-        <Text style={styles.resultTitle}>
-          {passed ? "Экзамен сдан!" : "Экзамен не сдан"}
-        </Text>
-
-        <Text style={styles.professionName}>{professionName}</Text>
-
-        {/* Основная статистика */}
-        <View style={styles.statsCard}>
-          <View style={styles.scoreContainer}>
-            <Text style={styles.scoreLabel}>Ваш результат</Text>
-            <Text
-              style={[
-                styles.scoreValue,
-                passed ? styles.scorePassed : styles.scoreFailed,
-              ]}
-            >
-              {score}%
-            </Text>
+      <ScrollView
+        style={styles.scrollView}
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={styles.scrollContent}
+      >
+        <View style={styles.content}>
+          {/* Иконка результата */}
+          <View
+            style={[
+              styles.resultIconContainer,
+              passed
+                ? { backgroundColor: isDark ? "#1C3C1C" : "#F0FFF4" }
+                : { backgroundColor: isDark ? "#3C1C1C" : "#FFF0F0" },
+            ]}
+          >
+            {passed ? (
+              <Award size={80} color={colors.success} />
+            ) : (
+              <XCircle size={80} color={colors.danger} />
+            )}
           </View>
 
-          <View style={styles.statsGrid}>
-            <View style={styles.statItem}>
-              <CheckCircle size={24} color="#34C759" />
-              <Text style={styles.statNumber}>{correctAnswers}</Text>
-              <Text style={styles.statLabel}>Правильно</Text>
-            </View>
+          {/* Заголовок */}
+          <Text style={[styles.resultTitle, { color: colors.text }]}>
+            {passed ? "Экзамен сдан!" : "Экзамен не сдан"}
+          </Text>
 
-            <View style={styles.statDivider} />
+          <Text style={[styles.professionName, { color: colors.muted }]}>
+            {professionName}
+          </Text>
 
-            <View style={styles.statItem}>
-              <XCircle size={24} color="#FF3B30" />
-              <Text style={styles.statNumber}>
-                {totalQuestions - correctAnswers}
+          {/* Основная статистика */}
+          <View style={[styles.statsCard, { backgroundColor: colors.card }]}>
+            <View style={styles.scoreContainer}>
+              <Text style={[styles.scoreLabel, { color: colors.muted }]}>
+                Ваш результат
               </Text>
-              <Text style={styles.statLabel}>Ошибок</Text>
-            </View>
-
-            <View style={styles.statDivider} />
-
-            <View style={styles.statItem}>
-              <Clock size={24} color="#007AFF" />
-              <Text style={styles.statNumber}>
-                {Math.floor(timeSpent / 60)}:
-                {String(timeSpent % 60).padStart(2, "0")}
-              </Text>
-              <Text style={styles.statLabel}>Время</Text>
-            </View>
-          </View>
-
-          <View style={styles.passIndicator}>
-            <View style={styles.passBar}>
-              <View
+              <Text
                 style={[
-                  styles.passProgress,
-                  { width: `${score}%` },
-                  passed ? styles.passProgressSuccess : styles.passProgressFail,
+                  styles.scoreValue,
+                  passed ? { color: colors.success } : { color: colors.danger },
                 ]}
-              />
+              >
+                {score}%
+              </Text>
             </View>
-            <View style={styles.passThreshold}>
-              <View style={styles.thresholdLine} />
-              <Text style={styles.thresholdText}>70% - порог</Text>
+
+            <View style={styles.statsGrid}>
+              <View style={styles.statItem}>
+                <CheckCircle size={24} color={colors.success} />
+                <Text style={[styles.statNumber, { color: colors.text }]}>
+                  {correctAnswers}
+                </Text>
+                <Text style={[styles.statLabel, { color: colors.muted }]}>
+                  Правильно
+                </Text>
+              </View>
+
+              <View
+                style={[styles.statDivider, { backgroundColor: colors.border }]}
+              />
+
+              <View style={styles.statItem}>
+                <XCircle size={24} color={colors.danger} />
+                <Text style={[styles.statNumber, { color: colors.text }]}>
+                  {totalQuestions - correctAnswers}
+                </Text>
+                <Text style={[styles.statLabel, { color: colors.muted }]}>
+                  Ошибок
+                </Text>
+              </View>
+
+              <View
+                style={[styles.statDivider, { backgroundColor: colors.border }]}
+              />
+
+              <View style={styles.statItem}>
+                <Clock size={24} color={colors.primary} />
+                <Text style={[styles.statNumber, { color: colors.text }]}>
+                  {formatTime(timeSpent)}
+                </Text>
+                <Text style={[styles.statLabel, { color: colors.muted }]}>
+                  Время
+                </Text>
+              </View>
+            </View>
+
+            <View style={styles.passIndicator}>
+              <View
+                style={[styles.passBar, { backgroundColor: colors.border }]}
+              >
+                <View
+                  style={[
+                    styles.passProgress,
+                    { width: `${Math.min(score, 100)}%` },
+                    passed
+                      ? { backgroundColor: colors.success }
+                      : { backgroundColor: colors.danger },
+                  ]}
+                />
+              </View>
+              <View style={styles.passThreshold}>
+                <View
+                  style={[
+                    styles.thresholdLine,
+                    { backgroundColor: colors.primary },
+                  ]}
+                />
+                <Text style={[styles.thresholdText, { color: colors.primary }]}>
+                  70% - порог
+                </Text>
+              </View>
             </View>
           </View>
-        </View>
 
-        {/* Детали по вопросам */}
-        {questionsData.length > 0 && (
-          <View style={styles.detailsCard}>
-            <Text style={styles.detailsTitle}>Детали по вопросам:</Text>
+          {/* Детали по вопросам */}
+          {questionsData.length > 0 && (
+            <View style={styles.detailsCard}>
+              <Text style={[styles.detailsTitle, { color: colors.text }]}>
+                Детали по вопросам:
+              </Text>
 
-            <View style={styles.questionsList}>
-              {questionsData.map((question, index) => {
-                const userAnswer = answersData[index];
-                const isCorrect = userAnswer === question.correctAnswer;
-                const correctOption = question.options.find(
-                  (opt) => opt.id === question.correctAnswer,
-                );
-                const userOption = question.options.find(
-                  (opt) => opt.id === userAnswer,
-                );
+              <View style={styles.questionsList}>
+                {questionsData.map((question, index) => {
+                  const userAnswer = answersData[index];
+                  const isCorrect = userAnswer === question.correctAnswer;
+                  const correctOption = question.options.find(
+                    (opt) => opt.id === question.correctAnswer,
+                  );
+                  const userOption = question.options.find(
+                    (opt) => opt.id === userAnswer,
+                  );
 
-                return (
-                  <TouchableOpacity
-                    key={question.id}
-                    style={styles.questionItem}
-                    onPress={() => handleViewDetails(index)}
-                  >
-                    <View style={styles.questionItemHeader}>
-                      <Text style={styles.questionItemNumber}>
-                        Вопрос {index + 1}
-                      </Text>
-                      <View
-                        style={[
-                          styles.questionItemStatus,
-                          isCorrect
-                            ? styles.questionItemCorrect
-                            : styles.questionItemIncorrect,
-                        ]}
-                      >
+                  return (
+                    <View
+                      key={question.id}
+                      style={[
+                        styles.questionItem,
+                        {
+                          backgroundColor: isDark ? "#2C2C2E" : "#F8F9FA",
+                          borderColor: colors.border,
+                        },
+                      ]}
+                    >
+                      <View style={styles.questionItemHeader}>
                         <Text
                           style={[
-                            styles.questionItemStatusText,
-                            isCorrect
-                              ? styles.questionItemCorrectText
-                              : styles.questionItemIncorrectText,
+                            styles.questionItemNumber,
+                            { color: colors.primary },
                           ]}
                         >
-                          {isCorrect ? "✓" : "✗"}
+                          Вопрос {index + 1}
                         </Text>
-                      </View>
-                    </View>
-
-                    <Text style={styles.questionItemText} numberOfLines={2}>
-                      {question.text}
-                    </Text>
-
-                    <View style={styles.questionItemAnswers}>
-                      <View style={styles.answerRow}>
-                        <Text style={styles.answerLabel}>Ваш ответ:</Text>
-                        <Text
+                        <View
                           style={[
-                            styles.answerValue,
+                            styles.questionItemStatus,
                             isCorrect
-                              ? styles.correctAnswerValue
-                              : styles.incorrectAnswerValue,
+                              ? { backgroundColor: colors.success + "20" }
+                              : { backgroundColor: colors.danger + "20" },
                           ]}
                         >
-                          {userOption?.text || "Не ответил"}
-                        </Text>
-                      </View>
-
-                      {!isCorrect && correctOption && (
-                        <View style={styles.answerRow}>
-                          <Text style={styles.answerLabel}>Правильный:</Text>
-                          <Text style={styles.correctAnswerValue}>
-                            {correctOption.text}
+                          <Text
+                            style={[
+                              styles.questionItemStatusText,
+                              isCorrect
+                                ? { color: colors.success }
+                                : { color: colors.danger },
+                            ]}
+                          >
+                            {isCorrect ? "✓" : "✗"}
                           </Text>
                         </View>
-                      )}
+                      </View>
+
+                      <View style={styles.questionContent}>
+                        <Text
+                          style={[styles.questionText, { color: colors.text }]}
+                        >
+                          {question.text}
+                        </Text>
+                      </View>
+
+                      <View style={styles.answersContainer}>
+                        <View style={styles.answerRow}>
+                          <Text
+                            style={[
+                              styles.answerLabel,
+                              { color: colors.muted },
+                            ]}
+                          >
+                            Ваш ответ:
+                          </Text>
+                          <View style={styles.answerTextContainer}>
+                            <Text
+                              style={[
+                                styles.answerText,
+                                isCorrect
+                                  ? { color: colors.success }
+                                  : { color: colors.danger },
+                              ]}
+                            >
+                              {userOption?.text || "Не ответил"}
+                            </Text>
+                          </View>
+                        </View>
+
+                        {!isCorrect && correctOption && (
+                          <View style={styles.answerRow}>
+                            <Text
+                              style={[
+                                styles.answerLabel,
+                                { color: colors.muted },
+                              ]}
+                            >
+                              Правильный:
+                            </Text>
+                            <View style={styles.answerTextContainer}>
+                              <Text
+                                style={[
+                                  styles.correctAnswerText,
+                                  { color: colors.success },
+                                ]}
+                              >
+                                {correctOption.text}
+                              </Text>
+                            </View>
+                          </View>
+                        )}
+                      </View>
                     </View>
-
-                    <ChevronRight
-                      size={16}
-                      color="#8E8E93"
-                      style={styles.chevronIcon}
-                    />
-                  </TouchableOpacity>
-                );
-              })}
+                  );
+                })}
+              </View>
             </View>
-          </View>
-        )}
-
-        {/* Кнопки действий */}
-        <View style={styles.actionsContainer}>
-          <TouchableOpacity
-            style={[styles.actionButton, styles.statsButton]}
-            onPress={handleViewStats}
-          >
-            <Award size={20} color="#34C759" />
-            <Text style={[styles.actionButtonText, styles.statsButtonText]}>
-              Посмотреть статистику
-            </Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity style={styles.actionButton} onPress={handleShare}>
-            <Share2 size={20} color="#007AFF" />
-            <Text style={styles.actionButtonText}>Поделиться</Text>
-          </TouchableOpacity>
-
-          {!passed && (
-            <TouchableOpacity
-              style={[styles.actionButton, styles.retryButton]}
-              onPress={handleRetry}
-            >
-              <Clock size={20} color="#FFFFFF" />
-              <Text style={[styles.actionButtonText, styles.retryButtonText]}>
-                Попробовать снова
-              </Text>
-            </TouchableOpacity>
           )}
 
-          <TouchableOpacity
-            style={[styles.actionButton, styles.homeButton]}
-            onPress={handleGoHome}
-          >
-            <Home size={20} color="#FFFFFF" />
-            <Text style={[styles.actionButtonText, styles.homeButtonText]}>
-              К списку экзаменов
-            </Text>
-          </TouchableOpacity>
+          {/* Кнопки действий */}
+          <View style={styles.actionsContainer}>
+            <TouchableOpacity
+              style={[
+                styles.actionButton,
+                styles.statsButton,
+                { borderColor: colors.success },
+              ]}
+              onPress={handleViewStats}
+            >
+              <Award size={20} color={colors.success} />
+              <Text
+                style={[styles.actionButtonText, { color: colors.success }]}
+              >
+                Статистика
+              </Text>
+            </TouchableOpacity>
+
+            {!passed && (
+              <TouchableOpacity
+                style={[
+                  styles.actionButton,
+                  styles.retryButton,
+                  { backgroundColor: colors.warning },
+                ]}
+                onPress={handleRetry}
+              >
+                <RotateCcw size={20} color="#FFFFFF" />
+                <Text style={[styles.actionButtonText, { color: "#FFFFFF" }]}>
+                  Снова
+                </Text>
+              </TouchableOpacity>
+            )}
+
+            <TouchableOpacity
+              style={[
+                styles.actionButton,
+                styles.homeButton,
+                { backgroundColor: colors.primary },
+              ]}
+              onPress={handleGoHome}
+            >
+              <Home size={20} color="#FFFFFF" />
+              <Text style={[styles.actionButtonText, { color: "#FFFFFF" }]}>
+                На главную
+              </Text>
+            </TouchableOpacity>
+          </View>
         </View>
-      </View>
-    </ScrollView>
+      </ScrollView>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#F8F9FA",
+  },
+  scrollView: {
+    flex: 1,
+  },
+  scrollContent: {
+    flexGrow: 1,
   },
   content: {
     flex: 1,
-    padding: 24,
-    paddingTop: 60,
+    padding: 16,
+    paddingTop: 24,
   },
   resultIconContainer: {
     width: 120,
@@ -359,56 +418,35 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     alignSelf: "center",
-    marginBottom: 24,
-  },
-  passedIcon: {
-    backgroundColor: "#F0FFF4",
-  },
-  failedIcon: {
-    backgroundColor: "#FFF0F0",
+    marginBottom: 16,
   },
   resultTitle: {
-    fontSize: 32,
+    fontSize: 28,
     fontWeight: "700",
-    color: "#1C1C1E",
     textAlign: "center",
     marginBottom: 8,
   },
   professionName: {
-    fontSize: 18,
-    color: "#8E8E93",
+    fontSize: 16,
     textAlign: "center",
-    marginBottom: 32,
+    marginBottom: 24,
   },
   statsCard: {
-    backgroundColor: "#FFFFFF",
     borderRadius: 16,
-    padding: 24,
-    marginBottom: 24,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
+    padding: 20,
+    marginBottom: 20,
   },
   scoreContainer: {
     alignItems: "center",
     marginBottom: 24,
   },
   scoreLabel: {
-    fontSize: 16,
-    color: "#8E8E93",
-    marginBottom: 8,
+    fontSize: 14,
+    marginBottom: 4,
   },
   scoreValue: {
-    fontSize: 56,
+    fontSize: 48,
     fontWeight: "700",
-  },
-  scorePassed: {
-    color: "#34C759",
-  },
-  scoreFailed: {
-    color: "#FF3B30",
   },
   statsGrid: {
     flexDirection: "row",
@@ -420,43 +458,33 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   statNumber: {
-    fontSize: 28,
+    fontSize: 24,
     fontWeight: "700",
-    color: "#1C1C1E",
     marginTop: 8,
     marginBottom: 4,
   },
   statLabel: {
-    fontSize: 14,
-    color: "#8E8E93",
+    fontSize: 12,
   },
   statDivider: {
     width: 1,
-    backgroundColor: "#E5E5EA",
   },
   passIndicator: {
     marginTop: 16,
   },
   passBar: {
-    height: 8,
-    backgroundColor: "#F2F2F7",
-    borderRadius: 4,
+    height: 6,
+    borderRadius: 3,
     overflow: "hidden",
   },
   passProgress: {
     height: "100%",
-    borderRadius: 4,
-  },
-  passProgressSuccess: {
-    backgroundColor: "#34C759",
-  },
-  passProgressFail: {
-    backgroundColor: "#FF3B30",
+    borderRadius: 3,
   },
   passThreshold: {
     marginTop: 8,
     position: "relative",
-    height: 20,
+    height: 16,
   },
   thresholdLine: {
     position: "absolute",
@@ -464,49 +492,39 @@ const styles = StyleSheet.create({
     top: 0,
     bottom: 0,
     width: 2,
-    backgroundColor: "#007AFF",
   },
   thresholdText: {
     position: "absolute",
     left: "70%",
-    top: 24,
-    fontSize: 12,
-    color: "#007AFF",
-    transform: [{ translateX: -25 }],
+    top: 20,
+    fontSize: 10,
+    transform: [{ translateX: -20 }],
   },
   detailsCard: {
-    backgroundColor: "#FFFFFF",
-    borderRadius: 16,
-    padding: 24,
-    marginBottom: 24,
+    marginBottom: 20,
   },
   detailsTitle: {
-    fontSize: 20,
+    fontSize: 18,
     fontWeight: "600",
-    color: "#1C1C1E",
-    marginBottom: 16,
+    marginBottom: 12,
   },
   questionsList: {
     gap: 12,
   },
   questionItem: {
-    backgroundColor: "#F8F9FA",
     borderRadius: 12,
     padding: 16,
     borderWidth: 1,
-    borderColor: "#E5E5EA",
-    position: "relative",
   },
   questionItemHeader: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    marginBottom: 8,
+    marginBottom: 12,
   },
   questionItemNumber: {
     fontSize: 14,
     fontWeight: "600",
-    color: "#007AFF",
   },
   questionItemStatus: {
     width: 24,
@@ -515,94 +533,74 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-  questionItemCorrect: {
-    backgroundColor: "#F0FFF4",
-  },
-  questionItemIncorrect: {
-    backgroundColor: "#FFF0F0",
-  },
   questionItemStatusText: {
     fontSize: 12,
     fontWeight: "bold",
   },
-  questionItemCorrectText: {
-    color: "#34C759",
-  },
-  questionItemIncorrectText: {
-    color: "#FF3B30",
-  },
-  questionItemText: {
-    fontSize: 14,
-    color: "#1C1C1E",
+  questionContent: {
     marginBottom: 12,
+  },
+  questionText: {
+    fontSize: 14,
     lineHeight: 20,
   },
-  questionItemAnswers: {
-    gap: 6,
+  answersContainer: {
+    gap: 8,
   },
   answerRow: {
     flexDirection: "row",
-    alignItems: "center",
+    alignItems: "flex-start",
   },
   answerLabel: {
     fontSize: 12,
-    color: "#8E8E93",
-    width: 80,
+    minWidth: 80,
+    marginTop: 2,
   },
-  answerValue: {
-    fontSize: 14,
+  answerTextContainer: {
     flex: 1,
+    flexShrink: 1,
+  },
+  answerText: {
+    fontSize: 13,
     fontWeight: "500",
+    lineHeight: 18,
+    flexWrap: "wrap",
   },
-  correctAnswerValue: {
-    color: "#34C759",
-  },
-  incorrectAnswerValue: {
-    color: "#FF3B30",
-  },
-  chevronIcon: {
-    position: "absolute",
-    right: 16,
-    top: "50%",
-    marginTop: -8,
+  correctAnswerText: {
+    fontSize: 13,
+    fontWeight: "500",
+    lineHeight: 18,
+    flexWrap: "wrap",
   },
   actionsContainer: {
-    gap: 12,
-    marginBottom: 40,
+    flexDirection: "row",
+    flexWrap: "wrap",
+    gap: 10,
+    marginBottom: 20,
+    justifyContent: "center",
   },
   actionButton: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    padding: 16,
-    borderRadius: 12,
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    borderRadius: 10,
     borderWidth: 1,
-    borderColor: "#007AFF",
     gap: 8,
-  },
-  actionButtonText: {
-    fontSize: 16,
-    fontWeight: "600",
-    color: "#007AFF",
+    minWidth: 120,
   },
   statsButton: {
-    borderColor: "#34C759",
-  },
-  statsButtonText: {
-    color: "#34C759",
+    borderWidth: 1,
   },
   retryButton: {
-    backgroundColor: "#FF9500",
-    borderColor: "#FF9500",
-  },
-  retryButtonText: {
-    color: "#FFFFFF",
+    borderWidth: 0,
   },
   homeButton: {
-    backgroundColor: "#007AFF",
-    borderColor: "#007AFF",
+    borderWidth: 0,
   },
-  homeButtonText: {
-    color: "#FFFFFF",
+  actionButtonText: {
+    fontSize: 14,
+    fontWeight: "600",
   },
 });

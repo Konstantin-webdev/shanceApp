@@ -1,7 +1,7 @@
+import { useTheme } from "@/components/ThemeProvider";
 import React from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import type { IQuestion } from "../app/types/questions";
-import { useTheme } from "@/components/ThemeProvider";
 
 interface QuestionCardProps {
   question: IQuestion;
@@ -47,10 +47,10 @@ export default function QuestionCard({
   const styles = StyleSheet.create({
     container: {
       flex: 1,
-      padding: 20,
+      padding: 7,
     },
     questionHeader: {
-      marginBottom: 16,
+      marginBottom: 7,
     },
     questionNumber: {
       fontSize: 14,
@@ -60,7 +60,7 @@ export default function QuestionCard({
       backgroundColor: colors.card,
       padding: 20,
       borderRadius: 12,
-      marginBottom: 20,
+      marginBottom: 10,
       borderWidth: 1,
       borderColor: colors.border,
     },
@@ -72,7 +72,7 @@ export default function QuestionCard({
     },
     optionsContainer: {
       gap: 12,
-      marginBottom: 20,
+      marginBottom: 7,
     },
     optionButton: {
       backgroundColor: colors.card,
@@ -122,12 +122,6 @@ export default function QuestionCard({
 
   return (
     <View style={styles.container}>
-      <View style={styles.questionHeader}>
-        <Text style={styles.questionNumber}>
-          Вопрос {questionNumber} из {totalQuestions}
-        </Text>
-      </View>
-
       <View style={styles.questionCard}>
         <Text style={styles.questionText}>{question.text}</Text>
       </View>
@@ -137,7 +131,6 @@ export default function QuestionCard({
           const isSelected = selectedAnswer === option.id;
           const isCorrect = isCorrectAnswer(option.id);
 
-          // Форматируем текст только для правильных ответов в режиме обучения
           const displayText =
             showCorrectAnswers && isCorrect
               ? formatCorrectAnswerText(option.text)
