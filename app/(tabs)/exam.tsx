@@ -191,7 +191,7 @@ export default function ExamScreen() {
               <View style={styles.featureTextContainer}>
                 <Text style={styles.featureTitle}>Ограничение по времени</Text>
                 <Text style={styles.featureDescription}>
-                  20 минут на 10 вопросов
+                  10 минут на 10 вопросов (не тормози!)
                 </Text>
               </View>
             </View>
@@ -211,7 +211,7 @@ export default function ExamScreen() {
               <View style={styles.featureTextContainer}>
                 <Text style={styles.featureTitle}>Сертификат</Text>
                 <Text style={styles.featureDescription}>
-                  Результат сохраняется в истории
+                  Результат сохраняется в истории и грамоту получишь
                 </Text>
               </View>
             </View>
@@ -219,7 +219,7 @@ export default function ExamScreen() {
             <View style={styles.rules}>
               <Text style={styles.rulesTitle}>Правила:</Text>
               <Text style={styles.ruleText}>• 10 случайных вопросов</Text>
-              <Text style={styles.ruleText}>• Таймер 20 минут</Text>
+              <Text style={styles.ruleText}>• Таймер 10 минут</Text>
               <Text style={styles.ruleText}>
                 • Нет возможности исправить ответ
               </Text>

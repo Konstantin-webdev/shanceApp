@@ -1,17 +1,17 @@
 import { IProfession } from "../types/profession";
 
 export const professions: IProfession[] = [
-  { id: 38, name: "Электромонтер по ремонту ВЛЭП", questionCount: 201 },
+  { id: 38, name: "Электромонтер по ремонту ВЛЭП", questionCount: 201 }, //done
   {
     id: 78,
     name: "Электромонтер по ремонту электрооборудования",
     questionCount: 216,
-  },
+  }, //done
   { id: 2, name: "Водитель", questionCount: 370 },
+  { id: 20, name: "Слесарь-ремонтник", questionCount: 235 },
+  { id: 3, name: "Слесарь АВР", questionCount: 237 }, //done
   { id: 14, name: "Электромонтер ЭХЗ", questionCount: 237 },
   { id: 16, name: "Электрогазосварщик", questionCount: 295 },
-  { id: 20, name: "Слесарь-ремонтник", questionCount: 235 },
-  { id: 3, name: "Слесарь АВР", questionCount: 237 },
   { id: 47, name: "Горничная", questionCount: 85 },
   { id: 25, name: "Уборщик", questionCount: 85 },
   { id: 42, name: "Крановщик", questionCount: 210 },
@@ -67,7 +67,7 @@ export const searchProfessions = (searchText: string): IProfession[] => {
 
   const lowerSearch = searchText.toLowerCase();
   return professions.filter((profession) =>
-    profession.name.toLowerCase().includes(lowerSearch)
+    profession.name.toLowerCase().includes(lowerSearch),
   );
 };
 
