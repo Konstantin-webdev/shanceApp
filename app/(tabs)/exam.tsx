@@ -1,3 +1,4 @@
+import { useTheme } from "@/components/ThemeProvider"; // Добавьте импорт
 import { useRouter } from "expo-router";
 import { AlertCircle, Award, Clock, Play } from "lucide-react-native";
 import React, { useState } from "react";
@@ -8,13 +9,15 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
 import { useProfessionStore } from "../store/useProfessionStore";
 
 export default function ExamScreen() {
   const router = useRouter();
   const { selectedProfession } = useProfessionStore();
   const [isLoading, setIsLoading] = useState(false);
+
+  // Используем тему
+  const { colors } = useTheme();
 
   const handleStartExam = () => {
     if (!selectedProfession) return;
@@ -27,8 +30,126 @@ export default function ExamScreen() {
     setIsLoading(false);
   };
 
+  // Создаем стили с использованием цветов темы
+  const styles = StyleSheet.create({
+    safeArea: {
+      flex: 1,
+      backgroundColor: colors.background,
+    },
+    container: {
+      flex: 1,
+    },
+    header: {
+      paddingHorizontal: 20,
+      paddingTop: 12, // Уменьшен отступ сверху
+      paddingBottom: 16,
+      backgroundColor: colors.card,
+    },
+    title: {
+      fontSize: 28,
+      fontWeight: "bold",
+      color: colors.danger, // Красный цвет для экзамена
+    },
+    subtitle: {
+      fontSize: 14,
+      color: colors.muted,
+      marginTop: 4,
+    },
+    content: {
+      padding: 20,
+    },
+    professionInfo: {
+      backgroundColor: colors.card,
+      padding: 16,
+      borderRadius: 12,
+      marginTop: 16,
+      marginBottom: 20,
+      borderWidth: 1,
+      borderColor: colors.danger + "20", // 20% прозрачности danger цвета
+    },
+    professionName: {
+      fontSize: 18,
+      fontWeight: "600",
+      color: colors.text,
+    },
+    professionStats: {
+      fontSize: 14,
+      color: colors.danger,
+      marginTop: 4,
+    },
+    startButton: {
+      backgroundColor: colors.danger,
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "center",
+      paddingVertical: 14,
+      borderRadius: 12,
+      marginTop: 8,
+      marginBottom: 24,
+      gap: 8,
+    },
+    disabledButton: {
+      backgroundColor: colors.muted,
+    },
+    startButtonText: {
+      color: "#FFFFFF", // Белый остается всегда белым
+      fontSize: 16,
+      fontWeight: "600",
+    },
+    featuresCard: {
+      backgroundColor: colors.card,
+      padding: 16,
+      borderRadius: 12,
+      borderWidth: 1,
+      borderColor: colors.border,
+    },
+    featuresTitle: {
+      fontSize: 18,
+      fontWeight: "700",
+      color: colors.text,
+      marginBottom: 16,
+    },
+    featureItem: {
+      flexDirection: "row",
+      alignItems: "flex-start",
+      marginBottom: 16,
+    },
+    featureTextContainer: {
+      flex: 1,
+      marginLeft: 12,
+    },
+    featureTitle: {
+      fontSize: 15,
+      fontWeight: "600",
+      color: colors.text,
+      marginBottom: 2,
+    },
+    featureDescription: {
+      fontSize: 13,
+      color: colors.muted,
+    },
+    rules: {
+      marginTop: 20,
+      paddingTop: 16,
+      borderTopWidth: 1,
+      borderTopColor: colors.border,
+    },
+    rulesTitle: {
+      fontSize: 15,
+      fontWeight: "600",
+      color: colors.text,
+      marginBottom: 10,
+    },
+    ruleText: {
+      fontSize: 14,
+      color: colors.muted,
+      marginBottom: 6,
+      marginLeft: 4,
+    },
+  });
+
   return (
-    <SafeAreaView style={styles.safeArea}>
+    <View style={styles.safeArea}>
       <ScrollView style={styles.container}>
         <View style={styles.header}>
           <Text style={styles.title}>Экзамен</Text>
@@ -66,7 +187,7 @@ export default function ExamScreen() {
             <Text style={styles.featuresTitle}>Особенности экзамена:</Text>
 
             <View style={styles.featureItem}>
-              <Clock size={20} color="#FF3B30" />
+              <Clock size={20} color={colors.danger} />
               <View style={styles.featureTextContainer}>
                 <Text style={styles.featureTitle}>Ограничение по времени</Text>
                 <Text style={styles.featureDescription}>
@@ -76,7 +197,7 @@ export default function ExamScreen() {
             </View>
 
             <View style={styles.featureItem}>
-              <AlertCircle size={20} color="#FF9500" />
+              <AlertCircle size={20} color={colors.warning} />
               <View style={styles.featureTextContainer}>
                 <Text style={styles.featureTitle}>Без подсказок</Text>
                 <Text style={styles.featureDescription}>
@@ -86,7 +207,7 @@ export default function ExamScreen() {
             </View>
 
             <View style={styles.featureItem}>
-              <Award size={20} color="#007AFF" />
+              <Award size={20} color={colors.primary} />
               <View style={styles.featureTextContainer}>
                 <Text style={styles.featureTitle}>Сертификат</Text>
                 <Text style={styles.featureDescription}>
@@ -107,124 +228,6 @@ export default function ExamScreen() {
           </View>
         </View>
       </ScrollView>
-    </SafeAreaView>
+    </View>
   );
 }
-
-const styles = StyleSheet.create({
-  safeArea: {
-    flex: 1,
-    backgroundColor: "#F8F9FA",
-  },
-  container: {
-    flex: 1,
-    backgroundColor: "#F8F9FA",
-  },
-  header: {
-    paddingHorizontal: 20,
-    paddingTop: 40,
-    paddingBottom: 20,
-    backgroundColor: "#FFFFFF",
-  },
-  title: {
-    fontSize: 32,
-    fontWeight: "bold",
-    color: "#FF3B30",
-  },
-  subtitle: {
-    fontSize: 16,
-    color: "#8E8E93",
-    marginTop: 8,
-  },
-  content: {
-    padding: 20,
-  },
-  professionInfo: {
-    backgroundColor: "#FFFFFF",
-    padding: 16,
-    borderRadius: 12,
-    marginTop: 16,
-    marginBottom: 20,
-    borderWidth: 1,
-    borderColor: "#FFE5E5",
-  },
-  professionName: {
-    fontSize: 18,
-    fontWeight: "600",
-    color: "#1C1C1E",
-  },
-  professionStats: {
-    fontSize: 14,
-    color: "#FF3B30",
-    marginTop: 4,
-  },
-  startButton: {
-    backgroundColor: "#FF3B30",
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    paddingVertical: 16,
-    borderRadius: 12,
-    marginTop: 8,
-    marginBottom: 30,
-    gap: 8,
-  },
-  disabledButton: {
-    backgroundColor: "#C7C7CC",
-  },
-  startButtonText: {
-    color: "#FFFFFF",
-    fontSize: 18,
-    fontWeight: "600",
-  },
-  featuresCard: {
-    backgroundColor: "#FFFFFF",
-    padding: 20,
-    borderRadius: 12,
-    borderWidth: 1,
-    borderColor: "#FFE5E5",
-  },
-  featuresTitle: {
-    fontSize: 20,
-    fontWeight: "700",
-    color: "#1C1C1E",
-    marginBottom: 20,
-  },
-  featureItem: {
-    flexDirection: "row",
-    alignItems: "flex-start",
-    marginBottom: 20,
-  },
-  featureTextContainer: {
-    flex: 1,
-    marginLeft: 12,
-  },
-  featureTitle: {
-    fontSize: 16,
-    fontWeight: "600",
-    color: "#1C1C1E",
-    marginBottom: 2,
-  },
-  featureDescription: {
-    fontSize: 14,
-    color: "#8E8E93",
-  },
-  rules: {
-    marginTop: 24,
-    paddingTop: 20,
-    borderTopWidth: 1,
-    borderTopColor: "#F2F2F7",
-  },
-  rulesTitle: {
-    fontSize: 16,
-    fontWeight: "600",
-    color: "#1C1C1E",
-    marginBottom: 12,
-  },
-  ruleText: {
-    fontSize: 15,
-    color: "#8E8E93",
-    marginBottom: 8,
-    marginLeft: 4,
-  },
-});

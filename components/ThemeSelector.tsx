@@ -1,16 +1,19 @@
+// components/ThemeSelector.tsx
+import { ThemeType, useThemeStore } from "@/app/store/useThemeStore";
+import { useTheme } from "@/components/ThemeProvider"; // Добавьте этот импорт
+import { Check, Moon, Smartphone, Sun } from "lucide-react-native";
 import React from "react";
 import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
   Appearance,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
 } from "react-native";
-import { Moon, Sun, Smartphone, Check } from "lucide-react-native";
-import { ThemeType, useThemeStore } from "@/app/store/useThemeStore";
 
 const ThemeSelector = () => {
   const { theme, setTheme } = useThemeStore();
+  const { colors } = useTheme(); // Получаем цвета темы
 
   const themeOptions: Array<{
     id: ThemeType;
@@ -21,19 +24,19 @@ const ThemeSelector = () => {
     {
       id: "light",
       label: "Светлая",
-      icon: <Sun size={24} color="#FF9500" />,
+      icon: <Sun size={24} color={colors.warning} />,
       description: "Всегда светлая тема",
     },
     {
       id: "dark",
       label: "Тёмная",
-      icon: <Moon size={24} color="#5856D6" />,
+      icon: <Moon size={24} color={colors.secondary} />,
       description: "Всегда тёмная тема",
     },
     {
       id: "auto",
       label: "Как в системе",
-      icon: <Smartphone size={24} color="#34C759" />,
+      icon: <Smartphone size={24} color={colors.success} />,
       description: "Следует за настройками телефона",
     },
   ];
@@ -49,6 +52,73 @@ const ThemeSelector = () => {
     }
     return theme;
   };
+
+  const styles = StyleSheet.create({
+    container: {
+      padding: 16,
+    },
+    title: {
+      fontSize: 20,
+      fontWeight: "600",
+      color: colors.text,
+      marginBottom: 8,
+    },
+    subtitle: {
+      fontSize: 14,
+      color: colors.muted,
+      marginBottom: 20,
+    },
+    currentTheme: {
+      fontWeight: "600",
+      color: colors.primary,
+    },
+    optionsContainer: {
+      gap: 12,
+    },
+    optionCard: {
+      backgroundColor: colors.card,
+      borderRadius: 12,
+      padding: 16,
+      borderWidth: 2,
+      borderColor: colors.border,
+    },
+    optionCardSelected: {
+      backgroundColor: colors.primary + "20", // 20% opacity
+      borderColor: colors.primary,
+    },
+    optionContent: {
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "space-between",
+    },
+    optionHeader: {
+      flexDirection: "row",
+      alignItems: "center",
+      flex: 1,
+    },
+    optionTexts: {
+      marginLeft: 12,
+      flex: 1,
+    },
+    optionLabel: {
+      fontSize: 16,
+      fontWeight: "500",
+      color: colors.text,
+      marginBottom: 2,
+    },
+    optionDescription: {
+      fontSize: 14,
+      color: colors.muted,
+    },
+    checkmark: {
+      width: 24,
+      height: 24,
+      borderRadius: 12,
+      backgroundColor: colors.primary + "20",
+      alignItems: "center",
+      justifyContent: "center",
+    },
+  });
 
   return (
     <View style={styles.container}>
@@ -74,7 +144,6 @@ const ThemeSelector = () => {
               style={[
                 styles.optionCard,
                 isSelected && styles.optionCardSelected,
-                { borderColor: isSelected ? "#007AFF" : "#E5E5EA" },
               ]}
               onPress={() => setTheme(option.id)}
               activeOpacity={0.7}
@@ -92,7 +161,7 @@ const ThemeSelector = () => {
 
                 {isSelected && (
                   <View style={styles.checkmark}>
-                    <Check size={20} color="#007AFF" />
+                    <Check size={20} color={colors.primary} />
                   </View>
                 )}
               </View>
@@ -103,70 +172,5 @@ const ThemeSelector = () => {
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    padding: 16,
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: "600",
-    color: "#1C1C1E",
-    marginBottom: 8,
-  },
-  subtitle: {
-    fontSize: 14,
-    color: "#8E8E93",
-    marginBottom: 20,
-  },
-  currentTheme: {
-    fontWeight: "600",
-    color: "#007AFF",
-  },
-  optionsContainer: {
-    gap: 12,
-  },
-  optionCard: {
-    backgroundColor: "#FFFFFF",
-    borderRadius: 12,
-    padding: 16,
-    borderWidth: 2,
-  },
-  optionCardSelected: {
-    backgroundColor: "#F0F7FF",
-  },
-  optionContent: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-  },
-  optionHeader: {
-    flexDirection: "row",
-    alignItems: "center",
-    flex: 1,
-  },
-  optionTexts: {
-    marginLeft: 12,
-    flex: 1,
-  },
-  optionLabel: {
-    fontSize: 16,
-    fontWeight: "500",
-    color: "#1C1C1E",
-    marginBottom: 2,
-  },
-  optionDescription: {
-    fontSize: 14,
-    color: "#8E8E93",
-  },
-  checkmark: {
-    width: 24,
-    height: 24,
-    borderRadius: 12,
-    backgroundColor: "#E6F2FF",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-});
 
 export default ThemeSelector;

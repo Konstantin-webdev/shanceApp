@@ -1,172 +1,156 @@
+// app/tabs/_layout.tsx
+import { useTheme } from "@/components/ThemeProvider";
 import { Tabs } from "expo-router";
 import {
   BookOpenText,
   ChartColumn,
   FileCheck,
-  Settings2
+  Settings2,
 } from "lucide-react-native";
-import { useEffect } from "react";
 import { StyleSheet, View } from "react-native";
-import Animated, {
-  useAnimatedStyle,
-  useSharedValue,
-  withSpring,
-} from "react-native-reanimated";
+import { SafeAreaView } from "react-native-safe-area-context";
 
-// Цвета для каждого таба
-const TAB_COLORS = {
-  training: "#007AFF", // Синий для тренировки
-  exam: "#FF9500",     // Оранжевый для экзамена
-  stats: "#34C759",    // Зеленый для статистики
-  settings: "#AF52DE", // Фиолетовый для настроек
-};
-
-// Цвета для неактивных иконок (более светлые)
-const INACTIVE_COLORS = {
-  training: "#B3D7FF",
-  exam: "#FFE5B3",
-  stats: "#D5F0DD",
-  settings: "#E8D3F2",
-};
-
-// Анимированная иконка с индикатором
-function AnimatedTabIcon({
+// Простая иконка с индикатором
+function TabIcon({
   Icon,
   focused,
-  tabName,
-  size = 24
+  tabKey,
+  size = 24,
 }: {
   Icon: any;
   focused: boolean;
-  tabName: keyof typeof TAB_COLORS;
+  tabKey: string;
   size: number;
 }) {
-  const scale = useSharedValue(1);
+  const { colors } = useTheme();
 
-  useEffect(() => {
-    scale.value = withSpring(focused ? 1.2 : 1, {
-      damping: 10,
-      stiffness: 100,
-    });
-  }, [focused]);
+  // Цвета для активных иконок
+  const getActiveColor = () => {
+    switch (tabKey) {
+      case "training":
+        return colors.primary;
+      case "exam":
+        return colors.warning;
+      case "stats":
+        return colors.success;
+      case "settings":
+        return colors.secondary;
+      default:
+        return colors.primary;
+    }
+  };
 
-  const animatedStyle = useAnimatedStyle(() => ({
-    transform: [{ scale: scale.value }],
-  }));
-
-  const color = focused ? TAB_COLORS[tabName] : INACTIVE_COLORS[tabName];
+  const activeColor = getActiveColor();
+  const color = focused ? activeColor : colors.muted;
 
   return (
     <View style={styles.iconContainer}>
-      <Animated.View style={animatedStyle}>
-        <Icon size={size} color={color} />
-      </Animated.View>
-      {/* Индикатор активного таба */}
-      {focused && (
-        <View style={[
-          styles.activeIndicator,
-          { backgroundColor: TAB_COLORS[tabName] }
-        ]} />
-      )}
+      <Icon size={size} color={color} />
     </View>
   );
 }
 
 export default function TabLayout() {
+  const { colors } = useTheme();
+
   return (
-    <Tabs
-      screenOptions={{
-        tabBarActiveTintColor: "#007AFF",
-        tabBarInactiveTintColor: "#8E8E93",
-        headerShown: false,
-        tabBarStyle: styles.tabBar,
-        tabBarLabelStyle: styles.tabBarLabel,
-      }}
-    >
-      <Tabs.Screen
-        name="index"
-        options={{
-          title: "Тренировка",
-          tabBarIcon: ({ focused, size }) => (
-            <AnimatedTabIcon
-              Icon={BookOpenText}
-              focused={focused}
-              tabName="training"
-              size={size}
-            />
-          ),
+    <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
+      <Tabs
+        screenOptions={{
+          tabBarActiveTintColor: colors.primary,
+          tabBarInactiveTintColor: colors.muted,
+          headerShown: false,
+          tabBarStyle: {
+            ...styles.tabBar,
+            backgroundColor: colors.tabBar,
+            borderTopColor: colors.border,
+            height: 60, // Уменьшаем высоту
+            paddingBottom: 5, // Уменьшаем нижний паддинг
+            paddingTop: 5, // Уменьшаем верхний паддинг
+          },
+          tabBarLabelStyle: {
+            fontSize: 11,
+            fontWeight: "500",
+            marginBottom: 2, // Уменьшаем отступ
+          },
         }}
-      />
-      <Tabs.Screen
-        name="exam"
-        options={{
-          title: "Экзамен",
-          tabBarIcon: ({ focused, size }) => (
-            <AnimatedTabIcon
-              Icon={FileCheck}
-              focused={focused}
-              tabName="exam"
-              size={size}
-            />
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="stats"
-        options={{
-          title: "Статистика",
-          tabBarIcon: ({ focused, size }) => (
-            <AnimatedTabIcon
-              Icon={ChartColumn}
-              focused={focused}
-              tabName="stats"
-              size={size}
-            />
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="settings"
-        options={{
-          title: "Настройки",
-          tabBarIcon: ({ focused, size }) => (
-            <AnimatedTabIcon
-              Icon={Settings2}
-              focused={focused}
-              tabName="settings"
-              size={size}
-            />
-          ),
-        }}
-      />
-    </Tabs>
+      >
+        <Tabs.Screen
+          name="index"
+          options={{
+            title: "Тренировка",
+            tabBarIcon: ({ focused, size }) => (
+              <TabIcon
+                Icon={BookOpenText}
+                focused={focused}
+                tabKey="training"
+                size={size}
+              />
+            ),
+          }}
+        />
+        <Tabs.Screen
+          name="exam"
+          options={{
+            title: "Экзамен",
+            tabBarIcon: ({ focused, size }) => (
+              <TabIcon
+                Icon={FileCheck}
+                focused={focused}
+                tabKey="exam"
+                size={size}
+              />
+            ),
+          }}
+        />
+        <Tabs.Screen
+          name="stats"
+          options={{
+            title: "Статистика",
+            tabBarIcon: ({ focused, size }) => (
+              <TabIcon
+                Icon={ChartColumn}
+                focused={focused}
+                tabKey="stats"
+                size={size}
+              />
+            ),
+          }}
+        />
+        <Tabs.Screen
+          name="settings"
+          options={{
+            title: "Настройки",
+            tabBarIcon: ({ focused, size }) => (
+              <TabIcon
+                Icon={Settings2}
+                focused={focused}
+                tabKey="settings"
+                size={size}
+              />
+            ),
+          }}
+        />
+      </Tabs>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   tabBar: {
-    height: 70,
-    paddingBottom: 90,
-    paddingTop: 10,
     borderTopWidth: 1,
-    borderTopColor: "#F0F0F0",
-    backgroundColor: "#FFFFFF",
-  },
-  tabBarLabel: {
-    fontSize: 12,
-    fontWeight: "600",
-    marginBottom: 4,
   },
   iconContainer: {
     alignItems: "center",
     justifyContent: "center",
     position: "relative",
+    paddingTop: 2, // Добавляем небольшой отступ сверху
   },
   activeIndicator: {
     position: "absolute",
-    bottom: -8,
-    width: 6,
-    height: 6,
-    borderRadius: 3,
+    bottom: -6, // Поднимаем индикатор
+    width: 4,
+    height: 4,
+    borderRadius: 2,
   },
 });

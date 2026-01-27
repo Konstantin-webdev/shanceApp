@@ -1,3 +1,4 @@
+import { useTheme } from "@/components/ThemeProvider";
 import { Briefcase, ChevronDown, Search, X } from "lucide-react-native";
 import React, { useEffect, useState } from "react";
 import {
@@ -15,6 +16,7 @@ import type { IProfession } from "../app/types/profession";
 
 const ProfessionSelector = () => {
   const { selectedProfession, setSelectedProfession } = useProfessionStore();
+  const { colors } = useTheme();
   const [modalVisible, setModalVisible] = useState(false);
   const [searchText, setSearchText] = useState("");
   const [filteredProfessions, setFilteredProfessions] = useState(professions);
@@ -30,6 +32,155 @@ const ProfessionSelector = () => {
     setSearchText("");
   };
 
+  const styles = StyleSheet.create({
+    container: {
+      width: "100%",
+      marginBottom: 16,
+    },
+    selector: {
+      backgroundColor: colors.card,
+      padding: 16,
+      borderRadius: 12,
+      borderWidth: 1,
+      borderColor: colors.border,
+      flexDirection: "row",
+      justifyContent: "space-between",
+      alignItems: "center",
+    },
+    selectorContent: {
+      flexDirection: "row",
+      alignItems: "center",
+      flex: 1,
+    },
+    selectedInfo: {
+      marginLeft: 12,
+      flex: 1,
+    },
+    selectedName: {
+      fontSize: 16,
+      fontWeight: "600",
+      color: colors.text,
+    },
+    selectedCount: {
+      fontSize: 14,
+      color: colors.muted,
+      marginTop: 2,
+    },
+    placeholder: {
+      fontSize: 16,
+      color: colors.muted,
+      marginLeft: 12,
+      flex: 1,
+    },
+    modal: {
+      flex: 1,
+      backgroundColor: "rgba(0, 0, 0, 0.5)",
+      justifyContent: "flex-end",
+    },
+    modalContent: {
+      backgroundColor: colors.card,
+      borderTopLeftRadius: 20,
+      borderTopRightRadius: 20,
+      height: "80%",
+      paddingBottom: 20,
+    },
+    header: {
+      flexDirection: "row",
+      justifyContent: "space-between",
+      alignItems: "center",
+      padding: 20,
+      borderBottomWidth: 1,
+      borderBottomColor: colors.border,
+    },
+    title: {
+      fontSize: 20,
+      fontWeight: "700",
+      color: colors.text,
+    },
+    closeButton: {
+      padding: 4,
+    },
+    searchBox: {
+      flexDirection: "row",
+      alignItems: "center",
+      backgroundColor: colors.border,
+      margin: 16,
+      paddingHorizontal: 12,
+      borderRadius: 10,
+      height: 48,
+    },
+    searchInput: {
+      flex: 1,
+      marginLeft: 8,
+      fontSize: 16,
+      color: colors.text,
+      height: "100%",
+    },
+    count: {
+      fontSize: 14,
+      color: colors.muted,
+      marginHorizontal: 16,
+      marginBottom: 8,
+    },
+    list: {
+      paddingHorizontal: 16,
+    },
+    item: {
+      backgroundColor: colors.card,
+      padding: 16,
+      borderRadius: 10,
+      marginBottom: 8,
+      borderWidth: 1,
+      borderColor: colors.border,
+    },
+    selectedItem: {
+      backgroundColor: colors.primary + "10", // 10% opacity
+      borderColor: colors.primary,
+    },
+    itemContent: {
+      flexDirection: "row",
+      alignItems: "center",
+    },
+    itemText: {
+      marginLeft: 12,
+      flex: 1,
+    },
+    itemName: {
+      fontSize: 16,
+      fontWeight: "500",
+      color: colors.text,
+      marginBottom: 4,
+    },
+    itemDetails: {
+      fontSize: 14,
+      color: colors.muted,
+    },
+    checkmark: {
+      position: "absolute",
+      right: 16,
+      top: 16,
+      width: 24,
+      height: 24,
+      borderRadius: 12,
+      backgroundColor: colors.primary,
+      justifyContent: "center",
+      alignItems: "center",
+    },
+    checkmarkText: {
+      color: "#FFFFFF",
+      fontSize: 14,
+      fontWeight: "bold",
+    },
+    empty: {
+      alignItems: "center",
+      paddingVertical: 40,
+    },
+    emptyText: {
+      fontSize: 16,
+      color: colors.muted,
+    },
+  });
+
   const renderProfessionItem = ({ item }: { item: IProfession }) => (
     <TouchableOpacity
       style={[
@@ -39,7 +190,7 @@ const ProfessionSelector = () => {
       onPress={() => handleSelectProfession(item)}
     >
       <View style={styles.itemContent}>
-        <Briefcase size={20} color="#007AFF" />
+        <Briefcase size={20} color={colors.primary} />
         <View style={styles.itemText}>
           <Text style={styles.itemName}>{item.name}</Text>
           <Text style={styles.itemDetails}>{item.questionCount} вопросов</Text>
@@ -62,7 +213,7 @@ const ProfessionSelector = () => {
         <View style={styles.selectorContent}>
           {selectedProfession ? (
             <>
-              <Briefcase size={20} color="#007AFF" />
+              <Briefcase size={20} color={colors.primary} />
               <View style={styles.selectedInfo}>
                 <Text style={styles.selectedName}>
                   {selectedProfession.name}
@@ -74,12 +225,12 @@ const ProfessionSelector = () => {
             </>
           ) : (
             <>
-              <Briefcase size={20} color="#8E8E93" />
+              <Briefcase size={20} color={colors.muted} />
               <Text style={styles.placeholder}>Выберите профессию</Text>
             </>
           )}
         </View>
-        <ChevronDown size={20} color="#8E8E93" />
+        <ChevronDown size={20} color={colors.muted} />
       </TouchableOpacity>
 
       <Modal
@@ -96,16 +247,16 @@ const ProfessionSelector = () => {
                 onPress={() => setModalVisible(false)}
                 style={styles.closeButton}
               >
-                <X size={24} color="#666" />
+                <X size={24} color={colors.muted} />
               </TouchableOpacity>
             </View>
 
             <View style={styles.searchBox}>
-              <Search size={20} color="#8E8E93" />
+              <Search size={20} color={colors.muted} />
               <TextInput
                 style={styles.searchInput}
                 placeholder="Поиск..."
-                placeholderTextColor="#8E8E93"
+                placeholderTextColor={colors.muted}
                 value={searchText}
                 onChangeText={setSearchText}
                 autoFocus
@@ -133,154 +284,5 @@ const ProfessionSelector = () => {
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    width: "100%",
-    marginBottom: 16,
-  },
-  selector: {
-    backgroundColor: "#FFFFFF",
-    padding: 16,
-    borderRadius: 12,
-    borderWidth: 1,
-    borderColor: "#E5E5EA",
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-  },
-  selectorContent: {
-    flexDirection: "row",
-    alignItems: "center",
-    flex: 1,
-  },
-  selectedInfo: {
-    marginLeft: 12,
-    flex: 1,
-  },
-  selectedName: {
-    fontSize: 16,
-    fontWeight: "600",
-    color: "#000",
-  },
-  selectedCount: {
-    fontSize: 14,
-    color: "#8E8E93",
-    marginTop: 2,
-  },
-  placeholder: {
-    fontSize: 16,
-    color: "#8E8E93",
-    marginLeft: 12,
-    flex: 1,
-  },
-  modal: {
-    flex: 1,
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
-    justifyContent: "flex-end",
-  },
-  modalContent: {
-    backgroundColor: "#FFFFFF",
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
-    height: "80%",
-    paddingBottom: 20,
-  },
-  header: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    padding: 20,
-    borderBottomWidth: 1,
-    borderBottomColor: "#F2F2F7",
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: "700",
-    color: "#000",
-  },
-  closeButton: {
-    padding: 4,
-  },
-  searchBox: {
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: "#F2F2F7",
-    margin: 16,
-    paddingHorizontal: 12,
-    borderRadius: 10,
-    height: 48,
-  },
-  searchInput: {
-    flex: 1,
-    marginLeft: 8,
-    fontSize: 16,
-    color: "#000",
-    height: "100%",
-  },
-  count: {
-    fontSize: 14,
-    color: "#8E8E93",
-    marginHorizontal: 16,
-    marginBottom: 8,
-  },
-  list: {
-    paddingHorizontal: 16,
-  },
-  item: {
-    backgroundColor: "#FFFFFF",
-    padding: 16,
-    borderRadius: 10,
-    marginBottom: 8,
-    borderWidth: 1,
-    borderColor: "#F2F2F7",
-  },
-  selectedItem: {
-    backgroundColor: "#F0F7FF",
-    borderColor: "#007AFF",
-  },
-  itemContent: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  itemText: {
-    marginLeft: 12,
-    flex: 1,
-  },
-  itemName: {
-    fontSize: 16,
-    fontWeight: "500",
-    color: "#000",
-    marginBottom: 4,
-  },
-  itemDetails: {
-    fontSize: 14,
-    color: "#8E8E93",
-  },
-  checkmark: {
-    position: "absolute",
-    right: 16,
-    top: 16,
-    width: 24,
-    height: 24,
-    borderRadius: 12,
-    backgroundColor: "#007AFF",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  checkmarkText: {
-    color: "#FFFFFF",
-    fontSize: 14,
-    fontWeight: "bold",
-  },
-  empty: {
-    alignItems: "center",
-    paddingVertical: 40,
-  },
-  emptyText: {
-    fontSize: 16,
-    color: "#8E8E93",
-  },
-});
 
 export default ProfessionSelector;

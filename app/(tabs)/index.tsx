@@ -1,3 +1,5 @@
+// screens/TrainingScreen.tsx
+import { useTheme } from "@/components/ThemeProvider"; // Добавьте этот импорт
 import { useRouter } from "expo-router";
 import { Play } from "lucide-react-native";
 import { useEffect, useState } from "react";
@@ -19,6 +21,9 @@ export default function TrainingScreen() {
   const { userName } = useUserStore();
   const [isLoading, setIsLoading] = useState(false);
   const [showWelcome, setShowWelcome] = useState(false);
+
+  // Используем тему
+  const { colors } = useTheme();
 
   useEffect(() => {
     if (userName) {
@@ -45,9 +50,161 @@ export default function TrainingScreen() {
     setIsLoading(false);
   };
 
+  // Создаем стили с использованием цветов темы
+  const styles = StyleSheet.create({
+    safeArea: {
+      flex: 1,
+      backgroundColor: colors.background,
+      marginTop: -30,
+    },
+    container: {
+      flex: 1,
+    },
+    scrollContent: {
+      flexGrow: 1,
+    },
+    welcomeOverlay: {
+      position: "absolute",
+      top: 0,
+      left: 0,
+      right: 0,
+      backgroundColor: colors.primary,
+      paddingVertical: 20,
+      zIndex: 1000,
+      alignItems: "center",
+      paddingTop: StatusBar.currentHeight || 20,
+    },
+    welcomeText: {
+      color: colors.background || "#FFFFFF",
+      fontSize: 16,
+      fontWeight: "600",
+    },
+    header: {
+      paddingHorizontal: 20,
+      textAlign: "center",
+      backgroundColor: colors.card,
+    },
+    title: {
+      textAlign: "center",
+      fontSize: 32,
+      fontWeight: "bold",
+      color: colors.primary,
+    },
+    subtitle: {
+      fontSize: 16,
+      color: colors.muted,
+      marginTop: 8,
+    },
+    content: {
+      padding: 20,
+    },
+    professionCard: {
+      backgroundColor: colors.card,
+      padding: 20,
+      borderRadius: 12,
+      marginBottom: 16,
+      borderWidth: 1,
+      borderColor: colors.border,
+    },
+    professionTitle: {
+      fontSize: 16,
+      fontWeight: "600",
+      color: colors.text,
+      marginBottom: 8,
+    },
+    professionName: {
+      fontSize: 20,
+      fontWeight: "bold",
+      color: colors.primary,
+      marginBottom: 4,
+    },
+    professionStats: {
+      fontSize: 15,
+      color: colors.success,
+      marginBottom: 8,
+    },
+    professionHint: {
+      fontSize: 14,
+      color: colors.muted,
+      fontStyle: "italic",
+    },
+    settingsButton: {
+      marginTop: 12,
+      paddingVertical: 10,
+      paddingHorizontal: 16,
+      backgroundColor: colors.primary + "10", // 10% opacity
+      borderRadius: 8,
+      alignSelf: "flex-start",
+    },
+    settingsButtonText: {
+      color: colors.primary,
+      fontSize: 14,
+      fontWeight: "600",
+    },
+    startButton: {
+      backgroundColor: colors.primary,
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "center",
+      paddingVertical: 16,
+      borderRadius: 12,
+      marginTop: 24,
+      gap: 8,
+    },
+    disabledButton: {
+      backgroundColor: colors.muted,
+    },
+    startButtonText: {
+      color: colors.background || "#FFFFFF",
+      fontSize: 18,
+      fontWeight: "600",
+    },
+    instructions: {
+      marginTop: 32,
+      backgroundColor: colors.card,
+      padding: 20,
+      borderRadius: 12,
+      borderWidth: 1,
+      borderColor: colors.border,
+    },
+    instructionsTitle: {
+      fontSize: 18,
+      fontWeight: "600",
+      color: colors.text,
+      marginBottom: 16,
+    },
+    instructionItem: {
+      flexDirection: "row",
+      alignItems: "center",
+      marginBottom: 12,
+    },
+    instructionNumber: {
+      width: 28,
+      height: 28,
+      borderRadius: 14,
+      backgroundColor: colors.primary + "10", // 10% opacity
+      color: colors.primary,
+      textAlign: "center",
+      lineHeight: 28,
+      fontWeight: "600",
+      marginRight: 12,
+    },
+    instructionText: {
+      fontSize: 15,
+      color: colors.text,
+      flex: 1,
+    },
+    bottomSpacer: {
+      height: 40,
+    },
+  });
+
   return (
     <SafeAreaView style={styles.safeArea}>
-      <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" />
+      {/* Обновляем StatusBar в зависимости от темы */}
+      <StatusBar
+        barStyle={colors.border === "dark" ? "light-content" : "dark-content"}
+      />
 
       {/* Приветственное сообщение */}
       {showWelcome && userName && (
@@ -111,7 +268,7 @@ export default function TrainingScreen() {
             disabled={!selectedProfession || isLoading}
             activeOpacity={0.8}
           >
-            <Play size={24} color="#FFFFFF" />
+            <Play size={24} color={colors.background || "#FFFFFF"} />
             <Text style={styles.startButtonText}>
               {isLoading ? "Загрузка..." : "Начать тренировку"}
             </Text>
@@ -151,150 +308,3 @@ export default function TrainingScreen() {
     </SafeAreaView>
   );
 }
-
-const styles = StyleSheet.create({
-  safeArea: {
-    flex: 1,
-    backgroundColor: "#F8F9FA",
-  },
-  container: {
-    flex: 1,
-  },
-  scrollContent: {
-    flexGrow: 1,
-  },
-  welcomeOverlay: {
-    position: "absolute",
-    top: 0,
-    left: 0,
-    right: 0,
-    backgroundColor: "#007AFF",
-    paddingVertical: 20,
-    zIndex: 1000,
-    alignItems: "center",
-    paddingTop: StatusBar.currentHeight || 20,
-  },
-  welcomeText: {
-    color: "#FFFFFF",
-    fontSize: 16,
-    fontWeight: "600",
-  },
-  header: {
-    paddingHorizontal: 20,
-    paddingTop: 20,
-    paddingBottom: 20,
-    backgroundColor: "#FFFFFF",
-  },
-  title: {
-    fontSize: 32,
-    fontWeight: "bold",
-    color: "#007AFF",
-  },
-  subtitle: {
-    fontSize: 16,
-    color: "#8E8E93",
-    marginTop: 8,
-  },
-  content: {
-    padding: 20,
-  },
-  professionCard: {
-    backgroundColor: "#FFFFFF",
-    padding: 20,
-    borderRadius: 12,
-    marginBottom: 16,
-    borderWidth: 1,
-    borderColor: "#E5E5EA",
-  },
-  professionTitle: {
-    fontSize: 16,
-    fontWeight: "600",
-    color: "#1C1C1E",
-    marginBottom: 8,
-  },
-  professionName: {
-    fontSize: 20,
-    fontWeight: "bold",
-    color: "#007AFF",
-    marginBottom: 4,
-  },
-  professionStats: {
-    fontSize: 15,
-    color: "#34C759",
-    marginBottom: 8,
-  },
-  professionHint: {
-    fontSize: 14,
-    color: "#8E8E93",
-    fontStyle: "italic",
-  },
-  settingsButton: {
-    marginTop: 12,
-    paddingVertical: 10,
-    paddingHorizontal: 16,
-    backgroundColor: "#F0F7FF",
-    borderRadius: 8,
-    alignSelf: "flex-start",
-  },
-  settingsButtonText: {
-    color: "#007AFF",
-    fontSize: 14,
-    fontWeight: "600",
-  },
-  startButton: {
-    backgroundColor: "#007AFF",
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    paddingVertical: 16,
-    borderRadius: 12,
-    marginTop: 24,
-    gap: 8,
-  },
-  disabledButton: {
-    backgroundColor: "#C7C7CC",
-  },
-  startButtonText: {
-    color: "#FFFFFF",
-    fontSize: 18,
-    fontWeight: "600",
-  },
-  instructions: {
-    marginTop: 32,
-    backgroundColor: "#FFFFFF",
-    padding: 20,
-    borderRadius: 12,
-    borderWidth: 1,
-    borderColor: "#E5E5EA",
-  },
-  instructionsTitle: {
-    fontSize: 18,
-    fontWeight: "600",
-    color: "#1C1C1E",
-    marginBottom: 16,
-  },
-  instructionItem: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginBottom: 12,
-  },
-  instructionNumber: {
-    width: 28,
-    height: 28,
-    borderRadius: 14,
-    backgroundColor: "#F0F7FF",
-    color: "#007AFF",
-    textAlign: "center",
-    lineHeight: 28,
-    fontWeight: "600",
-    marginRight: 12,
-  },
-  instructionText: {
-    fontSize: 15,
-    color: "#1C1C1E",
-    flex: 1,
-  },
-  bottomSpacer: {
-    height: 40,
-  },
-});

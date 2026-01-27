@@ -1,13 +1,8 @@
-import React from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  SafeAreaView,
-} from "react-native";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { CheckCircle, Home } from "lucide-react-native";
+import React from "react";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function TrainingCompletionScreen() {
   const router = useRouter();

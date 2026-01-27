@@ -1,4 +1,3 @@
-// app/exam/[professionId].tsx
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useCallback, useEffect, useState } from "react";
 import {
@@ -288,7 +287,7 @@ export default function ExamSessionScreen() {
   const isAnswered = isCurrentQuestionAnswered();
 
   return (
-    <SafeAreaView style={styles.container} edges={["top", "left", "right"]}>
+    <SafeAreaView style={styles.container}>
       <ExamHeader
         professionName={profession.name}
         onBack={handleBack}
@@ -297,7 +296,6 @@ export default function ExamSessionScreen() {
         onExamComplete={handleExamComplete}
       />
 
-      {/* Вертикальный скролл для вопроса */}
       <ScrollView
         style={styles.scrollView}
         contentContainerStyle={styles.scrollContent}
@@ -314,7 +312,6 @@ export default function ExamSessionScreen() {
           showCorrectAnswers={showCorrectAnswers}
         />
 
-        {/* Кнопка навигации внутри ScrollView */}
         <View style={styles.navigationContainer}>
           {isLastQuestion ? (
             <TouchableOpacity
@@ -335,14 +332,6 @@ export default function ExamSessionScreen() {
             >
               <Text style={styles.nextButtonText}>Следующий вопрос</Text>
             </TouchableOpacity>
-          )}
-
-          <Text style={styles.pageIndicator}>
-            Вопрос {currentQuestionIndex + 1} из {examQuestions.length}
-          </Text>
-
-          {!isAnswered && (
-            <Text style={styles.hintText}>Выберите ответ для продолжения</Text>
           )}
         </View>
       </ScrollView>

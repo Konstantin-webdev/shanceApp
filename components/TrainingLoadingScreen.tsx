@@ -1,6 +1,7 @@
 // components/TrainingLoadingScreen.tsx
+import { useTheme } from "@/components/ThemeProvider";
 import React from "react";
-import { View, Text, ActivityIndicator, StyleSheet } from "react-native";
+import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
 
 interface TrainingLoadingScreenProps {
   message?: string;
@@ -9,24 +10,26 @@ interface TrainingLoadingScreenProps {
 export default function TrainingLoadingScreen({
   message = "Загрузка вопросов...",
 }: TrainingLoadingScreenProps) {
+  const { colors } = useTheme();
+
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      justifyContent: "center",
+      alignItems: "center",
+      backgroundColor: colors.background,
+    },
+    text: {
+      marginTop: 16,
+      fontSize: 16,
+      color: colors.muted,
+    },
+  });
+
   return (
     <View style={styles.container}>
-      <ActivityIndicator size="large" color="#007AFF" />
+      <ActivityIndicator size="large" color={colors.primary} />
       <Text style={styles.text}>{message}</Text>
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "#F8F9FA",
-  },
-  text: {
-    marginTop: 16,
-    fontSize: 16,
-    color: "#8E8E93",
-  },
-});

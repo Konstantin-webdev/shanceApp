@@ -1,4 +1,5 @@
 // components/ExamTimer.tsx
+import { useTheme } from "@/components/ThemeProvider";
 import React, { useEffect, useRef, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import Svg, { Circle } from "react-native-svg";
@@ -16,6 +17,7 @@ export default function ExamTimer({
   onTimeUp,
   onExamComplete,
 }: ExamTimerProps) {
+  const { colors } = useTheme();
   const [remainingTime, setRemainingTime] = useState(EXAM_DURATION);
   const [elapsedTime, setElapsedTime] = useState(0);
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -70,9 +72,9 @@ export default function ExamTimer({
   // Цвет меняется от зеленого к красному по мере убывания времени
   const getTimerColor = () => {
     const timeProgress = remainingTime / EXAM_DURATION;
-    if (timeProgress > 0.66) return "#34C759"; // зеленый
-    if (timeProgress > 0.33) return "#FF9500"; // оранжевый
-    return "#FF3B30"; // красный
+    if (timeProgress > 0.66) return colors.success; // зеленый
+    if (timeProgress > 0.33) return colors.warning; // оранжевый
+    return colors.danger; // красный
   };
 
   const formatTime = (seconds: number) => {
@@ -80,6 +82,22 @@ export default function ExamTimer({
     const secs = seconds % 60;
     return `${mins}:${secs < 10 ? "0" : ""}${secs}`;
   };
+
+  const styles = StyleSheet.create({
+    container: {
+      width: 50,
+      height: 50,
+      alignItems: "center",
+      justifyContent: "center",
+      position: "relative",
+    },
+    timeText: {
+      position: "absolute",
+      fontSize: 12,
+      fontWeight: "600",
+      color: colors.text,
+    },
+  });
 
   return (
     <View style={styles.container}>
@@ -89,7 +107,7 @@ export default function ExamTimer({
           cx="25"
           cy="25"
           r={radius}
-          stroke="#E5E5EA"
+          stroke={colors.border}
           strokeWidth="3"
           fill="none"
         />
@@ -112,19 +130,3 @@ export default function ExamTimer({
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    width: 50,
-    height: 50,
-    alignItems: "center",
-    justifyContent: "center",
-    position: "relative",
-  },
-  timeText: {
-    position: "absolute",
-    fontSize: 12,
-    fontWeight: "600",
-    color: "#1C1C1E",
-  },
-});

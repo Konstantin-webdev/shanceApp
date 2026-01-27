@@ -1,6 +1,7 @@
 import React from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import type { IQuestion } from "../app/types/questions";
+import { useTheme } from "@/components/ThemeProvider";
 
 interface QuestionCardProps {
   question: IQuestion;
@@ -19,6 +20,8 @@ export default function QuestionCard({
   totalQuestions,
   showCorrectAnswers = false,
 }: QuestionCardProps) {
+  const { colors } = useTheme();
+
   const isCorrectAnswer = (answerId: string) => {
     return answerId === question.correctAnswer;
   };
@@ -40,6 +43,82 @@ export default function QuestionCard({
     // Но это уже будет заметно, так что лучше оставить как есть
     return text;
   };
+
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      padding: 20,
+    },
+    questionHeader: {
+      marginBottom: 16,
+    },
+    questionNumber: {
+      fontSize: 14,
+      color: colors.muted,
+    },
+    questionCard: {
+      backgroundColor: colors.card,
+      padding: 20,
+      borderRadius: 12,
+      marginBottom: 20,
+      borderWidth: 1,
+      borderColor: colors.border,
+    },
+    questionText: {
+      fontSize: 18,
+      fontWeight: "500",
+      color: colors.text,
+      lineHeight: 24,
+    },
+    optionsContainer: {
+      gap: 12,
+      marginBottom: 20,
+    },
+    optionButton: {
+      backgroundColor: colors.card,
+      padding: 16,
+      borderRadius: 12,
+      borderWidth: 1,
+      borderColor: colors.border,
+    },
+    selectedOption: {
+      borderColor: colors.primary,
+      backgroundColor: colors.primary + "10", // 10% opacity
+    },
+    optionContent: {
+      flexDirection: "row",
+      alignItems: "center",
+    },
+    optionIndicator: {
+      width: 32,
+      height: 32,
+      borderRadius: 16,
+      backgroundColor: colors.border,
+      justifyContent: "center",
+      alignItems: "center",
+      marginRight: 12,
+    },
+    selectedOptionIndicator: {
+      backgroundColor: colors.primary,
+    },
+    optionLetter: {
+      fontSize: 14,
+      fontWeight: "600",
+      color: colors.text,
+    },
+    selectedOptionLetter: {
+      color: "#FFFFFF",
+    },
+    optionText: {
+      fontSize: 16,
+      color: colors.text,
+      flex: 1,
+    },
+    selectedOptionText: {
+      color: colors.primary,
+      fontWeight: "500",
+    },
+  });
 
   return (
     <View style={styles.container}>
@@ -102,79 +181,3 @@ export default function QuestionCard({
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 20,
-  },
-  questionHeader: {
-    marginBottom: 16,
-  },
-  questionNumber: {
-    fontSize: 14,
-    color: "#8E8E93",
-  },
-  questionCard: {
-    backgroundColor: "#FFFFFF",
-    padding: 20,
-    borderRadius: 12,
-    marginBottom: 20,
-    borderWidth: 1,
-    borderColor: "#E5E5EA",
-  },
-  questionText: {
-    fontSize: 18,
-    fontWeight: "500",
-    color: "#1C1C1E",
-    lineHeight: 24,
-  },
-  optionsContainer: {
-    gap: 12,
-    marginBottom: 20,
-  },
-  optionButton: {
-    backgroundColor: "#FFFFFF",
-    padding: 16,
-    borderRadius: 12,
-    borderWidth: 1,
-    borderColor: "#E5E5EA",
-  },
-  selectedOption: {
-    borderColor: "#007AFF",
-    backgroundColor: "#F0F7FF",
-  },
-  optionContent: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  optionIndicator: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
-    backgroundColor: "#F2F2F7",
-    justifyContent: "center",
-    alignItems: "center",
-    marginRight: 12,
-  },
-  selectedOptionIndicator: {
-    backgroundColor: "#007AFF",
-  },
-  optionLetter: {
-    fontSize: 14,
-    fontWeight: "600",
-    color: "#1C1C1E",
-  },
-  selectedOptionLetter: {
-    color: "#FFFFFF",
-  },
-  optionText: {
-    fontSize: 16,
-    color: "#1C1C1E",
-    flex: 1,
-  },
-  selectedOptionText: {
-    color: "#007AFF",
-    fontWeight: "500",
-  },
-});

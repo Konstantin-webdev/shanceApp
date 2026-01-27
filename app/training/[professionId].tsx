@@ -1,33 +1,33 @@
 // app/training/[professionId].tsx
+import { useTheme } from "@/components/ThemeProvider"; // Добавьте импорт
+import { useTrainingProgress } from "@/hooks/useTrainingProgress";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { ArrowLeft } from "lucide-react-native";
 import React, { useEffect, useState } from "react";
 import {
+  Alert,
   ScrollView,
-  StatusBar,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
-  Alert,
 } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import NotImplementedScreen from "../../components/NotImplementedScreen";
+import QuestionItem from "../../components/QuestionItem";
 import TrainingContinueModal from "../../components/TrainingContinueModal";
 import TrainingLoadingScreen from "../../components/TrainingLoadingScreen";
-import QuestionItem from "../../components/QuestionItem";
 import { getProfessionById } from "../data/professions";
 import {
   getQuestionsByProfessionId,
   hasQuestionsForProfession,
 } from "../data/questions";
 import type { IQuestion } from "../types/questions";
-import { useTrainingProgress } from "@/hooks/useTrainingProgress";
-
-// ... (TrainingHeader и ProgressBar остаются такими же) ...
 
 export default function TrainingSessionScreen() {
   const router = useRouter();
   const { professionId } = useLocalSearchParams<{ professionId: string }>();
+  const { colors, isDark } = useTheme(); // Получаем тему
 
   const [profession, setProfession] = useState<any>(null);
   const [questions, setQuestions] = useState<IQuestion[]>([]);
@@ -209,205 +209,199 @@ export default function TrainingSessionScreen() {
   const isLastQuestion = currentQuestionIndex === questions.length - 1;
   const progress = (currentQuestionIndex + 1) / questions.length;
 
+  // Создаем стили динамически
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: colors.background,
+      paddingTop: 50,
+    },
+    header: {
+      flexDirection: "row",
+      alignItems: "center",
+      paddingHorizontal: 16,
+      paddingBottom: 12,
+      backgroundColor: colors.card,
+      borderBottomWidth: 1,
+      borderBottomColor: colors.border,
+    },
+    backButton: {
+      padding: 8,
+    },
+    headerInfo: {
+      flex: 1,
+      marginHorizontal: 12,
+    },
+    professionName: {
+      fontSize: 16,
+      fontWeight: "600",
+      color: colors.text,
+    },
+    progressText: {
+      fontSize: 14,
+      color: colors.muted,
+      marginTop: 2,
+    },
+    progressBarContainer: {
+      paddingHorizontal: 20,
+      paddingVertical: 12,
+      backgroundColor: colors.card,
+    },
+    progressBarBackground: {
+      height: 4,
+      backgroundColor: colors.border,
+      borderRadius: 2,
+      overflow: "hidden",
+    },
+    progressBarFill: {
+      height: "100%",
+      backgroundColor: colors.primary,
+      borderRadius: 2,
+    },
+    contentScroll: {
+      flex: 1,
+    },
+    navigationContainer: {
+      marginTop: 24,
+      paddingVertical: 16,
+      borderTopWidth: 1,
+      borderTopColor: colors.border,
+    },
+    navigationButtons: {
+      flexDirection: "row",
+      justifyContent: "space-between",
+      marginBottom: 16,
+    },
+    navButton: {
+      flex: 1,
+      paddingVertical: 16,
+      borderRadius: 12,
+      alignItems: "center",
+    },
+    prevButton: {
+      backgroundColor: colors.border,
+      marginRight: 8,
+    },
+    nextButton: {
+      backgroundColor: colors.primary,
+      marginLeft: 8,
+    },
+    completeButton: {
+      backgroundColor: colors.success,
+      marginLeft: 8,
+    },
+    disabledButton: {
+      backgroundColor: colors.muted,
+      opacity: 0.6,
+    },
+    navButtonText: {
+      color: "#FFFFFF", // Белый остается всегда белым
+      fontSize: 16,
+      fontWeight: "600",
+    },
+    clearProgressLink: {
+      paddingVertical: 12,
+      alignItems: "center",
+    },
+    clearProgressText: {
+      color: colors.danger,
+      fontSize: 14,
+    },
+  });
+
   return (
-    <View style={styles.container}>
-      <StatusBar barStyle="dark-content" />
+    <SafeAreaView
+      style={{ flex: 1, backgroundColor: colors.background, marginTop: -30 }}
+    >
+      <View style={styles.container}>
+        <TrainingContinueModal
+          visible={showContinueModal}
+          onContinue={handleContinue}
+          onRestart={handleRestart}
+          onCancel={handleCancel}
+        />
 
-      <TrainingContinueModal
-        visible={showContinueModal}
-        onContinue={handleContinue}
-        onRestart={handleRestart}
-        onCancel={handleCancel}
-      />
-
-      {/* Заголовок */}
-      <View style={styles.header}>
-        <TouchableOpacity onPress={handleBack} style={styles.backButton}>
-          <ArrowLeft size={24} color="#007AFF" />
-        </TouchableOpacity>
-        <View style={styles.headerInfo}>
-          <Text style={styles.professionName} numberOfLines={1}>
-            {profession.name}
-          </Text>
-          <Text style={styles.progressText}>
-            Вопрос {currentQuestionIndex + 1} из {questions.length}
-          </Text>
-        </View>
-      </View>
-
-      {/* Прогресс бар */}
-      <View style={styles.progressBarContainer}>
-        <View style={styles.progressBarBackground}>
-          <View
-            style={[styles.progressBarFill, { width: `${progress * 100}%` }]}
-          />
-        </View>
-      </View>
-
-      {/* Основной контент */}
-      <ScrollView style={styles.contentScroll}>
-        {currentQuestion && (
-          <QuestionItem
-            question={currentQuestion}
-            index={currentQuestionIndex}
-            userAnswer={selectedAnswers[currentQuestionIndex]}
-            onAnswerSelect={handleAnswerSelect}
-            isCurrentQuestion={true}
-          />
-        )}
-
-        {/* Навигация */}
-        <View style={styles.navigationContainer}>
-          <View style={styles.navigationButtons}>
-            {currentQuestionIndex > 0 && (
-              <TouchableOpacity
-                style={[styles.navButton, styles.prevButton]}
-                onPress={handlePrevQuestion}
-              >
-                <Text style={styles.navButtonText}>← Назад</Text>
-              </TouchableOpacity>
-            )}
-
-            {!isLastQuestion ? (
-              <TouchableOpacity
-                style={[
-                  styles.navButton,
-                  styles.nextButton,
-                  !selectedAnswers[currentQuestionIndex] &&
-                    styles.disabledButton,
-                ]}
-                onPress={handleNextQuestion}
-                disabled={!selectedAnswers[currentQuestionIndex]}
-              >
-                <Text style={styles.navButtonText}>Далее →</Text>
-              </TouchableOpacity>
-            ) : (
-              <TouchableOpacity
-                style={[
-                  styles.navButton,
-                  styles.completeButton,
-                  !selectedAnswers[currentQuestionIndex] &&
-                    styles.disabledButton,
-                ]}
-                onPress={finishTraining}
-                disabled={!selectedAnswers[currentQuestionIndex]}
-              >
-                <Text style={styles.navButtonText}>Завершить тренировку</Text>
-              </TouchableOpacity>
-            )}
-          </View>
-
-          {/* Кнопка очистки прогресса */}
-          <TouchableOpacity
-            style={styles.clearProgressLink}
-            onPress={handleClearProgress}
-          >
-            <Text style={styles.clearProgressText}>
-              Начать тренировку заново
-            </Text>
+        {/* Заголовок */}
+        <View style={styles.header}>
+          <TouchableOpacity onPress={handleBack} style={styles.backButton}>
+            <ArrowLeft size={24} color={colors.primary} />
           </TouchableOpacity>
+          <View style={styles.headerInfo}>
+            <Text style={styles.professionName} numberOfLines={1}>
+              {profession.name}
+            </Text>
+            <Text style={styles.progressText}>
+              Вопрос {currentQuestionIndex + 1} из {questions.length}
+            </Text>
+          </View>
         </View>
-      </ScrollView>
-    </View>
+
+        {/* Прогресс бар */}
+        <View style={styles.progressBarContainer}>
+          <View style={styles.progressBarBackground}>
+            <View
+              style={[styles.progressBarFill, { width: `${progress * 100}%` }]}
+            />
+          </View>
+        </View>
+
+        {/* Основной контент */}
+        <ScrollView style={styles.contentScroll}>
+          {currentQuestion && (
+            <QuestionItem
+              question={currentQuestion}
+              index={currentQuestionIndex}
+              userAnswer={selectedAnswers[currentQuestionIndex]}
+              onAnswerSelect={handleAnswerSelect}
+              isCurrentQuestion={true}
+            />
+          )}
+
+          {/* Навигация */}
+          <View style={styles.navigationContainer}>
+            <View style={styles.navigationButtons}>
+              {currentQuestionIndex > 0 && (
+                <TouchableOpacity
+                  style={[styles.navButton, styles.prevButton]}
+                  onPress={handlePrevQuestion}
+                >
+                  <Text style={[styles.navButtonText, { color: colors.text }]}>
+                    ← Назад
+                  </Text>
+                </TouchableOpacity>
+              )}
+
+              {!isLastQuestion ? (
+                <TouchableOpacity
+                  style={[
+                    styles.navButton,
+                    styles.nextButton,
+                    !selectedAnswers[currentQuestionIndex] &&
+                      styles.disabledButton,
+                  ]}
+                  onPress={handleNextQuestion}
+                  disabled={!selectedAnswers[currentQuestionIndex]}
+                >
+                  <Text style={styles.navButtonText}>Далее →</Text>
+                </TouchableOpacity>
+              ) : (
+                <TouchableOpacity
+                  style={[
+                    styles.navButton,
+                    styles.completeButton,
+                    !selectedAnswers[currentQuestionIndex] &&
+                      styles.disabledButton,
+                  ]}
+                  onPress={finishTraining}
+                  disabled={!selectedAnswers[currentQuestionIndex]}
+                >
+                  <Text style={styles.navButtonText}>Завершить тренировку</Text>
+                </TouchableOpacity>
+              )}
+            </View>
+          </View>
+        </ScrollView>
+      </View>
+    </SafeAreaView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#F8F9FA",
-    paddingTop: 50,
-  },
-  header: {
-    flexDirection: "row",
-    alignItems: "center",
-    paddingHorizontal: 16,
-    paddingBottom: 12,
-    backgroundColor: "#FFFFFF",
-    borderBottomWidth: 1,
-    borderBottomColor: "#E5E5EA",
-  },
-  backButton: {
-    padding: 8,
-  },
-  headerInfo: {
-    flex: 1,
-    marginHorizontal: 12,
-  },
-  professionName: {
-    fontSize: 16,
-    fontWeight: "600",
-    color: "#1C1C1E",
-  },
-  progressText: {
-    fontSize: 14,
-    color: "#8E8E93",
-    marginTop: 2,
-  },
-  progressBarContainer: {
-    paddingHorizontal: 20,
-    paddingVertical: 12,
-    backgroundColor: "#FFFFFF",
-  },
-  progressBarBackground: {
-    height: 4,
-    backgroundColor: "#E5E5EA",
-    borderRadius: 2,
-    overflow: "hidden",
-  },
-  progressBarFill: {
-    height: "100%",
-    backgroundColor: "#007AFF",
-    borderRadius: 2,
-  },
-  contentScroll: {
-    flex: 1,
-    padding: 20,
-  },
-  navigationContainer: {
-    marginTop: 24,
-    paddingVertical: 16,
-    borderTopWidth: 1,
-    borderTopColor: "#E5E5EA",
-  },
-  navigationButtons: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    marginBottom: 16,
-  },
-  navButton: {
-    flex: 1,
-    paddingVertical: 16,
-    borderRadius: 12,
-    alignItems: "center",
-  },
-  prevButton: {
-    backgroundColor: "#E5E5EA",
-    marginRight: 8,
-  },
-  nextButton: {
-    backgroundColor: "#007AFF",
-    marginLeft: 8,
-  },
-  completeButton: {
-    backgroundColor: "#34C759",
-    marginLeft: 8,
-  },
-  disabledButton: {
-    backgroundColor: "#C7C7CC",
-    opacity: 0.6,
-  },
-  navButtonText: {
-    color: "#FFFFFF",
-    fontSize: 16,
-    fontWeight: "600",
-  },
-  clearProgressLink: {
-    paddingVertical: 12,
-    alignItems: "center",
-  },
-  clearProgressText: {
-    color: "#FF3B30",
-    fontSize: 14,
-  },
-});
