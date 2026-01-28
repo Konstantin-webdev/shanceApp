@@ -26,7 +26,6 @@ export const useAppTheme = () => {
   };
 };
 
-// Пример цветовых схем
 export const lightColors = {
   background: "#FFFFFF",
   card: "#F2F2F7",

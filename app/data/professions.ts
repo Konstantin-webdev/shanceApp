@@ -8,7 +8,7 @@ export const professions: IProfession[] = [
     questionCount: 216,
   }, //done
   { id: 2, name: "Водитель", questionCount: 370 },
-  { id: 20, name: "Слесарь-ремонтник", questionCount: 235 },
+  { id: 20, name: "Слесарь-ремонтник", questionCount: 235 }, //done
   { id: 3, name: "Слесарь АВР", questionCount: 237 }, //done
   { id: 14, name: "Электромонтер ЭХЗ", questionCount: 237 },
   { id: 16, name: "Электрогазосварщик", questionCount: 295 },

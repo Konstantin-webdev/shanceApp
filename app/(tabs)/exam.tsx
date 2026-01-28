@@ -1,4 +1,4 @@
-import { useTheme } from "@/components/ThemeProvider"; // Добавьте импорт
+import { useTheme } from "@/components/ThemeProvider";
 import { useRouter } from "expo-router";
 import { AlertCircle, Award, Clock, Play } from "lucide-react-native";
 import React, { useState } from "react";
@@ -40,17 +40,22 @@ export default function ExamScreen() {
       flex: 1,
     },
     header: {
-      paddingHorizontal: 20,
-      paddingTop: 12, // Уменьшен отступ сверху
-      paddingBottom: 16,
       backgroundColor: colors.card,
+      padding: 20,
+      borderRadius: 12,
+      margin: 16,
+      marginBottom: 0,
+      borderWidth: 1,
+      borderColor: colors.border,
     },
     title: {
+      textAlign: "center",
       fontSize: 28,
       fontWeight: "bold",
-      color: colors.danger, // Красный цвет для экзамена
+      color: colors.danger,
     },
     subtitle: {
+      textAlign: "center",
       fontSize: 14,
       color: colors.muted,
       marginTop: 4,

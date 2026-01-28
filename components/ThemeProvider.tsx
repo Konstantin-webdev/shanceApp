@@ -1,9 +1,7 @@
-// components/ThemeProvider.tsx
 import { useThemeStore } from "@/app/store/useThemeStore";
 import React, { createContext, useContext, useEffect } from "react";
 import { Platform, StatusBar, useColorScheme } from "react-native";
 
-// Определяем типы цветов
 export type ThemeColors = {
   background: string;
   card: string;
@@ -18,40 +16,60 @@ export type ThemeColors = {
   tabBar: string;
   tabBarActive: string;
   tabBarInactive: string;
+
+  // Новые цвета для табов - гармоничная палитра
+  tabTraining: string;
+  tabExam: string;
+  tabStats: string;
+  tabSettings: string;
 };
 
-// Светлая тема
+// Светлая тема - нейтральные приглушенные цвета
 const lightColors: ThemeColors = {
   background: "#F8F9FA",
   card: "#FFFFFF",
   text: "#1C1C1E",
   border: "#E5E5EA",
-  primary: "#007AFF",
-  secondary: "#5856D6",
-  danger: "#FF3B30",
-  warning: "#FF9500",
-  success: "#34C759",
-  muted: "#8E8E93",
+  primary: "#3B82F6", // Синий основной
+  secondary: "#8B5CF6", // Фиолетовый
+  danger: "#EF4444",
+  warning: "#F59E0B",
+  success: "#10B981",
+  muted: "#9CA3AF", // Серый вместо яркого
+
   tabBar: "#FFFFFF",
-  tabBarActive: "#007AFF",
-  tabBarInactive: "#8E8E93",
+  tabBarActive: "#3B82F6", // Синий для активного состояния
+  tabBarInactive: "#9CA3AF",
+
+  // Цвета для табов - спокойные нейтральные
+  tabTraining: "#3B82F6", // Приглушенный синий - обучение
+  tabExam: "#8B5CF6", // Фиолетовый - экзамен
+  tabStats: "#10B981", // Зеленый - статистика
+  tabSettings: "#6B7280", // Серый - настройки
 };
 
-// Тёмная тема
+// Тёмная тема - более светлые версии тех же цветов
 const darkColors: ThemeColors = {
-  background: "#000000",
-  card: "#1C1C1E",
+  background: "#121212",
+  card: "#1E1E1E",
   text: "#FFFFFF",
   border: "#2C2C2E",
-  primary: "#0A84FF",
-  secondary: "#5E5CE6",
-  danger: "#FF453A",
-  warning: "#FF9F0A",
-  success: "#30D158",
-  muted: "#98989D",
+  primary: "#60A5FA", // Светлее на 20%
+  secondary: "#A78BFA", // Светлее на 20%
+  danger: "#F87171",
+  warning: "#FBBF24",
+  success: "#34D399",
+  muted: "#9CA3AF",
+
   tabBar: "#1C1C1E",
-  tabBarActive: "#0A84FF",
-  tabBarInactive: "#98989D",
+  tabBarActive: "#60A5FA",
+  tabBarInactive: "#9CA3AF",
+
+  // Темная версия цветов табов
+  tabTraining: "#60A5FA", // Синий
+  tabExam: "#A78BFA", // Фиолетовый
+  tabStats: "#34D399", // Зеленый
+  tabSettings: "#9CA3AF", // Серый
 };
 
 // Тип контекста
@@ -62,32 +80,26 @@ type ThemeContextType = {
   isDark: boolean;
 };
 
-// Создаем контекст
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
   const systemTheme = useColorScheme();
   const { theme: themePreference } = useThemeStore();
 
-  // Определяем текущую тему
   const currentTheme =
     themePreference === "auto" ? systemTheme || "light" : themePreference;
-
   const isDark = currentTheme === "dark";
   const colors = isDark ? darkColors : lightColors;
 
-  // Применяем тему к статус-бару
+  // ТОЛЬКО настройка StatusBar - упрощаем
   useEffect(() => {
-    StatusBar.setBarStyle(isDark ? "light-content" : "dark-content", true);
-
-    // Для Android
     if (Platform.OS === "android") {
       StatusBar.setBackgroundColor(colors.background);
       StatusBar.setTranslucent(false);
     }
+    StatusBar.setBarStyle(isDark ? "light-content" : "dark-content");
   }, [isDark, colors.background]);
 
-  // Значение контекста
   const contextValue: ThemeContextType = {
     theme: currentTheme,
     themePreference,
@@ -102,7 +114,6 @@ export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
   );
 };
 
-// Хук для использования темы
 export const useTheme = () => {
   const context = useContext(ThemeContext);
   if (!context) {

@@ -16,23 +16,18 @@ export default function RootLayout() {
 
   useEffect(() => {
     if (userName === null) {
-      // Первый запуск - имя не установлено
       setCurrentScreen("welcome");
     } else if (selectedProfession === null) {
-      // Имя есть, но профессия не выбрана
       setCurrentScreen("profession");
     } else {
-      // И имя и профессия есть - переходим к табам
       setCurrentScreen("tabs");
     }
   }, [userName, selectedProfession]);
 
   if (currentScreen === "loading") {
-    // Можно добавить лоадер
     return null;
   }
 
-  // Обернем все в ThemeProvider
   const renderContent = () => {
     if (currentScreen === "welcome") {
       return <WelcomeScreen />;

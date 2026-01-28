@@ -68,7 +68,7 @@ export default function TrainingScreen() {
       top: 0,
       left: 0,
       right: 0,
-      backgroundColor: colors.primary,
+      backgroundColor: "rgba(255, 255, 255, 0.75)",
       paddingVertical: 20,
       zIndex: 1000,
       alignItems: "center",
@@ -80,9 +80,12 @@ export default function TrainingScreen() {
       fontWeight: "600",
     },
     header: {
-      paddingHorizontal: 20,
-      textAlign: "center",
       backgroundColor: colors.card,
+      padding: 20,
+      borderRadius: 12,
+      margin: 16,
+      borderWidth: 1,
+      borderColor: colors.border,
     },
     title: {
       textAlign: "center",
@@ -92,6 +95,7 @@ export default function TrainingScreen() {
     },
     subtitle: {
       fontSize: 16,
+      textAlign: "center",
       color: colors.muted,
       marginTop: 8,
     },
@@ -203,7 +207,8 @@ export default function TrainingScreen() {
     <SafeAreaView style={styles.safeArea}>
       {/* Обновляем StatusBar в зависимости от темы */}
       <StatusBar
-        barStyle={colors.border === "dark" ? "light-content" : "dark-content"}
+        /*  barStyle={colors.border === "dark" ? "light-content" : "dark-content"} */
+        backgroundColor="red"
       />
 
       {/* Приветственное сообщение */}
@@ -212,6 +217,9 @@ export default function TrainingScreen() {
           <Text style={styles.welcomeText}>Привет, {userName}! 👋</Text>
         </View>
       )}
+      <View style={styles.welcomeOverlay}>
+        <Text style={styles.welcomeText}>Привет, {userName}! 👋</Text>
+      </View>
       <ScrollView
         style={styles.container}
         contentContainerStyle={styles.scrollContent}
@@ -291,13 +299,13 @@ export default function TrainingScreen() {
             </View>
             <View style={styles.instructionItem}>
               <Text style={styles.instructionNumber}>3</Text>
-              <Text style={styles.instructionText}>
-                Смотрите объяснения после каждого ответа
-              </Text>
+              <Text style={styles.instructionText}>Улучшайте свои знания</Text>
             </View>
             <View style={styles.instructionItem}>
               <Text style={styles.instructionNumber}>4</Text>
-              <Text style={styles.instructionText}>Улучшайте свои знания</Text>
+              <Text style={styles.instructionText}>
+                Сохраняет свой прогресс
+              </Text>
             </View>
           </View>
 

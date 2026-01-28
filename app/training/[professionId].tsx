@@ -150,7 +150,6 @@ export default function TrainingSessionScreen() {
       return userAnswer === question.correctAnswer ? count + 1 : count;
     }, 0);
 
-    // Очищаем прогресс после завершения
     clearCurrentProgress();
 
     router.push({
@@ -205,111 +204,6 @@ export default function TrainingSessionScreen() {
   const isLastQuestion = currentQuestionIndex === questions.length - 1;
   const progress = (currentQuestionIndex + 1) / questions.length;
 
-  /*   const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      backgroundColor: colors.background,
-      paddingTop: 50,
-    },
-    header: {
-      flexDirection: "row",
-      alignItems: "center",
-      paddingHorizontal: 16,
-      paddingBottom: 12,
-      backgroundColor: colors.card,
-      borderBottomWidth: 1,
-      borderBottomColor: colors.border,
-    },
-    backButton: {
-      padding: 8,
-    },
-    headerInfo: {
-      flex: 1,
-      marginHorizontal: 12,
-    },
-    professionName: {
-      fontSize: 16,
-      fontWeight: "600",
-      color: colors.text,
-    },
-    progressText: {
-      fontSize: 14,
-      color: colors.muted,
-      marginTop: 2,
-    },
-    progressBarContainer: {
-      paddingHorizontal: 20,
-      paddingVertical: 12,
-      backgroundColor: colors.card,
-    },
-    progressBarBackground: {
-      height: 4,
-      backgroundColor: colors.border,
-      borderRadius: 2,
-      overflow: "hidden",
-    },
-    progressBarFill: {
-      height: "100%",
-      backgroundColor: colors.primary,
-      borderRadius: 2,
-    },
-    contentScroll: {
-      flex: 1,
-      paddingBottom: 160,
-    },
-    navigationContainer: {
-      position: "absolute",
-      bottom: 0,
-      left: 0,
-      right: 0,
-      backgroundColor: colors.background,
-      paddingTop: 16,
-      paddingBottom: 20, // Отступ для меню телефона
-      paddingHorizontal: 16,
-      borderTopWidth: 1,
-      borderTopColor: colors.border,
-    },
-    navigationButtons: {
-      flexDirection: "row",
-      justifyContent: "space-between",
-      marginBottom: 16,
-    },
-    navButton: {
-      flex: 1,
-      paddingVertical: 16,
-      borderRadius: 12,
-      alignItems: "center",
-    },
-    prevButton: {
-      backgroundColor: colors.border,
-      marginRight: 8,
-    },
-    nextButton: {
-      backgroundColor: colors.primary,
-      marginLeft: 8,
-    },
-    completeButton: {
-      backgroundColor: colors.success,
-      marginLeft: 8,
-    },
-    disabledButton: {
-      backgroundColor: colors.muted,
-      opacity: 0.6,
-    },
-    navButtonText: {
-      color: "#FFFFFF", // Белый остается всегда белым
-      fontSize: 16,
-      fontWeight: "600",
-    },
-    clearProgressLink: {
-      paddingVertical: 12,
-      alignItems: "center",
-    },
-    clearProgressText: {
-      color: colors.danger,
-      fontSize: 14,
-    },
-  }); */
   const styles = StyleSheet.create({
     container: {
       flex: 1,
@@ -400,6 +294,9 @@ export default function TrainingSessionScreen() {
       marginLeft: 8,
     },
     completeButton: {
+      justifyContent: "center",
+      alignItems: "center",
+      padding: 16,
       backgroundColor: colors.success,
       marginLeft: 8,
     },
@@ -433,7 +330,6 @@ export default function TrainingSessionScreen() {
           onCancel={handleCancel}
         />
 
-        {/* Заголовок */}
         <View style={styles.header}>
           <TouchableOpacity onPress={handleBack} style={styles.backButton}>
             <ArrowLeft size={24} color={colors.primary} />
@@ -448,7 +344,6 @@ export default function TrainingSessionScreen() {
           </View>
         </View>
 
-        {/* Прогресс бар */}
         <View style={styles.progressBarContainer}>
           <View style={styles.progressBarBackground}>
             <View

@@ -24,24 +24,24 @@ function TabIcon({
 }) {
   const { colors } = useTheme();
 
-  // Цвета для активных иконок
-  const getActiveColor = () => {
+  // Получаем цвет для таба
+  const getTabColor = () => {
     switch (tabKey) {
       case "training":
-        return colors.primary;
+        return colors.tabTraining;
       case "exam":
-        return colors.warning;
+        return colors.tabExam;
       case "stats":
-        return colors.success;
+        return colors.tabStats;
       case "settings":
-        return colors.secondary;
+        return colors.tabSettings;
       default:
         return colors.primary;
     }
   };
 
-  const activeColor = getActiveColor();
-  const color = focused ? activeColor : colors.muted;
+  const tabColor = getTabColor();
+  const color = focused ? tabColor : colors.tabBarInactive;
 
   return (
     <View style={styles.iconContainer}>
@@ -57,21 +57,21 @@ export default function TabLayout() {
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
       <Tabs
         screenOptions={{
-          tabBarActiveTintColor: colors.primary,
-          tabBarInactiveTintColor: colors.muted,
+          tabBarActiveTintColor: colors.tabBarActive, // Один цвет для всех активных
+          tabBarInactiveTintColor: colors.tabBarInactive,
           headerShown: false,
           tabBarStyle: {
             ...styles.tabBar,
             backgroundColor: colors.tabBar,
             borderTopColor: colors.border,
-            height: 60, // Уменьшаем высоту
-            paddingBottom: 5, // Уменьшаем нижний паддинг
-            paddingTop: 5, // Уменьшаем верхний паддинг
+            height: 60,
+            paddingBottom: 5,
+            paddingTop: 5,
           },
           tabBarLabelStyle: {
             fontSize: 11,
             fontWeight: "500",
-            marginBottom: 2, // Уменьшаем отступ
+            marginBottom: 2,
           },
         }}
       >
@@ -144,13 +144,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     position: "relative",
-    paddingTop: 2, // Добавляем небольшой отступ сверху
-  },
-  activeIndicator: {
-    position: "absolute",
-    bottom: -6, // Поднимаем индикатор
-    width: 4,
-    height: 4,
-    borderRadius: 2,
+    paddingTop: 2,
   },
 });

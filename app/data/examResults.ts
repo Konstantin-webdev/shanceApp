@@ -97,14 +97,6 @@ export const getExamResults = async (): Promise<ExamResult[]> => {
   }
 };
 
-export const clearExamResults = async (): Promise<void> => {
-  try {
-    await AsyncStorage.removeItem(STORAGE_KEY);
-  } catch (error) {
-    console.error("Error clearing exam results:", error);
-  }
-};
-
 export const getStatistics = async () => {
   const results = await getExamResults();
 
@@ -133,6 +125,16 @@ export const getStatistics = async () => {
     accuracy: totalQuestions > 0 ? (totalCorrect / totalQuestions) * 100 : 0,
     results,
   };
+};
+
+export const clearExamResults = async (): Promise<void> => {
+  try {
+    await AsyncStorage.removeItem(STORAGE_KEY);
+    console.log("Все результаты экзаменов очищены");
+  } catch (error) {
+    console.error("Error clearing exam results:", error);
+    throw error;
+  }
 };
 
 // Экспортируем утилиты форматирования

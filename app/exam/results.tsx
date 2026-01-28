@@ -18,6 +18,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { saveExamResult } from "../data/examResults";
 
 interface QuestionData {
@@ -103,216 +104,206 @@ export default function ExamResultsScreen() {
   };
 
   return (
-    <View style={[styles.container, { backgroundColor: colors.background }]}>
-      <StatusBar barStyle={isDark ? "light-content" : "dark-content"} />
+    <SafeAreaView style={{ flex: 1 }}>
+      <View style={[styles.container, { backgroundColor: colors.background }]}>
+        <StatusBar barStyle={isDark ? "light-content" : "dark-content"} />
 
-      <ScrollView
-        style={styles.scrollView}
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={styles.scrollContent}
-      >
-        <View style={styles.content}>
-          {/* Иконка результата */}
-          <View
-            style={[
-              styles.resultIconContainer,
-              passed
-                ? { backgroundColor: isDark ? "#1C3C1C" : "#F0FFF4" }
-                : { backgroundColor: isDark ? "#3C1C1C" : "#FFF0F0" },
-            ]}
-          >
-            {passed ? (
-              <Award size={80} color={colors.success} />
-            ) : (
-              <XCircle size={80} color={colors.danger} />
-            )}
-          </View>
-
-          {/* Заголовок */}
-          <Text style={[styles.resultTitle, { color: colors.text }]}>
-            {passed ? "Экзамен сдан!" : "Экзамен не сдан"}
-          </Text>
-
-          <Text style={[styles.professionName, { color: colors.muted }]}>
-            {professionName}
-          </Text>
-
-          {/* Основная статистика */}
-          <View style={[styles.statsCard, { backgroundColor: colors.card }]}>
-            <View style={styles.scoreContainer}>
-              <Text style={[styles.scoreLabel, { color: colors.muted }]}>
-                Ваш результат
-              </Text>
-              <Text
-                style={[
-                  styles.scoreValue,
-                  passed ? { color: colors.success } : { color: colors.danger },
-                ]}
-              >
-                {score}%
-              </Text>
+        <ScrollView
+          style={styles.scrollView}
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={styles.scrollContent}
+        >
+          <View style={styles.content}>
+            {/* Иконка результата */}
+            <View
+              style={[
+                styles.resultIconContainer,
+                passed
+                  ? { backgroundColor: isDark ? "#1C3C1C" : "#F0FFF4" }
+                  : { backgroundColor: isDark ? "#3C1C1C" : "#FFF0F0" },
+              ]}
+            >
+              {passed ? (
+                <Award size={80} color={colors.success} />
+              ) : (
+                <XCircle size={80} color={colors.danger} />
+              )}
             </View>
 
-            <View style={styles.statsGrid}>
-              <View style={styles.statItem}>
-                <CheckCircle size={24} color={colors.success} />
-                <Text style={[styles.statNumber, { color: colors.text }]}>
-                  {correctAnswers}
-                </Text>
-                <Text style={[styles.statLabel, { color: colors.muted }]}>
-                  Правильно
-                </Text>
-              </View>
+            {/* Заголовок */}
+            <Text style={[styles.resultTitle, { color: colors.text }]}>
+              {passed ? "Экзамен сдан!" : "Экзамен не сдан"}
+            </Text>
 
-              <View
-                style={[styles.statDivider, { backgroundColor: colors.border }]}
-              />
+            <Text style={[styles.professionName, { color: colors.muted }]}>
+              {professionName}
+            </Text>
 
-              <View style={styles.statItem}>
-                <XCircle size={24} color={colors.danger} />
-                <Text style={[styles.statNumber, { color: colors.text }]}>
-                  {totalQuestions - correctAnswers}
+            {/* Основная статистика */}
+            <View style={[styles.statsCard, { backgroundColor: colors.card }]}>
+              <View style={styles.scoreContainer}>
+                <Text style={[styles.scoreLabel, { color: colors.muted }]}>
+                  Ваш результат
                 </Text>
-                <Text style={[styles.statLabel, { color: colors.muted }]}>
-                  Ошибок
-                </Text>
-              </View>
-
-              <View
-                style={[styles.statDivider, { backgroundColor: colors.border }]}
-              />
-
-              <View style={styles.statItem}>
-                <Clock size={24} color={colors.primary} />
-                <Text style={[styles.statNumber, { color: colors.text }]}>
-                  {formatTime(timeSpent)}
-                </Text>
-                <Text style={[styles.statLabel, { color: colors.muted }]}>
-                  Время
-                </Text>
-              </View>
-            </View>
-
-            <View style={styles.passIndicator}>
-              <View
-                style={[styles.passBar, { backgroundColor: colors.border }]}
-              >
-                <View
+                <Text
                   style={[
-                    styles.passProgress,
-                    { width: `${Math.min(score, 100)}%` },
+                    styles.scoreValue,
                     passed
-                      ? { backgroundColor: colors.success }
-                      : { backgroundColor: colors.danger },
+                      ? { color: colors.success }
+                      : { color: colors.danger },
                   ]}
-                />
-              </View>
-              <View style={styles.passThreshold}>
-                <View
-                  style={[
-                    styles.thresholdLine,
-                    { backgroundColor: colors.primary },
-                  ]}
-                />
-                <Text style={[styles.thresholdText, { color: colors.primary }]}>
-                  70% - порог
+                >
+                  {score}%
                 </Text>
               </View>
+
+              <View style={styles.statsGrid}>
+                <View style={styles.statItem}>
+                  <CheckCircle size={24} color={colors.success} />
+                  <Text style={[styles.statNumber, { color: colors.text }]}>
+                    {correctAnswers}
+                  </Text>
+                  <Text style={[styles.statLabel, { color: colors.muted }]}>
+                    Правильно
+                  </Text>
+                </View>
+
+                <View
+                  style={[
+                    styles.statDivider,
+                    { backgroundColor: colors.border },
+                  ]}
+                />
+
+                <View style={styles.statItem}>
+                  <XCircle size={24} color={colors.danger} />
+                  <Text style={[styles.statNumber, { color: colors.text }]}>
+                    {totalQuestions - correctAnswers}
+                  </Text>
+                  <Text style={[styles.statLabel, { color: colors.muted }]}>
+                    Ошибок
+                  </Text>
+                </View>
+
+                <View
+                  style={[
+                    styles.statDivider,
+                    { backgroundColor: colors.border },
+                  ]}
+                />
+
+                <View style={styles.statItem}>
+                  <Clock size={24} color={colors.primary} />
+                  <Text style={[styles.statNumber, { color: colors.text }]}>
+                    {formatTime(timeSpent)}
+                  </Text>
+                  <Text style={[styles.statLabel, { color: colors.muted }]}>
+                    Время
+                  </Text>
+                </View>
+              </View>
+
+              <View style={styles.passIndicator}>
+                <View
+                  style={[styles.passBar, { backgroundColor: colors.border }]}
+                >
+                  <View
+                    style={[
+                      styles.passProgress,
+                      { width: `${Math.min(score, 100)}%` },
+                      passed
+                        ? { backgroundColor: colors.success }
+                        : { backgroundColor: colors.danger },
+                    ]}
+                  />
+                </View>
+                <View style={styles.passThreshold}>
+                  <View
+                    style={[
+                      styles.thresholdLine,
+                      { backgroundColor: colors.primary },
+                    ]}
+                  />
+                  <Text
+                    style={[styles.thresholdText, { color: colors.primary }]}
+                  >
+                    70% - порог
+                  </Text>
+                </View>
+              </View>
             </View>
-          </View>
 
-          {/* Детали по вопросам */}
-          {questionsData.length > 0 && (
-            <View style={styles.detailsCard}>
-              <Text style={[styles.detailsTitle, { color: colors.text }]}>
-                Детали по вопросам:
-              </Text>
+            {/* Детали по вопросам */}
+            {questionsData.length > 0 && (
+              <View style={styles.detailsCard}>
+                <Text style={[styles.detailsTitle, { color: colors.text }]}>
+                  Детали по вопросам:
+                </Text>
 
-              <View style={styles.questionsList}>
-                {questionsData.map((question, index) => {
-                  const userAnswer = answersData[index];
-                  const isCorrect = userAnswer === question.correctAnswer;
-                  const correctOption = question.options.find(
-                    (opt) => opt.id === question.correctAnswer,
-                  );
-                  const userOption = question.options.find(
-                    (opt) => opt.id === userAnswer,
-                  );
+                <View style={styles.questionsList}>
+                  {questionsData.map((question, index) => {
+                    const userAnswer = answersData[index];
+                    const isCorrect = userAnswer === question.correctAnswer;
+                    const correctOption = question.options.find(
+                      (opt) => opt.id === question.correctAnswer,
+                    );
+                    const userOption = question.options.find(
+                      (opt) => opt.id === userAnswer,
+                    );
 
-                  return (
-                    <View
-                      key={question.id}
-                      style={[
-                        styles.questionItem,
-                        {
-                          backgroundColor: isDark ? "#2C2C2E" : "#F8F9FA",
-                          borderColor: colors.border,
-                        },
-                      ]}
-                    >
-                      <View style={styles.questionItemHeader}>
-                        <Text
-                          style={[
-                            styles.questionItemNumber,
-                            { color: colors.primary },
-                          ]}
-                        >
-                          Вопрос {index + 1}
-                        </Text>
-                        <View
-                          style={[
-                            styles.questionItemStatus,
-                            isCorrect
-                              ? { backgroundColor: colors.success + "20" }
-                              : { backgroundColor: colors.danger + "20" },
-                          ]}
-                        >
+                    return (
+                      <View
+                        key={question.id}
+                        style={[
+                          styles.questionItem,
+                          {
+                            backgroundColor: isDark ? "#2C2C2E" : "#F8F9FA",
+                            borderColor: colors.border,
+                          },
+                        ]}
+                      >
+                        <View style={styles.questionItemHeader}>
                           <Text
                             style={[
-                              styles.questionItemStatusText,
+                              styles.questionItemNumber,
+                              { color: colors.primary },
+                            ]}
+                          >
+                            Вопрос {index + 1}
+                          </Text>
+                          <View
+                            style={[
+                              styles.questionItemStatus,
                               isCorrect
-                                ? { color: colors.success }
-                                : { color: colors.danger },
+                                ? { backgroundColor: colors.success + "20" }
+                                : { backgroundColor: colors.danger + "20" },
                             ]}
                           >
-                            {isCorrect ? "✓" : "✗"}
-                          </Text>
-                        </View>
-                      </View>
-
-                      <View style={styles.questionContent}>
-                        <Text
-                          style={[styles.questionText, { color: colors.text }]}
-                        >
-                          {question.text}
-                        </Text>
-                      </View>
-
-                      <View style={styles.answersContainer}>
-                        <View style={styles.answerRow}>
-                          <Text
-                            style={[
-                              styles.answerLabel,
-                              { color: colors.muted },
-                            ]}
-                          >
-                            Ваш ответ:
-                          </Text>
-                          <View style={styles.answerTextContainer}>
                             <Text
                               style={[
-                                styles.answerText,
+                                styles.questionItemStatusText,
                                 isCorrect
                                   ? { color: colors.success }
                                   : { color: colors.danger },
                               ]}
                             >
-                              {userOption?.text || "Не ответил"}
+                              {isCorrect ? "✓" : "✗"}
                             </Text>
                           </View>
                         </View>
 
-                        {!isCorrect && correctOption && (
+                        <View style={styles.questionContent}>
+                          <Text
+                            style={[
+                              styles.questionText,
+                              { color: colors.text },
+                            ]}
+                          >
+                            {question.text}
+                          </Text>
+                        </View>
+
+                        <View style={styles.answersContainer}>
                           <View style={styles.answerRow}>
                             <Text
                               style={[
@@ -320,79 +311,104 @@ export default function ExamResultsScreen() {
                                 { color: colors.muted },
                               ]}
                             >
-                              Правильный:
+                              Ваш ответ:
                             </Text>
                             <View style={styles.answerTextContainer}>
                               <Text
                                 style={[
-                                  styles.correctAnswerText,
-                                  { color: colors.success },
+                                  styles.answerText,
+                                  isCorrect
+                                    ? { color: colors.success }
+                                    : { color: colors.danger },
                                 ]}
                               >
-                                {correctOption.text}
+                                {userOption?.text || "Не ответил"}
                               </Text>
                             </View>
                           </View>
-                        )}
+
+                          {!isCorrect && correctOption && (
+                            <View style={styles.answerRow}>
+                              <Text
+                                style={[
+                                  styles.answerLabel,
+                                  { color: colors.muted },
+                                ]}
+                              >
+                                Правильный:
+                              </Text>
+                              <View style={styles.answerTextContainer}>
+                                <Text
+                                  style={[
+                                    styles.correctAnswerText,
+                                    { color: colors.success },
+                                  ]}
+                                >
+                                  {correctOption.text}
+                                </Text>
+                              </View>
+                            </View>
+                          )}
+                        </View>
                       </View>
-                    </View>
-                  );
-                })}
+                    );
+                  })}
+                </View>
               </View>
-            </View>
-          )}
+            )}
 
-          {/* Кнопки действий */}
-          <View style={styles.actionsContainer}>
-            <TouchableOpacity
-              style={[
-                styles.actionButton,
-                styles.statsButton,
-                { borderColor: colors.success },
-              ]}
-              onPress={handleViewStats}
-            >
-              <Award size={20} color={colors.success} />
-              <Text
-                style={[styles.actionButtonText, { color: colors.success }]}
-              >
-                Статистика
-              </Text>
-            </TouchableOpacity>
-
-            {!passed && (
+            {/* Кнопки действий */}
+            <View style={styles.actionsContainer}>
               <TouchableOpacity
                 style={[
                   styles.actionButton,
-                  styles.retryButton,
-                  { backgroundColor: colors.warning },
+                  styles.statsButton,
+                  { borderColor: colors.success },
                 ]}
-                onPress={handleRetry}
+                onPress={handleViewStats}
               >
-                <RotateCcw size={20} color="#FFFFFF" />
-                <Text style={[styles.actionButtonText, { color: "#FFFFFF" }]}>
-                  Снова
+                <Award size={20} color={colors.success} />
+                <Text
+                  style={[styles.actionButtonText, { color: colors.success }]}
+                >
+                  Статистика
                 </Text>
               </TouchableOpacity>
-            )}
 
-            <TouchableOpacity
-              style={[
-                styles.actionButton,
-                styles.homeButton,
-                { backgroundColor: colors.primary },
-              ]}
-              onPress={handleGoHome}
-            >
-              <Home size={20} color="#FFFFFF" />
-              <Text style={[styles.actionButtonText, { color: "#FFFFFF" }]}>
-                На главную
-              </Text>
-            </TouchableOpacity>
+              {!passed && (
+                <TouchableOpacity
+                  style={[
+                    styles.actionButton,
+                    styles.retryButton,
+                    { backgroundColor: colors.warning },
+                  ]}
+                  onPress={handleRetry}
+                >
+                  <RotateCcw size={20} color="#FFFFFF" />
+                  <Text style={[styles.actionButtonText, { color: "#FFFFFF" }]}>
+                    Снова
+                  </Text>
+                </TouchableOpacity>
+              )}
+
+              <TouchableOpacity
+                style={[
+                  styles.actionButton,
+                  styles.homeButton,
+                  { backgroundColor: colors.primary },
+                ]}
+                onPress={handleGoHome}
+              >
+                <Home size={20} color="#FFFFFF" />
+                <Text style={[styles.actionButtonText, { color: "#FFFFFF" }]}>
+                  На главную
+                </Text>
+              </TouchableOpacity>
+            </View>
           </View>
-        </View>
-      </ScrollView>
-    </View>
+        </ScrollView>
+      </View>
+    </SafeAreaView>
   );
 }
 
