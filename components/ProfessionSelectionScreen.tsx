@@ -1,42 +1,11 @@
-import { useProfessionStore } from "@/app/store/useProfessionStore";
 import { useTheme } from "@/components/ThemeProvider";
-import { useRouter } from "expo-router";
-import { ArrowRight, Clock } from "lucide-react-native";
-import { useEffect, useState } from "react";
-import {
-  ScrollView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { Clock } from "lucide-react-native";
+import { ScrollView, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import ProfessionSelector from "../components/ProfessionSelector";
 
 export default function ProfessionSelectionScreen() {
-  const { selectedProfession } = useProfessionStore();
   const { colors } = useTheme();
-  const router = useRouter();
-  const [canSkip, setCanSkip] = useState(false);
-
-  // Разрешаем пропуск через 3 секунды
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setCanSkip(true);
-    }, 3000);
-
-    return () => clearTimeout(timer);
-  }, []);
-
-  const handleContinue = () => {
-    if (selectedProfession) {
-      router.replace("/(tabs)");
-    }
-  };
-
-  const handleSkip = () => {
-    router.replace("/(tabs)");
-  };
 
   const styles = StyleSheet.create({
     safeArea: {
@@ -56,11 +25,14 @@ export default function ProfessionSelectionScreen() {
       backgroundColor: colors.card,
     },
     title: {
+      textAlign: "center",
       fontSize: 28,
       fontWeight: "bold",
       color: colors.primary,
+      paddingBlock: 16,
     },
     subtitle: {
+      textAlign: "center",
       fontSize: 14,
       color: colors.muted,
       marginTop: 4,
@@ -175,59 +147,16 @@ export default function ProfessionSelectionScreen() {
         </View>
 
         <View style={styles.content}>
-          {/* Компонент выбора профессии */}
           <ProfessionSelector />
-
           <View style={styles.professionInfo}>
-            {selectedProfession ? (
-              <>
-                <View style={styles.selectionCard}>
-                  <Text style={styles.selectedTitle}>Вы выбрали:</Text>
-                  <Text style={styles.professionName}>
-                    {selectedProfession.name}
-                  </Text>
-                  <Text style={styles.professionCount}>
-                    {selectedProfession.questionCount} вопросов
-                  </Text>
-
-                  <TouchableOpacity
-                    style={styles.continueButton}
-                    onPress={handleContinue}
-                    activeOpacity={0.8}
-                  >
-                    <ArrowRight size={24} color="#FFFFFF" />
-                    <Text style={styles.continueButtonText}>Продолжить</Text>
-                  </TouchableOpacity>
-                </View>
-              </>
-            ) : (
-              <View style={styles.emptySelection}>
-                <Clock size={40} color={colors.muted} />
-                <Text style={styles.emptyTitle}>Профессия не выбрана</Text>
-                <Text style={styles.emptyText}>
-                  Выберите профессию из списка выше или
-                </Text>
-
-                {canSkip ? (
-                  <TouchableOpacity
-                    style={styles.skipButton}
-                    onPress={handleSkip}
-                    activeOpacity={0.6}
-                  >
-                    <Text style={styles.skipButtonText}>пропустить сейчас</Text>
-                  </TouchableOpacity>
-                ) : (
-                  <View style={styles.skipTimer}>
-                    <Text style={styles.skipTimerText}>
-                      Можно будет пропустить через 3 секунды...
-                    </Text>
-                  </View>
-                )}
-              </View>
-            )}
+            <View style={styles.emptySelection}>
+              <Clock size={40} color={colors.muted} />
+              <Text style={styles.emptyTitle}>Профессия не выбрана</Text>
+              <Text style={styles.emptyText}>
+                Выберите профессию из списка выше
+              </Text>
+            </View>
           </View>
-
-          {/* Отступ снизу */}
           <View style={styles.bottomSpacer} />
         </View>
       </ScrollView>

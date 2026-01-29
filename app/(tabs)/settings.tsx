@@ -22,7 +22,7 @@ import { useTheme } from "@/components/ThemeProvider"; // Импортируем
 
 export default function SettingsScreen() {
   const { userName, setUserName, clearUserName } = useUserStore();
-  const { selectedProfession, setSelectedProfession } = useProfessionStore();
+  const { setSelectedProfession } = useProfessionStore();
   const [newName, setNewName] = useState(userName || "");
   const router = useRouter();
 

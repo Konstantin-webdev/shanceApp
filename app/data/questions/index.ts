@@ -4,6 +4,9 @@ import { questionsProfession20 } from "./profession20";
 import { questionsProfession3 } from "./profession3";
 import { questionsProfession38 } from "./profession38";
 import { questionsProfession78 } from "./profession78";
+import { questionsProfession16 } from "./profession16";
+import { questionsProfession25 } from "./profession25";
+import { questionsProfession42 } from "./profession42";
 
 export const questionsByProfession: Record<number, IQuestion[]> = {
   38: questionsProfession38,
@@ -11,6 +14,9 @@ export const questionsByProfession: Record<number, IQuestion[]> = {
   3: questionsProfession3,
   20: questionsProfession20,
   2: questionsProfession2,
+  16: questionsProfession16,
+  25: questionsProfession25,
+  42: questionsProfession42,
 };
 
 export const getQuestionsByProfessionId = (

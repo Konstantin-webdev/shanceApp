@@ -14,6 +14,7 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useProfessionStore } from "../store/useProfessionStore";
 import { useUserStore } from "../store/useUserStore";
+import GreetingScreen from "@/components/GreetingScreen";
 
 export default function TrainingScreen() {
   const router = useRouter();
@@ -22,7 +23,6 @@ export default function TrainingScreen() {
   const [isLoading, setIsLoading] = useState(false);
   const [showWelcome, setShowWelcome] = useState(false);
 
-  // Используем тему
   const { colors } = useTheme();
 
   useEffect(() => {
@@ -50,7 +50,6 @@ export default function TrainingScreen() {
     setIsLoading(false);
   };
 
-  // Создаем стили с использованием цветов темы
   const styles = StyleSheet.create({
     safeArea: {
       flex: 1,
@@ -205,21 +204,6 @@ export default function TrainingScreen() {
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      {/* Обновляем StatusBar в зависимости от темы */}
-      <StatusBar
-        /*  barStyle={colors.border === "dark" ? "light-content" : "dark-content"} */
-        backgroundColor="red"
-      />
-
-      {/* Приветственное сообщение */}
-      {showWelcome && userName && (
-        <View style={styles.welcomeOverlay}>
-          <Text style={styles.welcomeText}>Привет, {userName}! 👋</Text>
-        </View>
-      )}
-      <View style={styles.welcomeOverlay}>
-        <Text style={styles.welcomeText}>Привет, {userName}! 👋</Text>
-      </View>
       <ScrollView
         style={styles.container}
         contentContainerStyle={styles.scrollContent}
@@ -233,7 +217,6 @@ export default function TrainingScreen() {
         </View>
 
         <View style={styles.content}>
-          {/* Блок с выбранной профессией */}
           <View style={styles.professionCard}>
             {selectedProfession ? (
               <>

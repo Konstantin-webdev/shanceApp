@@ -57,7 +57,7 @@ export default function TabLayout() {
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
       <Tabs
         screenOptions={{
-          tabBarActiveTintColor: colors.tabBarActive, // Один цвет для всех активных
+          tabBarActiveTintColor: colors.tabBarActive,
           tabBarInactiveTintColor: colors.tabBarInactive,
           headerShown: false,
           tabBarStyle: {
