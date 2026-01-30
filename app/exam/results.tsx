@@ -375,21 +375,19 @@ export default function ExamResultsScreen() {
                 </Text>
               </TouchableOpacity>
 
-              {!passed && (
-                <TouchableOpacity
-                  style={[
-                    styles.actionButton,
-                    styles.retryButton,
-                    { backgroundColor: colors.warning },
-                  ]}
-                  onPress={handleRetry}
-                >
-                  <RotateCcw size={20} color="#FFFFFF" />
-                  <Text style={[styles.actionButtonText, { color: "#FFFFFF" }]}>
-                    Снова
-                  </Text>
-                </TouchableOpacity>
-              )}
+              <TouchableOpacity
+                style={[
+                  styles.actionButton,
+                  styles.retryButton,
+                  { backgroundColor: colors.warning },
+                ]}
+                onPress={handleRetry}
+              >
+                <RotateCcw size={20} color="#FFFFFF" />
+                <Text style={[styles.actionButtonText, { color: "#FFFFFF" }]}>
+                  Снова
+                </Text>
+              </TouchableOpacity>
 
               <TouchableOpacity
                 style={[

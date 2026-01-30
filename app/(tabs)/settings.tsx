@@ -19,12 +19,14 @@ import ThemeSelector from "@/components/ThemeSelector";
 import { useProfessionStore } from "../store/useProfessionStore";
 import { useUserStore } from "../store/useUserStore";
 import { useTheme } from "@/components/ThemeProvider"; // Импортируем useTheme
+import { useOnboardingStore } from "../store/useOnboardingStore";
 
 export default function SettingsScreen() {
   const { userName, setUserName, clearUserName } = useUserStore();
   const { setSelectedProfession } = useProfessionStore();
   const [newName, setNewName] = useState(userName || "");
   const router = useRouter();
+  const { resetOnboarding } = useOnboardingStore(); // Добавляем
 
   // Используем тему
   const { colors } = useTheme();
@@ -71,6 +73,7 @@ export default function SettingsScreen() {
             clearUserName();
             setNewName("");
             setSelectedProfession(null);
+            resetOnboarding();
             Alert.alert("Успешно", "Все данные сброшены");
           },
         },

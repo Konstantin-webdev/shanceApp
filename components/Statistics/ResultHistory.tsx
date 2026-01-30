@@ -85,11 +85,8 @@ export function ResultHistory({
               >
                 {/* Первая строка: Профессия и результат */}
                 <View style={styles.resultRow}>
-                  <Text
-                    style={[styles.resultProfession, { color: colors.text }]}
-                    numberOfLines={1}
-                  >
-                    {result.professionName}
+                  <Text style={[styles.resultDetail, { color: colors.muted }]}>
+                    {result.userName || "Пользователь"}
                   </Text>
                   <View
                     style={[
@@ -110,9 +107,6 @@ export function ResultHistory({
 
                 {/* Вторая строка: Имя и дата */}
                 <View style={styles.resultRow}>
-                  <Text style={[styles.resultDetail, { color: colors.muted }]}>
-                    {result.userName || "Пользователь"}
-                  </Text>
                   <Text style={[styles.resultDate, { color: colors.muted }]}>
                     {formatDate(result.date)}
                   </Text>
@@ -269,6 +263,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     paddingVertical: 5,
     borderRadius: 20,
+    marginLeft: "auto",
   },
   resultScore: {
     fontSize: 15,
@@ -285,5 +280,6 @@ const styles = StyleSheet.create({
   resultDate: {
     fontSize: 12,
     fontStyle: "italic",
+    marginLeft: "auto",
   },
 });
