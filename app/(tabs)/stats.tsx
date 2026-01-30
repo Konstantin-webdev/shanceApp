@@ -5,13 +5,14 @@ import { StatsHeader } from "@/components/Statistics/StatsHeader";
 import { useTheme } from "@/components/ThemeProvider";
 import React, { useEffect, useState } from "react";
 import {
+  Alert,
   RefreshControl,
   ScrollView,
   StyleSheet,
   Text,
   View,
 } from "react-native";
-import { ExamResult, getStatistics } from "../data/examResults";
+import { ExamResult, getStatistics, clearExamResults } from "../data/examResults";
 import { useProfessionStore } from "../store/useProfessionStore";
 import { useUserStore } from "../store/useUserStore";
 
@@ -53,10 +54,24 @@ export default function StatsScreen() {
 
   const handleClearStats = async () => {
     try {
-      await clearAllStatistics();
-      await loadResults();
+      await clearExamResults();
+
+      setResults([]);
+      setStats({
+        totalTests: 0,
+        averageScore: 0,
+        totalCorrect: 0,
+        totalQuestions: 0,
+        passedTests: 0,
+        accuracy: 0,
+      });
+
+      // Показываем уведомление об успехе
+      Alert.alert("Успех", "Вся статистика была очищена");
+
     } catch (error) {
       console.error("Ошибка при очистке статистики:", error);
+      Alert.alert("Ошибка", "Не удалось очистить статистику");
     }
   };
 
@@ -118,6 +133,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
 });
-function clearAllStatistics() {
-  throw new Error("Function not implemented.");
-}
+
+// Удалите эту неработающую функцию:
+// function clearAllStatistics() {
+//   throw new Error("Function not implemented.");
+// }

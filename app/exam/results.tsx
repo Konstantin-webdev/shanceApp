@@ -5,21 +5,24 @@ import {
   Award,
   CheckCircle,
   Clock,
+  Heart,
   Home,
   RotateCcw,
   XCircle,
-} from "lucide-react-native";
+} from "lucide-react-native"; // Добавлен Heart
 import React, { useEffect } from "react";
 import {
+  Linking,
   ScrollView,
   StatusBar,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
-} from "react-native";
+} from "react-native"; // Добавлен Linking
 import { SafeAreaView } from "react-native-safe-area-context";
 import { saveExamResult } from "../data/examResults";
+import { SBPDonation } from "@/components/Exam/SBPDonation";
 
 interface QuestionData {
   id: string;
@@ -101,6 +104,17 @@ export default function ExamResultsScreen() {
 
   const handleViewStats = () => {
     router.push("/(tabs)/stats");
+  };
+
+  const handleDonate = () => {
+    // Вставьте вашу ссылку на донат
+    const donationUrl = "https://yoomoney.ru/to/410011XXXXXXXXX"; // Замените на вашу ссылку
+
+    Linking.openURL(donationUrl).catch((err) => {
+      console.error("Ошибка при открытии ссылки:", err);
+      // Можно показать альтернативный способ
+      // Alert.alert("Ссылка не открывается", "Скопируйте: https://...");
+    });
   };
 
   return (
@@ -403,6 +417,14 @@ export default function ExamResultsScreen() {
                 </Text>
               </TouchableOpacity>
             </View>
+
+            {passed && (
+              <View style={styles.donationContainer}>
+                <SBPDonation
+                  phoneNumber="+7 951 033 22 31" // Ваш реальный номер
+                />
+              </View>
+            )}
           </View>
         </ScrollView>
       </View>
@@ -616,5 +638,30 @@ const styles = StyleSheet.create({
   actionButtonText: {
     fontSize: 14,
     fontWeight: "600",
+  },
+  // Стили для кнопки доната
+  donationContainer: {
+    marginTop: 8,
+    marginBottom: 30,
+  },
+  donateButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    paddingVertical: 16,
+    borderRadius: 12,
+    gap: 12,
+    width: "100%",
+  },
+  donateButtonText: {
+    color: "#FFFFFF",
+    fontSize: 16,
+    fontWeight: "600",
+  },
+  donationHint: {
+    fontSize: 12,
+    textAlign: "center",
+    marginTop: 8,
+    fontStyle: "italic",
   },
 });
