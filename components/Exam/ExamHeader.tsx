@@ -8,11 +8,11 @@ import ExamTimer from "./ExamTimer";
 interface ExamHeaderProps {
   currentQuestion: number;
   totalQuestions: number;
-  remainingTime: number; // <-- ДОБАВЛЕНО
+  remainingTime: number;
   onBack: () => void;
   timerActive: boolean;
   onTimeUp: () => void;
-  onExamComplete: (timeSpent: number) => void;
+  // onExamComplete: (timeSpent: number) => void; // <-- УДАЛИТЬ
 }
 
 export default function ExamHeader({
@@ -22,7 +22,7 @@ export default function ExamHeader({
   onBack,
   timerActive,
   onTimeUp,
-  onExamComplete,
+  // onExamComplete, // <-- УДАЛИТЬ
 }: ExamHeaderProps) {
   const { colors } = useTheme();
 
@@ -30,7 +30,7 @@ export default function ExamHeader({
     container: {
       backgroundColor: colors.card,
       paddingTop: 5,
-      paddingHorizontal: 7, // Уменьшили отступы до 7px
+      paddingHorizontal: 7,
       paddingBottom: 12,
       borderBottomWidth: 1,
       borderBottomColor: colors.border,
@@ -72,7 +72,6 @@ export default function ExamHeader({
           isActive={timerActive}
           onTimeUp={onTimeUp}
           remainingTime={remainingTime}
-          onExamComplete={onExamComplete}
         />
       </View>
     </View>

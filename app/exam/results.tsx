@@ -5,10 +5,9 @@ import {
   Award,
   CheckCircle,
   Clock,
-  Heart,
   Home,
   RotateCcw,
-  XCircle,
+  XCircle
 } from "lucide-react-native"; // Добавлен Heart
 import React, { useEffect } from "react";
 import {
@@ -22,7 +21,6 @@ import {
 } from "react-native"; // Добавлен Linking
 import { SafeAreaView } from "react-native-safe-area-context";
 import { saveExamResult } from "../data/examResults";
-import { SBPDonation } from "@/components/Exam/SBPDonation";
 
 interface QuestionData {
   id: string;
@@ -418,13 +416,6 @@ export default function ExamResultsScreen() {
               </TouchableOpacity>
             </View>
 
-            {passed && (
-              <View style={styles.donationContainer}>
-                <SBPDonation
-                  phoneNumber="+7 951 033 22 31" // Ваш реальный номер
-                />
-              </View>
-            )}
           </View>
         </ScrollView>
       </View>

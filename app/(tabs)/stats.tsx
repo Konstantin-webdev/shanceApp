@@ -10,9 +10,9 @@ import {
   ScrollView,
   StyleSheet,
   Text,
-  View,
+  View
 } from "react-native";
-import { ExamResult, getStatistics, clearExamResults } from "../data/examResults";
+import { clearExamResults, ExamResult, getStatistics } from "../data/examResults";
 import { useProfessionStore } from "../store/useProfessionStore";
 import { useUserStore } from "../store/useUserStore";
 
@@ -133,8 +133,3 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
 });
-
-// Удалите эту неработающую функцию:
-// function clearAllStatistics() {
-//   throw new Error("Function not implemented.");
-// }

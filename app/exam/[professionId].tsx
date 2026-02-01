@@ -1,5 +1,5 @@
 import { useLocalSearchParams, useRouter } from "expo-router";
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   ActivityIndicator,
   ScrollView,
@@ -20,17 +20,26 @@ import type { IQuestion } from "../types/questions";
 
 // Компоненты
 import { useTheme } from "@/components/ThemeProvider";
-import ExamHeader from "../../components/ExamHeader";
+import ExamHeader from "../../components/Exam/ExamHeader";
 import QuestionCard from "../../components/QuestionCard";
 import type { IProfession } from "../types/profession";
 
 const EXAM_QUESTIONS_COUNT = 10;
 const EXAM_DURATION = 10 * 60; // 10 минут в секундах
 
+// Специальные значения для ответов
+const ANSWER_TYPES = {
+  SKIPPED: "SKIPPED", // Пользователь пропустил (сам завершил)
+  TIMEOUT: "TIMEOUT", // Время вышло
+  ANSWERED: "ANSWERED", // Обычный ответ
+} as const;
+
 export default function ExamSessionScreen() {
   const router = useRouter();
   const { professionId } = useLocalSearchParams<{ professionId: string }>();
   const { colors, isDark } = useTheme();
+
+  // Состояния
   const [profession, setProfession] = useState<IProfession | null>(null);
   const [allQuestions, setAllQuestions] = useState<IQuestion[]>([]);
   const [examQuestions, setExamQuestions] = useState<IQuestion[]>([]);
@@ -40,41 +49,28 @@ export default function ExamSessionScreen() {
   >({});
   const [isLoading, setIsLoading] = useState(true);
   const [timerActive, setTimerActive] = useState(false);
-  const [remainingTime, setRemainingTime] = useState(EXAM_DURATION); // <-- ДОБАВЛЕНО
-  const [timeSpent, setTimeSpent] = useState<number | null>(null);
+  const [remainingTime, setRemainingTime] = useState(EXAM_DURATION);
   const [isFinishing, setIsFinishing] = useState(false);
-  const timerIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null); // <-- ДОБАВЛЕНО
+
+  // Рефы
+  const timerIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const examStartTimeRef = useRef<number>(Date.now());
+  const isExamFinishedRef = useRef<boolean>(false);
+
   const showCorrectAnswers = professionId === "38" || professionId === "78";
 
   // Таймер экзамена
   useEffect(() => {
-    if (timerActive) {
-      // Очищаем предыдущий интервал на всякий случай
-      if (timerIntervalRef.current) {
-        clearInterval(timerIntervalRef.current);
-      }
-
+    if (timerActive && !isExamFinishedRef.current) {
       timerIntervalRef.current = setInterval(() => {
         setRemainingTime((prev) => {
           if (prev <= 1) {
-            // Время вышло
-            if (timerIntervalRef.current) {
-              clearInterval(timerIntervalRef.current);
-              timerIntervalRef.current = null;
-            }
-            setTimerActive(false);
             handleTimeUp();
             return 0;
           }
           return prev - 1;
         });
       }, 1000);
-    } else {
-      // Останавливаем таймер
-      if (timerIntervalRef.current) {
-        clearInterval(timerIntervalRef.current);
-        timerIntervalRef.current = null;
-      }
     }
 
     return () => {
@@ -85,7 +81,7 @@ export default function ExamSessionScreen() {
     };
   }, [timerActive]);
 
-  // Загрузка данных и автоматический старт экзамена
+  // Загрузка данных
   useEffect(() => {
     const initializeExam = async () => {
       if (!professionId) {
@@ -117,35 +113,35 @@ export default function ExamSessionScreen() {
   }, [professionId]);
 
   // Запуск экзамена
-  const startExam = (questions: IQuestion[] = allQuestions) => {
+  const startExam = (questions: IQuestion[]) => {
     const shuffled = [...questions]
       .sort(() => Math.random() - 0.5)
       .slice(0, EXAM_QUESTIONS_COUNT);
 
     setExamQuestions(shuffled);
     setTimerActive(true);
-    setRemainingTime(EXAM_DURATION); // <-- СБРАСЫВАЕМ ТАЙМЕР
-    setTimeSpent(null);
+    setRemainingTime(EXAM_DURATION);
     setSelectedAnswers({});
     setCurrentQuestionIndex(0);
     setIsLoading(false);
+    isExamFinishedRef.current = false;
+    examStartTimeRef.current = Date.now();
   };
 
-  // Колбэк когда время истекло (10 минут)
-  const handleTimeUp = useCallback(() => {
-    const spentTime = EXAM_DURATION - remainingTime;
-    setTimeSpent(spentTime);
-    setTimerActive(false);
-    finishExam(spentTime);
-  }, [examQuestions, selectedAnswers, remainingTime]);
+  // Время вышло
+  const handleTimeUp = () => {
+    if (isExamFinishedRef.current) return;
+    isExamFinishedRef.current = true;
 
-  // Колбэк когда работник сам завершил экзамен
-  const handleExamComplete = useCallback(() => {
-    const spentTime = EXAM_DURATION - remainingTime;
-    setTimeSpent(spentTime);
     setTimerActive(false);
-    finishExam(spentTime);
-  }, [remainingTime]);
+    if (timerIntervalRef.current) {
+      clearInterval(timerIntervalRef.current);
+      timerIntervalRef.current = null;
+    }
+
+    const spentTime = EXAM_DURATION - remainingTime;
+    finishExam(spentTime, ANSWER_TYPES.TIMEOUT);
+  };
 
   // Навигация назад
   const handleBack = () => {
@@ -160,69 +156,111 @@ export default function ExamSessionScreen() {
     }));
   };
 
-  // Оптимизированная функция показа результатов
-  const showExamResults = useCallback(
-    (finalAnswers: Record<number, string>, spentTime?: number) => {
-      if (!examQuestions.length) return;
+  // Завершение экзамена (кнопка "Завершить")
+  const handleFinishExam = () => {
+    if (isExamFinishedRef.current || isFinishing || examQuestions.length === 0) {
+      return;
+    }
 
-      // Быстрый расчет результатов
-      const correctAnswers = examQuestions.reduce((count, question, index) => {
-        const userAnswer = finalAnswers[index];
-        return userAnswer === question.correctAnswer ? count + 1 : count;
-      }, 0);
+    setIsFinishing(true);
+    isExamFinishedRef.current = true;
 
-      const score = Math.round((correctAnswers / examQuestions.length) * 100);
-      const passed = score >= 70;
+    setTimerActive(false);
+    if (timerIntervalRef.current) {
+      clearInterval(timerIntervalRef.current);
+      timerIntervalRef.current = null;
+    }
 
-      // Готовим данные для перехода
-      const params = {
-        correctAnswers: correctAnswers.toString(),
-        totalQuestions: examQuestions.length.toString(),
-        professionName: profession?.name || "",
-        professionId: professionId || "",
-        score: score.toString(),
-        passed: passed.toString(),
-        timeSpent: spentTime
-          ? spentTime.toString()
-          : (EXAM_DURATION - remainingTime).toString(),
-        questionsData: JSON.stringify(examQuestions),
-        answersData: JSON.stringify(finalAnswers),
-      };
-
-      setTimeout(() => {
-        router.push({
-          pathname: "/exam/results",
-          params,
-        });
-      }, 50);
-    },
-    [examQuestions, profession, professionId, router, remainingTime],
-  );
+    const spentTime = EXAM_DURATION - remainingTime;
+    finishExam(spentTime, ANSWER_TYPES.SKIPPED);
+  };
 
   // Функция завершения экзамена
-  const finishExam = useCallback(
-    (spentTime?: number) => {
-      if (examQuestions.length === 0) return;
+  const finishExam = (spentTime: number, completionType: string) => {
+    if (examQuestions.length === 0) return;
 
-      setIsFinishing(true);
+    // Подготавливаем финальные ответы
+    const finalAnswers = prepareFinalAnswers(selectedAnswers, completionType);
 
-      // Быстрое завершение без проверки всех ответов
-      const finalAnswers = { ...selectedAnswers };
-      examQuestions.forEach((_, index) => {
-        if (!finalAnswers[index]) {
-          finalAnswers[index] = "";
+    // Рассчитываем результаты
+    const results = calculateResults(examQuestions, finalAnswers);
+
+    // Навигация на результаты
+    navigateToResults(results, finalAnswers, spentTime, completionType);
+  };
+
+  // Подготовка финальных ответов
+  const prepareFinalAnswers = (
+    answers: Record<number, string>,
+    completionType: string
+  ): Record<number, string> => {
+    const finalAnswers = { ...answers };
+
+    examQuestions.forEach((_, index) => {
+      if (!finalAnswers[index]) {
+        // Если ответ отсутствует, помечаем почему
+        if (completionType === ANSWER_TYPES.TIMEOUT) {
+          finalAnswers[index] = ANSWER_TYPES.TIMEOUT; // "Не успел"
+        } else {
+          finalAnswers[index] = ANSWER_TYPES.SKIPPED; // "Пропустил"
         }
-      });
+      }
+    });
 
-      // Немедленный показ результатов
-      showExamResults(finalAnswers, spentTime);
-    },
-    [examQuestions, selectedAnswers, showExamResults],
-  );
+    return finalAnswers;
+  };
 
-  // Проверка, отвечен ли текущий вопрос
-  const isCurrentQuestionAnswered = () => {
-    return !!selectedAnswers[currentQuestionIndex];
+  // Расчет результатов (чистая функция)
+  const calculateResults = (
+    questions: IQuestion[],
+    answers: Record<number, string>
+  ) => {
+    let correctCount = 0;
+
+    questions.forEach((question, index) => {
+      const userAnswer = answers[index];
+
+      // Считаем только если ответ есть и это не спец. значение
+      if (userAnswer &&
+        userAnswer !== ANSWER_TYPES.SKIPPED &&
+        userAnswer !== ANSWER_TYPES.TIMEOUT) {
+        if (userAnswer === question.correctAnswer) {
+          correctCount++;
+        }
+      }
+    });
+
+    const totalQuestions = questions.length;
+    const score = Math.round((correctCount / totalQuestions) * 100);
+    const passed = score >= 70;
+
+    return { correctCount, totalQuestions, score, passed };
+  };
+
+  // Навигация на экран результатов
+  const navigateToResults = (
+    results: ReturnType<typeof calculateResults>,
+    finalAnswers: Record<number, string>,
+    spentTime: number,
+    completionType: string
+  ) => {
+    const params = {
+      correctAnswers: results.correctCount.toString(),
+      totalQuestions: results.totalQuestions.toString(),
+      professionName: profession?.name || "",
+      professionId: professionId || "",
+      score: results.score.toString(),
+      passed: results.passed.toString(),
+      timeSpent: spentTime.toString(),
+      questionsData: JSON.stringify(examQuestions),
+      answersData: JSON.stringify(finalAnswers),
+      completionType: completionType, // Добавляем тип завершения
+    };
+
+    router.replace({
+      pathname: "/exam/results",
+      params,
+    });
   };
 
   // Переход к следующему вопросу
@@ -230,18 +268,6 @@ export default function ExamSessionScreen() {
     if (currentQuestionIndex < examQuestions.length - 1) {
       setCurrentQuestionIndex((prev) => prev + 1);
     }
-  };
-
-  // Завершение экзамена (кнопка "Завершить")
-  const handleFinishExam = () => {
-    if (examQuestions.length === 0) return;
-
-    if (!isCurrentQuestionAnswered()) {
-      return;
-    }
-
-    setIsFinishing(true);
-    handleExamComplete(); // <-- Используем существующий колбэк
   };
 
   // Если вопросы в разработке
@@ -260,7 +286,7 @@ export default function ExamSessionScreen() {
   // Основной экран экзамена
   const currentQuestion = examQuestions[currentQuestionIndex];
   const isLastQuestion = currentQuestionIndex === examQuestions.length - 1;
-  const isAnswered = isCurrentQuestionAnswered();
+  const isAnswered = !!selectedAnswers[currentQuestionIndex];
 
   return (
     <SafeAreaView
@@ -271,11 +297,10 @@ export default function ExamSessionScreen() {
       <ExamHeader
         currentQuestion={currentQuestionIndex + 1}
         totalQuestions={examQuestions.length}
-        remainingTime={remainingTime} // <-- ПЕРЕДАЕМ ВРЕМЯ
+        remainingTime={remainingTime}
         onBack={handleBack}
         timerActive={timerActive}
         onTimeUp={handleTimeUp}
-        onExamComplete={handleExamComplete}
       />
 
       <ScrollView
@@ -295,7 +320,7 @@ export default function ExamSessionScreen() {
         />
       </ScrollView>
 
-      {/* Фиксированная кнопка навигации с учетом safe area */}
+      {/* Фиксированная кнопка навигации */}
       <View style={styles.navigationContainer}>
         <View
           style={[
@@ -372,7 +397,6 @@ const styles = StyleSheet.create({
   },
   disabledButton: {
     opacity: 0.5,
-    marginBottom: 16,
   },
   processingButton: {
     opacity: 0.7,

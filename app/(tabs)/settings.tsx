@@ -1,9 +1,14 @@
 // screens/SettingsScreen.tsx
+import ProfessionSelector from "@/components/ProfessionSelector";
+import { useTheme } from "@/components/ThemeProvider";
+import ThemeSelector from "@/components/ThemeSelector";
+import { useRouter } from "expo-router";
+import { ArrowLeft, Trash2 } from "lucide-react-native";
 import React, { useState } from "react";
 import {
   Alert,
   KeyboardAvoidingView,
-  Platform, // Добавьте этот импорт
+  Platform,
   ScrollView,
   StyleSheet,
   Text,
@@ -12,24 +17,18 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { ArrowLeft, Trash2 } from "lucide-react-native";
-import { useRouter } from "expo-router";
-import ProfessionSelector from "@/components/ProfessionSelector";
-import ThemeSelector from "@/components/ThemeSelector";
+import { useOnboardingStore } from "../store/useOnboardingStore";
 import { useProfessionStore } from "../store/useProfessionStore";
 import { useUserStore } from "../store/useUserStore";
-import { useTheme } from "@/components/ThemeProvider"; // Импортируем useTheme
-import { useOnboardingStore } from "../store/useOnboardingStore";
 
 export default function SettingsScreen() {
   const { userName, setUserName, clearUserName } = useUserStore();
   const { setSelectedProfession } = useProfessionStore();
   const [newName, setNewName] = useState(userName || "");
   const router = useRouter();
-  const { resetOnboarding } = useOnboardingStore(); // Добавляем
+  const { resetOnboarding } = useOnboardingStore();
 
-  // Используем тему
-  const { colors } = useTheme();
+  const { colors, isDark } = useTheme();
 
   const handleSaveName = () => {
     if (!newName.trim()) {
@@ -81,7 +80,7 @@ export default function SettingsScreen() {
     );
   };
 
-  // Создаем стили с использованием цветов темы
+  // Обновленные стили
   const styles = StyleSheet.create({
     safeArea: {
       flex: 1,
@@ -91,113 +90,167 @@ export default function SettingsScreen() {
       flex: 1,
     },
     content: {
-      padding: 20,
-      paddingTop: 20,
+      paddingHorizontal: 20,
+      paddingTop: 12,
+      paddingBottom: 30,
     },
     header: {
       flexDirection: "row",
       alignItems: "center",
-      marginBottom: 24,
+      marginBottom: 32,
+      paddingTop: 8,
+      paddingBottom: 16,
+      borderBottomWidth: 1,
+      borderBottomColor: colors.border,
     },
     backButton: {
       marginRight: 16,
-      padding: 4,
+      padding: 8,
+      borderRadius: 8,
+      backgroundColor: colors.primary + "20", // 20% прозрачности
     },
     title: {
-      fontSize: 28,
-      fontWeight: "bold",
-      color: colors.primary,
+      fontSize: 32,
+      fontWeight: "800",
+      color: colors.text,
+      letterSpacing: -0.5,
+    },
+    sectionContainer: {
+      marginBottom: 28,
+    },
+    sectionTitle: {
+      fontSize: 22,
+      fontWeight: "700",
+      color: colors.text,
+      marginBottom: 20,
+      letterSpacing: -0.3,
     },
     card: {
       backgroundColor: colors.card,
-      borderRadius: 12,
-      padding: 20,
-      marginBottom: 20,
+      borderRadius: 20,
+      padding: 24,
+      shadowColor: isDark ? "#000" : colors.muted, // Используем muted для светлой тени
+      shadowOffset: { width: 0, height: 4 },
+      shadowOpacity: isDark ? 0.3 : 0.1,
+      shadowRadius: 12,
+      elevation: 5,
       borderWidth: 1,
       borderColor: colors.border,
     },
-    cardTitle: {
-      fontSize: 20,
-      fontWeight: "600",
-      color: colors.text,
-      marginBottom: 16,
-    },
     inputGroup: {
-      marginBottom: 20,
+      marginBottom: 24,
     },
     label: {
       fontSize: 16,
-      fontWeight: "500",
+      fontWeight: "600",
       color: colors.text,
-      marginBottom: 8,
+      marginBottom: 12,
+    },
+    inputContainer: {
+      position: "relative",
     },
     input: {
-      borderWidth: 1,
+      borderWidth: 2,
       borderColor: colors.border,
-      borderRadius: 8,
-      padding: 12,
-      fontSize: 16,
-      marginBottom: 8,
+      borderRadius: 14,
+      padding: 18,
+      fontSize: 17,
       backgroundColor: colors.card,
       color: colors.text,
+      paddingRight: 120,
     },
-    saveButton: {
+    inputFocused: {
+      borderColor: colors.primary,
+    },
+    saveButtonInline: {
+      position: "absolute",
+      right: 12,
+      top: 12,
       backgroundColor: colors.primary,
-      paddingVertical: 14,
-      borderRadius: 8,
-      alignItems: "center",
+      paddingHorizontal: 20,
+      paddingVertical: 10,
+      borderRadius: 10,
+      minWidth: 100,
     },
-    saveButtonDisabled: {
+    saveButtonInlineDisabled: {
       backgroundColor: colors.muted,
+      opacity: 0.6,
     },
-    saveButtonText: {
+    saveButtonInlineText: {
       color: "#FFFFFF",
-      fontSize: 16,
+      fontSize: 15,
       fontWeight: "600",
+      textAlign: "center",
     },
-    clearButton: {
-      borderWidth: 1,
-      borderColor: colors.warning,
-      paddingVertical: 12,
-      borderRadius: 8,
-      alignItems: "center",
-      marginBottom: 8,
+    buttonGroup: {
+      gap: 12,
     },
-    clearButtonText: {
-      color: colors.warning,
-      fontSize: 16,
-      fontWeight: "600",
-    },
-    resetAllButton: {
-      borderWidth: 2,
-      borderColor: colors.danger,
-      paddingVertical: 14,
-      borderRadius: 8,
+    button: {
+      borderRadius: 14,
+      paddingVertical: 18,
       alignItems: "center",
       flexDirection: "row",
       justifyContent: "center",
     },
-    resetIcon: {
+    primaryButton: {
+      backgroundColor: colors.primary,
+    },
+    secondaryButton: {
+      backgroundColor: colors.warning + "20", // 20% прозрачности
+      borderWidth: 2,
+      borderColor: colors.warning,
+    },
+    dangerButton: {
+      backgroundColor: colors.danger + "15", // 15% прозрачности
+      borderWidth: 2,
+      borderColor: colors.danger,
+    },
+    buttonText: {
+      fontSize: 17,
+      fontWeight: "600",
+      marginLeft: 10,
+    },
+    primaryButtonText: {
+      color: "#FFFFFF",
+    },
+    secondaryButtonText: {
+      color: colors.warning,
+    },
+    dangerButtonText: {
+      color: colors.danger,
+    },
+    buttonIcon: {
       marginRight: 8,
     },
-    resetAllButtonText: {
-      color: colors.danger,
-      fontSize: 16,
-      fontWeight: "bold",
+    warningText: {
+      fontSize: 14,
+      color: colors.muted,
+      textAlign: "center",
+      marginTop: 16,
+      lineHeight: 20,
+      fontStyle: "italic",
     },
     dangerText: {
       fontSize: 14,
       color: colors.danger,
-      marginTop: 12,
       textAlign: "center",
+      marginTop: 16,
+      lineHeight: 20,
+      fontWeight: "500",
     },
     separator: {
       height: 1,
-      backgroundColor: colors.border,
-      marginVertical: 16,
+      backgroundColor: colors.border + "80", // 80% прозрачности
+      marginVertical: 20,
     },
     bottomSpacer: {
       height: 40,
+    },
+    currentValue: {
+      fontSize: 15,
+      color: colors.muted,
+      marginTop: 4,
+      fontStyle: "italic",
     },
   });
 
@@ -206,6 +259,7 @@ export default function SettingsScreen() {
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={styles.container}
+        keyboardVerticalOffset={Platform.OS === "ios" ? 60 : 0}
       >
         <ScrollView
           contentContainerStyle={styles.content}
@@ -216,6 +270,7 @@ export default function SettingsScreen() {
             <TouchableOpacity
               onPress={() => router.back()}
               style={styles.backButton}
+              activeOpacity={0.7}
             >
               <ArrowLeft size={24} color={colors.primary} />
             </TouchableOpacity>
@@ -223,72 +278,85 @@ export default function SettingsScreen() {
           </View>
 
           {/* Блок с именем пользователя */}
-          <View style={styles.card}>
-            <Text style={styles.cardTitle}>Личные данные</Text>
-
-            <View style={styles.inputGroup}>
-              <Text style={styles.label}>Ваше имя</Text>
-              <TextInput
-                style={styles.input}
-                value={newName}
-                onChangeText={setNewName}
-                placeholder="Введите ваше имя"
-                placeholderTextColor={colors.muted}
-                maxLength={50}
-                returnKeyType="done"
-              />
+          <View style={styles.sectionContainer}>
+            <Text style={styles.sectionTitle}>Личные данные</Text>
+            <View style={styles.card}>
+              <View style={styles.inputGroup}>
+                <Text style={styles.label}>Ваше имя</Text>
+                <View style={styles.inputContainer}>
+                  <TextInput
+                    style={styles.input}
+                    value={newName}
+                    onChangeText={setNewName}
+                    placeholder="Введите ваше имя"
+                    placeholderTextColor={colors.muted + "80"}
+                    maxLength={50}
+                    returnKeyType="done"
+                    onSubmitEditing={handleSaveName}
+                  />
+                  <TouchableOpacity
+                    style={[
+                      styles.saveButtonInline,
+                      !newName.trim() && styles.saveButtonInlineDisabled,
+                    ]}
+                    onPress={handleSaveName}
+                    disabled={!newName.trim()}
+                    activeOpacity={0.8}
+                  >
+                    <Text style={styles.saveButtonInlineText}>
+                      {userName ? "Обновить" : "Сохранить"}
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
             </View>
-
-            <TouchableOpacity
-              style={[
-                styles.saveButton,
-                !newName.trim() && styles.saveButtonDisabled,
-              ]}
-              onPress={handleSaveName}
-              disabled={!newName.trim()}
-            >
-              <Text style={styles.saveButtonText}>Сохранить имя</Text>
-            </TouchableOpacity>
           </View>
 
           {/* Блок выбора профессии */}
-          <View style={styles.card}>
-            <ProfessionSelector />
+          <View style={styles.sectionContainer}>
+            <Text style={styles.sectionTitle}>Профессия</Text>
+            <View style={styles.card}>
+              <ProfessionSelector />
+            </View>
           </View>
 
           {/* Блок выбора темы */}
-          <View style={styles.card}>
-            <ThemeSelector />
+          <View style={styles.sectionContainer}>
+            <Text style={styles.sectionTitle}>Внешний вид</Text>
+            <View style={styles.card}>
+              <ThemeSelector />
+            </View>
           </View>
 
           {/* Блок сброса всех данных */}
-          <View style={styles.card}>
-            <Text style={styles.cardTitle}>Опасная зона</Text>
+          <View style={styles.sectionContainer}>
+            <Text style={styles.sectionTitle}>Опасная зона</Text>
+            <View style={styles.card}>
+              <Text style={styles.warningText}>
+                Эти действия приведут к потере данных. Вы не сможете восстановить их.
+              </Text>
 
-            <TouchableOpacity
-              style={styles.clearButton}
-              onPress={handleClearName}
-            >
-              <Text style={styles.clearButtonText}>Сбросить только имя</Text>
-            </TouchableOpacity>
+              <View style={styles.separator} />
 
-            <View style={styles.separator} />
+              <TouchableOpacity
+                style={[styles.button, styles.dangerButton]}
+                onPress={handleResetAll}
+                activeOpacity={0.8}
+              >
+                <Trash2
+                  size={22}
+                  color={colors.danger}
+                  style={styles.buttonIcon}
+                />
+                <Text style={[styles.buttonText, styles.dangerButtonText]}>
+                  Сбросить все данные
+                </Text>
+              </TouchableOpacity>
 
-            <TouchableOpacity
-              style={styles.resetAllButton}
-              onPress={handleResetAll}
-            >
-              <Trash2
-                size={20}
-                color={colors.danger}
-                style={styles.resetIcon}
-              />
-              <Text style={styles.resetAllButtonText}>Сбросить всё</Text>
-            </TouchableOpacity>
-
-            <Text style={styles.dangerText}>
-              Эта кнопка сбросит ваше имя и выбранную профессию
-            </Text>
+              <Text style={styles.dangerText}>
+                Сбросит имя, профессию и вернёт к первоначальной настройке
+              </Text>
+            </View>
           </View>
 
           <View style={styles.bottomSpacer} />

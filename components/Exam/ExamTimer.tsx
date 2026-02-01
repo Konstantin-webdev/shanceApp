@@ -8,16 +8,12 @@ interface ExamTimerProps {
   remainingTime: number; // Оставшееся время в секундах
   isActive: boolean;
   onTimeUp: () => void;
-  onExamComplete: (timeSpent: number) => void;
 }
 
 const EXAM_DURATION = 10 * 60; // 10 минут
 
 export default function ExamTimer({
-  remainingTime, // Получаем время сверху
-  isActive,
-  onTimeUp,
-  onExamComplete,
+  remainingTime,
 }: ExamTimerProps) {
   const { colors } = useTheme();
 

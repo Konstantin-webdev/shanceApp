@@ -22,7 +22,9 @@ export default function TrainingCompletionScreen() {
       : 0;
 
   const handleGoHome = () => {
-    router.back();
+    router.replace({
+      pathname: "/",
+    });
   };
 
   return (
