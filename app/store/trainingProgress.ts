@@ -1,28 +1,23 @@
-// app/store/trainingProgress.ts
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 interface TrainingProgressState {
-  // Храним прогресс по professionId: { questionIndex, selectedAnswers }
   progress: Record<
     number,
     {
       questionIndex: number;
       selectedAnswers: Record<number, string>;
-      timestamp: number; // Когда был сохранен прогресс
+      timestamp: number;
     }
   >;
 
-  // Методы для работы с прогрессом
   saveProgress: (
     professionId: number,
     questionIndex: number,
     selectedAnswers: Record<number, string>,
   ) => void;
-  getProgress: (
-    professionId: number,
-  ) => {
+  getProgress: (professionId: number) => {
     questionIndex: number;
     selectedAnswers: Record<number, string>;
   } | null;

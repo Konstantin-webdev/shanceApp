@@ -14,11 +14,15 @@ export const professions: IProfession[] = [
   { id: 25, name: "Уборщик", questionCount: 85 }, //done
   { id: 42, name: "Крановщик", questionCount: 210 }, //done
   { id: 35, name: "Машинист экскаватора", questionCount: 180 }, //done
+  { id: 73, name: "Машинист компрессорных установок", questionCount: 245 }, //done
+  { id: 29, name: "Бульдозерист", questionCount: 152 }, //done
+  { id: 55, name: "Кладовщик", questionCount: 85 }, //done
+  { id: 54, name: "Зав. складом", questionCount: 145 }, //done
+  { id: 32, name: "Оператор АЗС", questionCount: 96 }, //done
 
-  { id: 73, name: "Машинист компрессорных установок", questionCount: 245 },
-  { id: 29, name: "Бульдозерист", questionCount: 152 },
-  { id: 1, name: "Специалист", questionCount: 609 },
-  { id: 4, name: "Оператор котельной", questionCount: 232 },
+  { id: 21, name: "Стропальщик", questionCount: 236 },
+
+  /*  { id: 4, name: "Оператор котельной", questionCount: 232 },
   { id: 5, name: "Приборист", questionCount: 244 },
   { id: 58, name: "Экономист", questionCount: 57 },
   { id: 59, name: "Главный бухгалтер", questionCount: 57 },
@@ -27,13 +31,11 @@ export const professions: IProfession[] = [
   { id: 65, name: "Медсестра", questionCount: 57 },
   { id: 66, name: "Завхоз", questionCount: 85 },
   { id: 75, name: "Слесарь по КИП и А", questionCount: 204 },
-  { id: 21, name: "Стропальщик", questionCount: 236 },
   { id: 24, name: "Инженер-программист", questionCount: 85 },
-  { id: 32, name: "Оператор АЗС", questionCount: 96 },
   { id: 40, name: "Кабельщик-спайщик", questionCount: 206 },
-  { id: 54, name: "Зав. складом", questionCount: 145 },
-  { id: 55, name: "Кладовщик", questionCount: 85 },
-  /*   { id: 9, name: "ПТБ Группа V", questionCount: 424 },
+
+   { id: 9, name: "ПТБ Группа V", questionCount: 424 },
+   { id: 1, name: "Специалист", questionCount: 609 },
   { id: 47, name: "Горничная", questionCount: 85 },
   { id: 10, name: "ПТБ Группа IV", questionCount: 356 },
   { id: 11, name: "ПТБ Группа III", questionCount: 241 },

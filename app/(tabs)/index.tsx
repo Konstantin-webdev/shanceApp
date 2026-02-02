@@ -14,7 +14,6 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useProfessionStore } from "../store/useProfessionStore";
 import { useUserStore } from "../store/useUserStore";
-import GreetingScreen from "@/components/GreetingScreen";
 
 export default function TrainingScreen() {
   const router = useRouter();
@@ -62,22 +61,6 @@ export default function TrainingScreen() {
     scrollContent: {
       flexGrow: 1,
     },
-    welcomeOverlay: {
-      position: "absolute",
-      top: 0,
-      left: 0,
-      right: 0,
-      backgroundColor: "rgba(255, 255, 255, 0.75)",
-      paddingVertical: 20,
-      zIndex: 1000,
-      alignItems: "center",
-      paddingTop: StatusBar.currentHeight || 20,
-    },
-    welcomeText: {
-      color: colors.background || "#FFFFFF",
-      fontSize: 16,
-      fontWeight: "600",
-    },
     header: {
       backgroundColor: colors.card,
       padding: 20,
@@ -105,7 +88,6 @@ export default function TrainingScreen() {
       backgroundColor: colors.card,
       padding: 20,
       borderRadius: 12,
-      marginBottom: 16,
       borderWidth: 1,
       borderColor: colors.border,
     },
@@ -265,7 +247,6 @@ export default function TrainingScreen() {
             </Text>
           </TouchableOpacity>
 
-          {/* Инструкция */}
           <View style={styles.instructions}>
             <Text style={styles.instructionsTitle}>Как это работает:</Text>
             <View style={styles.instructionItem}>

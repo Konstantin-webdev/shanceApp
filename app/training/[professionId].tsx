@@ -1,10 +1,9 @@
 import { useTheme } from "@/components/ThemeProvider";
 import { useTrainingProgress } from "@/hooks/useTrainingProgress";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import { ArrowLeft } from "lucide-react-native";
+import { ArrowLeft, ArrowRight } from "lucide-react-native";
 import React, { useEffect, useState } from "react";
 import {
-  Alert,
   ScrollView,
   StyleSheet,
   Text,
@@ -117,7 +116,6 @@ export default function TrainingSessionScreen() {
   };
 
   const handleCancel = () => {
-    // Если отмена - возвращаемся к начальным значениям
     setCurrentQuestionIndex(0);
     setSelectedAnswers({});
     setShowContinueModal(false);
@@ -163,33 +161,7 @@ export default function TrainingSessionScreen() {
   };
 
   const handleBack = () => {
-    Alert.alert(
-      "Выйти из тренировки?",
-      "Ваш прогресс будет сохранен автоматически",
-      [
-        { text: "Отмена", style: "cancel" },
-        {
-          text: "Выйти",
-          onPress: () => router.back(),
-        },
-      ],
-    );
-  };
-
-  const handleClearProgress = () => {
-    Alert.alert("Начать заново?", "Весь текущий прогресс будет сброшен", [
-      { text: "Отмена", style: "cancel" },
-      {
-        text: "Начать заново",
-        style: "destructive",
-        onPress: () => {
-          clearCurrentProgress();
-          setCurrentQuestionIndex(0);
-          setSelectedAnswers({});
-          Alert.alert("Прогресс сброшен", "Можете начать заново");
-        },
-      },
-    ]);
+    router.back();
   };
 
   if (!isLoading && questions.length === 0) {
@@ -285,6 +257,9 @@ export default function TrainingSessionScreen() {
       borderRadius: 12,
       alignItems: "center",
     },
+    navButtonIcon: {
+      margin: 8,
+    },
     prevButton: {
       backgroundColor: colors.border,
       marginRight: 8,
@@ -308,6 +283,13 @@ export default function TrainingSessionScreen() {
       color: "#FFFFFF",
       fontSize: 16,
       fontWeight: "600",
+    },
+    navButtonWrap: {
+      display: "flex",
+      flexDirection: "row",
+      justifyContent: "center",
+      alignItems: "center",
+      gap: 8,
     },
     clearProgressLink: {
       paddingVertical: 12,
@@ -378,9 +360,14 @@ export default function TrainingSessionScreen() {
                   style={[styles.navButton, styles.prevButton]}
                   onPress={handlePrevQuestion}
                 >
-                  <Text style={[styles.navButtonText, { color: colors.text }]}>
-                    ← Назад
-                  </Text>
+                  <View style={styles.navButtonWrap}>
+                    <ArrowLeft size={18} color={colors.text} />
+                    <Text
+                      style={[styles.navButtonText, { color: colors.text }]}
+                    >
+                      Назад
+                    </Text>
+                  </View>
                 </TouchableOpacity>
               )}
 
@@ -395,7 +382,10 @@ export default function TrainingSessionScreen() {
                   onPress={handleNextQuestion}
                   disabled={!selectedAnswers[currentQuestionIndex]}
                 >
-                  <Text style={styles.navButtonText}>Далее →</Text>
+                  <View style={styles.navButtonWrap}>
+                    <Text style={styles.navButtonText}>Далее</Text>
+                    <ArrowRight size={18} color={"#FFFFFF"} />
+                  </View>
                 </TouchableOpacity>
               ) : (
                 <TouchableOpacity
