@@ -1,4 +1,3 @@
-// components/TrainingContinueModal.tsx
 import { useTheme } from "@/components/ThemeProvider";
 import React from "react";
 import { Modal, StyleSheet, Text, TouchableOpacity, View } from "react-native";

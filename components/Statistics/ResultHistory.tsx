@@ -1,8 +1,8 @@
-import type { IProfession } from "@/app/types/profession";
 import { useTheme } from "@/components/ThemeProvider";
+import type { IProfession } from "@/components/types/profession";
 import React from "react";
 import { Alert, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import { ExamResult, formatDate, formatTime } from "../../app/data/examResults";
+import { ExamResult, formatDate, formatTime } from "../data/examResults";
 
 interface ResultHistoryProps {
   results: ExamResult[];

@@ -1,4 +1,3 @@
-// components/TrainingLoadingScreen.tsx
 import { useTheme } from "@/components/ThemeProvider";
 import React from "react";
 import { ActivityIndicator, StyleSheet, Text, View } from "react-native";

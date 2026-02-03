@@ -11,18 +11,17 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import NotImplementedScreen from "../../components/NotImplementedScreen";
-import { getProfessionById } from "../data/professions";
+import { getProfessionById } from "../../components/data/professions";
 import {
   getQuestionsByProfessionId,
   hasQuestionsForProfession,
-} from "../data/questions";
-import type { IQuestion } from "../types/questions";
+} from "../../components/data/questions";
+import type { IQuestion } from "../../components/types/questions";
 
-// Компоненты
 import { useTheme } from "@/components/ThemeProvider";
 import ExamHeader from "../../components/Exam/ExamHeader";
 import QuestionCard from "../../components/QuestionCard";
-import type { IProfession } from "../types/profession";
+import type { IProfession } from "../../components/types/profession";
 
 const EXAM_QUESTIONS_COUNT = 10;
 const EXAM_DURATION = 10 * 60; // 10 минут в секундах
@@ -158,7 +157,11 @@ export default function ExamSessionScreen() {
 
   // Завершение экзамена (кнопка "Завершить")
   const handleFinishExam = () => {
-    if (isExamFinishedRef.current || isFinishing || examQuestions.length === 0) {
+    if (
+      isExamFinishedRef.current ||
+      isFinishing ||
+      examQuestions.length === 0
+    ) {
       return;
     }
 
@@ -192,7 +195,7 @@ export default function ExamSessionScreen() {
   // Подготовка финальных ответов
   const prepareFinalAnswers = (
     answers: Record<number, string>,
-    completionType: string
+    completionType: string,
   ): Record<number, string> => {
     const finalAnswers = { ...answers };
 
@@ -213,7 +216,7 @@ export default function ExamSessionScreen() {
   // Расчет результатов (чистая функция)
   const calculateResults = (
     questions: IQuestion[],
-    answers: Record<number, string>
+    answers: Record<number, string>,
   ) => {
     let correctCount = 0;
 
@@ -221,9 +224,11 @@ export default function ExamSessionScreen() {
       const userAnswer = answers[index];
 
       // Считаем только если ответ есть и это не спец. значение
-      if (userAnswer &&
+      if (
+        userAnswer &&
         userAnswer !== ANSWER_TYPES.SKIPPED &&
-        userAnswer !== ANSWER_TYPES.TIMEOUT) {
+        userAnswer !== ANSWER_TYPES.TIMEOUT
+      ) {
         if (userAnswer === question.correctAnswer) {
           correctCount++;
         }
@@ -242,7 +247,7 @@ export default function ExamSessionScreen() {
     results: ReturnType<typeof calculateResults>,
     finalAnswers: Record<number, string>,
     spentTime: number,
-    completionType: string
+    completionType: string,
   ) => {
     const params = {
       correctAnswers: results.correctCount.toString(),

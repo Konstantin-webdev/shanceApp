@@ -10,9 +10,9 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { professions, searchProfessions } from "../app/data/professions";
-import { useProfessionStore } from "../app/store/useProfessionStore";
-import type { IProfession } from "../app/types/profession";
+import { professions, searchProfessions } from "./data/professions";
+import type { IProfession } from "./types/profession";
+import { useProfessionStore } from "./store/useProfessionStore";
 
 const ProfessionSelector = () => {
   const { selectedProfession, setSelectedProfession } = useProfessionStore();

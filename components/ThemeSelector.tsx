@@ -1,5 +1,3 @@
-// components/ThemeSelector.tsx
-import { ThemeType, useThemeStore } from "@/app/store/useThemeStore";
 import { useTheme } from "@/components/ThemeProvider"; // Добавьте этот импорт
 import { Check, Moon, Smartphone, Sun } from "lucide-react-native";
 import React from "react";
@@ -10,10 +8,12 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import { useThemeStore } from "./store/useThemeStore";
+import type { ThemeType } from "./store/useThemeStore";
 
 const ThemeSelector = () => {
   const { theme, setTheme } = useThemeStore();
-  const { colors } = useTheme(); // Получаем цвета темы
+  const { colors } = useTheme();
 
   const themeOptions: Array<{
     id: ThemeType;

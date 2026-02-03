@@ -1,4 +1,3 @@
-// GreetingScreen.tsx
 import { View, Text, StyleSheet, Animated } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useEffect, useRef } from "react";

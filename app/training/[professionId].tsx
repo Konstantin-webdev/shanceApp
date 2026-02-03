@@ -15,13 +15,13 @@ import NotImplementedScreen from "../../components/NotImplementedScreen";
 import QuestionItem from "../../components/QuestionItem";
 import TrainingContinueModal from "../../components/TrainingContinueModal";
 import TrainingLoadingScreen from "../../components/TrainingLoadingScreen";
-import { getProfessionById } from "../data/professions";
+import { getProfessionById } from "../../components/data/professions";
 import {
   getQuestionsByProfessionId,
   hasQuestionsForProfession,
-} from "../data/questions";
-import type { IProfession } from "../types/profession";
-import type { IQuestion } from "../types/questions";
+} from "../../components/data/questions";
+import type { IProfession } from "../../components/types/profession";
+import type { IQuestion } from "../../components/types/questions";
 
 export default function TrainingSessionScreen() {
   const router = useRouter();

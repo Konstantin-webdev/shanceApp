@@ -1,17 +1,15 @@
-// app/_layout.tsx
+import GreetingScreen from "@/components/GreetingScreen";
 import ProfessionSelectionScreen from "@/components/ProfessionSelectionScreen";
+import { useOnboardingStore } from "@/components/store/useOnboardingStore";
+import { useProfessionStore } from "@/components/store/useProfessionStore";
+import { useUserStore } from "@/components/store/useUserStore";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import WelcomeScreen from "@/components/WelcomeScreen";
-import GreetingScreen from "@/components/GreetingScreen";
 import { Stack } from "expo-router";
 import { useEffect, useState } from "react";
-import { SafeAreaProvider } from "react-native-safe-area-context";
-import { useProfessionStore } from "./store/useProfessionStore";
-import { useUserStore } from "./store/useUserStore";
-import { useOnboardingStore } from "./store/useOnboardingStore";
 import { AppState } from "react-native";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 
-// Время сессии в миллисекундах (например, 5 минут)
 const SESSION_TIMEOUT = 5 * 60 * 1000;
 
 export default function RootLayout() {
@@ -28,7 +26,6 @@ export default function RootLayout() {
     "loading" | "welcome" | "greeting" | "profession" | "tabs"
   >("loading");
 
-  // Проверяем, является ли это началом новой сессии
   useEffect(() => {
     const now = Date.now();
     const isNewSession = !appStartTime || now - appStartTime > SESSION_TIMEOUT;
@@ -39,38 +36,27 @@ export default function RootLayout() {
     }
   }, []);
 
-  // Слушатель изменения состояния приложения (свернуто/развернуто)
   useEffect(() => {
-    const subscription = AppState.addEventListener("change", (nextAppState) => {
-      if (nextAppState === "background" || nextAppState === "inactive") {
-        // При сворачивании приложения не сбрасываем сессию
-      }
-    });
+    // Если состояние еще загружается
+    if (userName === undefined || selectedProfession === undefined) {
+      return;
+    }
 
-    return () => {
-      subscription.remove();
-    };
-  }, []);
-
-  useEffect(() => {
     if (userName === null) {
       setCurrentScreen("welcome");
     } else if (selectedProfession === null) {
       setCurrentScreen("profession");
     } else if (!hasSeenGreetingInThisSession) {
-      // Показываем приветствие только если в этой сессии еще не видели
       setCurrentScreen("greeting");
     } else {
       setCurrentScreen("tabs");
     }
   }, [userName, selectedProfession, hasSeenGreetingInThisSession]);
 
-  // Эффект для таймера на экране приветствия
   useEffect(() => {
     if (currentScreen === "greeting") {
       const timer = setTimeout(() => {
-        setHasSeenGreetingInThisSession(true); // Отмечаем, что в этой сессии увидели
-        setCurrentScreen("tabs");
+        setHasSeenGreetingInThisSession(true);
       }, 2700);
 
       return () => clearTimeout(timer);

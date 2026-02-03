@@ -10,11 +10,15 @@ import {
   ScrollView,
   StyleSheet,
   Text,
-  View
+  View,
 } from "react-native";
-import { clearExamResults, ExamResult, getStatistics } from "../data/examResults";
-import { useProfessionStore } from "../store/useProfessionStore";
-import { useUserStore } from "../store/useUserStore";
+import {
+  clearExamResults,
+  ExamResult,
+  getStatistics,
+} from "../../components/data/examResults";
+import { useUserStore } from "@/components/store/useUserStore";
+import { useProfessionStore } from "@/components/store/useProfessionStore";
 
 export default function StatsScreen() {
   const [results, setResults] = useState<ExamResult[]>([]);
@@ -68,7 +72,6 @@ export default function StatsScreen() {
 
       // Показываем уведомление об успехе
       Alert.alert("Успех", "Вся статистика была очищена");
-
     } catch (error) {
       console.error("Ошибка при очистке статистики:", error);
       Alert.alert("Ошибка", "Не удалось очистить статистику");

@@ -1,30 +1,28 @@
-// app/tabs/_layout.tsx
 import { useTheme } from "@/components/ThemeProvider";
 import { Tabs } from "expo-router";
 import {
   BookOpenText,
   ChartColumn,
   FileCheck,
+  LucideIcon,
   Settings2,
 } from "lucide-react-native";
 import { StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-// Простая иконка с индикатором
 function TabIcon({
   Icon,
   focused,
   tabKey,
   size = 24,
 }: {
-  Icon: any;
+  Icon: LucideIcon;
   focused: boolean;
   tabKey: string;
   size: number;
 }) {
   const { colors } = useTheme();
 
-  // Получаем цвет для таба
   const getTabColor = () => {
     switch (tabKey) {
       case "training":

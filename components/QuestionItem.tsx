@@ -1,9 +1,8 @@
-// components/QuestionItem.tsx
 import { useTheme } from "@/components/ThemeProvider";
 import { Check, X } from "lucide-react-native";
 import React from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import type { IQuestion } from "../app/types/questions";
+import type { IQuestion } from "./types/questions";
 
 interface QuestionItemProps {
   question: IQuestion;

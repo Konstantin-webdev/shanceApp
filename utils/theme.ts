@@ -1,4 +1,4 @@
-import { useThemeStore } from "@/app/store/useThemeStore";
+import { useThemeStore } from "@/components/store/useThemeStore";
 import { useColorScheme } from "react-native";
 
 export const useAppTheme = () => {

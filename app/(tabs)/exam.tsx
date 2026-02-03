@@ -1,3 +1,4 @@
+import { useProfessionStore } from "@/components/store/useProfessionStore";
 import { useTheme } from "@/components/ThemeProvider";
 import { useRouter } from "expo-router";
 import { AlertCircle, Award, Clock, Play } from "lucide-react-native";
@@ -9,7 +10,6 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { useProfessionStore } from "../store/useProfessionStore";
 
 export default function ExamScreen() {
   const router = useRouter();

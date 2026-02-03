@@ -1,6 +1,6 @@
-import { useThemeStore } from "@/app/store/useThemeStore";
 import React, { createContext, useContext, useEffect } from "react";
 import { Platform, StatusBar, useColorScheme } from "react-native";
+import { useThemeStore } from "./store/useThemeStore";
 
 export type ThemeColors = {
   background: string;
@@ -17,7 +17,6 @@ export type ThemeColors = {
   tabBarActive: string;
   tabBarInactive: string;
 
-  // Новые цвета для табов - гармоничная палитра
   tabTraining: string;
   tabExam: string;
   tabStats: string;

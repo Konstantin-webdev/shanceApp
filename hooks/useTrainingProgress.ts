@@ -1,5 +1,4 @@
-// hooks/useTrainingProgress.ts
-import { useTrainingProgressStore } from "@/app/store/trainingProgress";
+import { useTrainingProgressStore } from "@/components/store/trainingProgress";
 import { useCallback } from "react";
 
 export function useTrainingProgress(professionId?: string) {

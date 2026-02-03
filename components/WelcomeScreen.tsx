@@ -1,6 +1,4 @@
-import { useUserStore } from "@/app/store/useUserStore";
 import { useTheme } from "@/components/ThemeProvider";
-import { useRouter } from "expo-router";
 import { useState } from "react";
 import {
   Alert,
@@ -13,12 +11,12 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useUserStore } from "./store/useUserStore";
 
 export default function WelcomeScreen() {
   const [name, setName] = useState("");
   const { setUserName } = useUserStore();
   const { colors } = useTheme();
-  const router = useRouter();
 
   const handleContinue = () => {
     if (!name.trim()) {
@@ -27,7 +25,6 @@ export default function WelcomeScreen() {
     }
 
     setUserName(name.trim());
-    router.replace("/(tabs)");
   };
 
   const styles = StyleSheet.create({

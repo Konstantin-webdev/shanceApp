@@ -1,39 +1,27 @@
-// screens/TrainingScreen.tsx
-import { useTheme } from "@/components/ThemeProvider"; // Добавьте этот импорт
 import { useRouter } from "expo-router";
+import { useState } from "react";
+
+import { useProfessionStore } from "@/components/store/useProfessionStore";
+import { useUserStore } from "@/components/store/useUserStore";
+import { useTheme } from "@/components/ThemeProvider";
+
 import { Play } from "lucide-react-native";
-import { useEffect, useState } from "react";
 import {
   ScrollView,
-  StatusBar,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useProfessionStore } from "../store/useProfessionStore";
-import { useUserStore } from "../store/useUserStore";
 
 export default function TrainingScreen() {
   const router = useRouter();
   const { selectedProfession } = useProfessionStore();
   const { userName } = useUserStore();
   const [isLoading, setIsLoading] = useState(false);
-  const [showWelcome, setShowWelcome] = useState(false);
 
   const { colors } = useTheme();
-
-  useEffect(() => {
-    if (userName) {
-      setShowWelcome(true);
-      const timer = setTimeout(() => {
-        setShowWelcome(false);
-      }, 3000);
-
-      return () => clearTimeout(timer);
-    }
-  }, [userName]);
 
   const handleStartTraining = () => {
     if (!selectedProfession) {

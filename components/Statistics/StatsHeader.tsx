@@ -1,6 +1,6 @@
 // components/StatsHeader.tsx
-import type { IProfession } from "@/app/types/profession";
 import { useTheme } from "@/components/ThemeProvider";
+import type { IProfession } from "@/components/types/profession";
 import React from "react";
 import { StyleSheet, Text, View } from "react-native";
 

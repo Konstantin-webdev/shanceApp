@@ -1,7 +1,7 @@
 import { useTheme } from "@/components/ThemeProvider";
 import React from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import type { IQuestion } from "../app/types/questions";
+import type { IQuestion } from "./types/questions";
 
 interface QuestionCardProps {
   question: IQuestion;
