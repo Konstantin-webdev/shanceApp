@@ -12,9 +12,7 @@ interface ExamTimerProps {
 
 const EXAM_DURATION = 10 * 60; // 10 минут
 
-export default function ExamTimer({
-  remainingTime,
-}: ExamTimerProps) {
+export default function ExamTimer({ remainingTime }: ExamTimerProps) {
   const { colors } = useTheme();
 
   // Прогресс: сколько времени уже прошло

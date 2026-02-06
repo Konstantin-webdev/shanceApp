@@ -24,7 +24,7 @@ import QuestionCard from "../../components/QuestionCard";
 import type { IProfession } from "../../components/types/profession";
 
 const EXAM_QUESTIONS_COUNT = 10;
-const EXAM_DURATION = 10 * 60; // 10 минут в секундах
+const EXAM_DURATION = 10; // 10 минут в секундах
 
 // Специальные значения для ответов
 const ANSWER_TYPES = {

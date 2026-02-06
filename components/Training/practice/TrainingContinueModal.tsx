@@ -107,13 +107,6 @@ export default function TrainingContinueModal({
           >
             <Text style={styles.restartButtonText}>Начать заново</Text>
           </TouchableOpacity>
-
-          <TouchableOpacity
-            style={[styles.modalButton, styles.cancelButton]}
-            onPress={onCancel}
-          >
-            <Text style={styles.cancelButtonText}>Отмена</Text>
-          </TouchableOpacity>
         </View>
       </View>
     </Modal>

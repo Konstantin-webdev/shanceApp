@@ -74,7 +74,7 @@ export default function TabLayout() {
         }}
       >
         <Tabs.Screen
-          name="index"
+          name="TrainingScreen"
           options={{
             title: "Тренировка",
             tabBarIcon: ({ focused, size }) => (
@@ -88,7 +88,7 @@ export default function TabLayout() {
           }}
         />
         <Tabs.Screen
-          name="exam"
+          name="ExamScreen"
           options={{
             title: "Экзамен",
             tabBarIcon: ({ focused, size }) => (
@@ -102,7 +102,7 @@ export default function TabLayout() {
           }}
         />
         <Tabs.Screen
-          name="stats"
+          name="StatsScreen"
           options={{
             title: "Статистика",
             tabBarIcon: ({ focused, size }) => (
@@ -116,7 +116,7 @@ export default function TabLayout() {
           }}
         />
         <Tabs.Screen
-          name="settings"
+          name="SettingsScreen"
           options={{
             title: "Настройки",
             tabBarIcon: ({ focused, size }) => (

@@ -7,7 +7,6 @@ import { ThemeProvider } from "@/components/ThemeProvider";
 import WelcomeScreen from "@/components/WelcomeScreen";
 import { Stack } from "expo-router";
 import { useEffect, useState } from "react";
-import { AppState } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 
 const SESSION_TIMEOUT = 5 * 60 * 1000;
@@ -37,7 +36,6 @@ export default function RootLayout() {
   }, []);
 
   useEffect(() => {
-    // Если состояние еще загружается
     if (userName === undefined || selectedProfession === undefined) {
       return;
     }

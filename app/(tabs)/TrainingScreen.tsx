@@ -2,175 +2,30 @@ import { useRouter } from "expo-router";
 import { useState } from "react";
 
 import { useProfessionStore } from "@/components/store/useProfessionStore";
-import { useUserStore } from "@/components/store/useUserStore";
 import { useTheme } from "@/components/ThemeProvider";
 
+import { TrainingScreenStyles } from "@/styles/training/TrainingScreen.styles";
 import { Play } from "lucide-react-native";
-import {
-  ScrollView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { ScrollView, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function TrainingScreen() {
   const router = useRouter();
   const { selectedProfession } = useProfessionStore();
-  const { userName } = useUserStore();
   const [isLoading, setIsLoading] = useState(false);
 
   const { colors } = useTheme();
+  const styles = TrainingScreenStyles(colors);
 
   const handleStartTraining = () => {
-    if (!selectedProfession) {
-      alert("Пожалуйста, выберите профессию в настройках");
-      return;
-    }
-
+    if (isLoading || !selectedProfession) return;
     setIsLoading(true);
-    router.push({
-      pathname: "/training/[professionId]",
-      params: { professionId: selectedProfession.id.toString() },
-    });
-    setIsLoading(false);
+    router.push("/training/practice");
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 1000);
+    return () => clearTimeout(timer);
   };
-
-  const styles = StyleSheet.create({
-    safeArea: {
-      flex: 1,
-      backgroundColor: colors.background,
-      marginTop: -30,
-    },
-    container: {
-      flex: 1,
-    },
-    scrollContent: {
-      flexGrow: 1,
-    },
-    header: {
-      backgroundColor: colors.card,
-      padding: 20,
-      borderRadius: 12,
-      margin: 16,
-      borderWidth: 1,
-      borderColor: colors.border,
-    },
-    title: {
-      textAlign: "center",
-      fontSize: 32,
-      fontWeight: "bold",
-      color: colors.primary,
-    },
-    subtitle: {
-      fontSize: 16,
-      textAlign: "center",
-      color: colors.muted,
-      marginTop: 8,
-    },
-    content: {
-      padding: 20,
-    },
-    professionCard: {
-      backgroundColor: colors.card,
-      padding: 20,
-      borderRadius: 12,
-      borderWidth: 1,
-      borderColor: colors.border,
-    },
-    professionTitle: {
-      fontSize: 16,
-      fontWeight: "600",
-      color: colors.text,
-      marginBottom: 8,
-    },
-    professionName: {
-      fontSize: 20,
-      fontWeight: "bold",
-      color: colors.primary,
-      marginBottom: 4,
-    },
-    professionStats: {
-      fontSize: 15,
-      color: colors.success,
-      marginBottom: 8,
-    },
-    professionHint: {
-      fontSize: 14,
-      color: colors.muted,
-      fontStyle: "italic",
-    },
-    settingsButton: {
-      marginTop: 12,
-      paddingVertical: 10,
-      paddingHorizontal: 16,
-      backgroundColor: colors.primary + "10", // 10% opacity
-      borderRadius: 8,
-      alignSelf: "flex-start",
-    },
-    settingsButtonText: {
-      color: colors.primary,
-      fontSize: 14,
-      fontWeight: "600",
-    },
-    startButton: {
-      backgroundColor: colors.primary,
-      flexDirection: "row",
-      alignItems: "center",
-      justifyContent: "center",
-      paddingVertical: 16,
-      borderRadius: 12,
-      marginTop: 24,
-      gap: 8,
-    },
-    disabledButton: {
-      backgroundColor: colors.muted,
-    },
-    startButtonText: {
-      color: colors.background || "#FFFFFF",
-      fontSize: 18,
-      fontWeight: "600",
-    },
-    instructions: {
-      marginTop: 32,
-      backgroundColor: colors.card,
-      padding: 20,
-      borderRadius: 12,
-      borderWidth: 1,
-      borderColor: colors.border,
-    },
-    instructionsTitle: {
-      fontSize: 18,
-      fontWeight: "600",
-      color: colors.text,
-      marginBottom: 16,
-    },
-    instructionItem: {
-      flexDirection: "row",
-      alignItems: "center",
-      marginBottom: 12,
-    },
-    instructionNumber: {
-      width: 28,
-      height: 28,
-      borderRadius: 14,
-      backgroundColor: colors.primary + "10", // 10% opacity
-      color: colors.primary,
-      textAlign: "center",
-      lineHeight: 28,
-      fontWeight: "600",
-      marginRight: 12,
-    },
-    instructionText: {
-      fontSize: 15,
-      color: colors.text,
-      flex: 1,
-    },
-    bottomSpacer: {
-      height: 40,
-    },
-  });
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -207,15 +62,6 @@ export default function TrainingScreen() {
                 <Text style={styles.professionHint}>
                   Выберите профессию в настройках, чтобы начать обучение
                 </Text>
-                <TouchableOpacity
-                  style={styles.settingsButton}
-                  onPress={() => router.push("/(tabs)/settings")}
-                  activeOpacity={0.7}
-                >
-                  <Text style={styles.settingsButtonText}>
-                    Перейти в настройки
-                  </Text>
-                </TouchableOpacity>
               </>
             )}
           </View>
@@ -261,7 +107,6 @@ export default function TrainingScreen() {
             </View>
           </View>
 
-          {/* Отступ снизу */}
           <View style={styles.bottomSpacer} />
         </View>
       </ScrollView>
