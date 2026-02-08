@@ -1,18 +1,18 @@
+// app/(tabs)/ExamScreen.tsx
+import { useRouter } from "expo-router";
+import { Play } from "lucide-react-native";
 import { useState } from "react";
 import { ScrollView, Text, TouchableOpacity, View } from "react-native";
-import { useRouter } from "expo-router";
 
 import { useProfessionStore } from "@/components/store/useProfessionStore";
 import { useTheme } from "@/components/ThemeProvider";
+import { FEATURE_CONFIGS, RULES } from "@/constants/examStart";
 import { ExamScreenStyles } from "@/styles/exam/ExamScreen.styles";
-import { featureItems, rules } from "@/constants/examStart";
-import { Play } from "lucide-react-native";
 
 export default function ExamScreen() {
   const router = useRouter();
   const { selectedProfession } = useProfessionStore();
   const [isNavigating, setIsNavigating] = useState(false);
-
   const { colors } = useTheme();
   const styles = ExamScreenStyles(colors);
 
@@ -20,10 +20,13 @@ export default function ExamScreen() {
     if (isNavigating || !selectedProfession) return;
     setIsNavigating(true);
     router.push("/exam/session");
-    setTimeout(() => {
-      setIsNavigating(false);
-    }, 1000);
+    setTimeout(() => setIsNavigating(false), 1000);
   };
+
+  const featureItems = FEATURE_CONFIGS.map(item => ({
+    ...item,
+    color: colors[item.colorKey]
+  }));
 
   return (
     <View style={styles.safeArea}>
@@ -80,7 +83,7 @@ export default function ExamScreen() {
 
             <View style={styles.rules}>
               <Text style={styles.rulesTitle}>Правила:</Text>
-              {rules.map((rule, index) => (
+              {RULES.map((rule, index) => (
                 <Text key={index} style={styles.ruleText}>
                   {rule}
                 </Text>

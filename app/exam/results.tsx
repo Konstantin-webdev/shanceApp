@@ -63,10 +63,9 @@ export default function ExamResultsScreen() {
     timeSpent,
   ]);
 
-  const handleGoHome = () => router.push("/(tabs)/exam");
-  const handleRetry = () =>
-    router.push({ pathname: "/exam/[professionId]", params: { professionId } });
-  const handleViewStats = () => router.push("/(tabs)/stats");
+  const handleGoHome = () => router.push("/(tabs)/ExamScreen");
+  const handleRetry = () => router.push("/exam/session");
+  const handleViewStats = () => router.push("/(tabs)/StatsScreen");
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
