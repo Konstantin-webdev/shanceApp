@@ -1,4 +1,3 @@
-// app/(tabs)/ExamScreen.tsx
 import { useRouter } from "expo-router";
 import { Play } from "lucide-react-native";
 import { useState } from "react";
@@ -23,9 +22,9 @@ export default function ExamScreen() {
     setTimeout(() => setIsNavigating(false), 1000);
   };
 
-  const featureItems = FEATURE_CONFIGS.map(item => ({
+  const featureItems = FEATURE_CONFIGS.map((item) => ({
     ...item,
-    color: colors[item.colorKey]
+    color: colors[item.colorKey],
   }));
 
   return (

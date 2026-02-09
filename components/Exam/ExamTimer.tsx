@@ -1,90 +1,49 @@
-// components/ExamTimer.tsx
+// components/ExamTimer.tsx (САМЫЙ ПРОСТОЙ)
 import { useTheme } from "@/components/ThemeProvider";
-import React from "react";
-import { StyleSheet, Text, View } from "react-native";
-import Svg, { Circle } from "react-native-svg";
+import { Clock } from "lucide-react-native";
+import { useEffect, useState } from "react";
+import { Text, View } from "react-native";
 
 interface ExamTimerProps {
-  remainingTime: number; // Оставшееся время в секундах
-  isActive: boolean;
-  onTimeUp: () => void;
+  durationMinutes: number;
+  onTimeUp?: () => void;
 }
 
-const EXAM_DURATION = 10 * 60; // 10 минут
-
-export default function ExamTimer({ remainingTime }: ExamTimerProps) {
+export function ExamTimer({ durationMinutes, onTimeUp }: ExamTimerProps) {
   const { colors } = useTheme();
+  const [startTime] = useState(Date.now()); // Время начала
+  const [currentTime, setCurrentTime] = useState(Date.now()); // Текущее время
 
-  // Прогресс: сколько времени уже прошло
-  const elapsedTime = EXAM_DURATION - remainingTime;
-  const progress = elapsedTime / EXAM_DURATION;
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentTime(Date.now()); // Просто обновляем текущее время
+    }, 1000);
 
-  const radius = 22;
-  const circumference = 2 * Math.PI * radius;
+    return () => clearInterval(interval);
+  }, []);
 
-  // Для движения ПО часовой стрелке: strokeDashoffset уменьшается
-  // Когда прогресс = 0 (время не прошло) → offset = полная окружность
-  // Когда прогресс = 1 (время вышло) → offset = 0
-  const strokeDashoffset = circumference - circumference * progress;
+  // Вычисляем оставшееся время
+  const elapsedSeconds = Math.floor((currentTime - startTime) / 1000);
+  const remainingSeconds = Math.max(durationMinutes * 60 - elapsedSeconds, 0);
 
-  // Цвет меняется от зеленого к красному по мере убывания времени
-  const getTimerColor = () => {
-    const timeProgress = remainingTime / EXAM_DURATION;
-    if (timeProgress > 0.66) return colors.success; // зеленый
-    if (timeProgress > 0.33) return colors.warning; // оранжевый
-    return colors.danger; // красный
-  };
+  // Проверяем время
+  useEffect(() => {
+    if (remainingSeconds <= 0 && onTimeUp) {
+      onTimeUp();
+    }
+  }, [remainingSeconds, onTimeUp]);
 
-  const formatTime = (seconds: number) => {
-    const mins = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-    return `${mins}:${secs < 10 ? "0" : ""}${secs}`;
-  };
-
-  const styles = StyleSheet.create({
-    container: {
-      width: 50,
-      height: 50,
-      alignItems: "center",
-      justifyContent: "center",
-      position: "relative",
-    },
-    timeText: {
-      position: "absolute",
-      fontSize: 12,
-      fontWeight: "600",
-      color: colors.text,
-    },
-  });
+  const minutes = Math.floor(remainingSeconds / 60);
+  const seconds = remainingSeconds % 60;
+  const timeColor = remainingSeconds < 60 ? colors.danger : colors.text;
 
   return (
-    <View style={styles.container}>
-      <Svg width="50" height="50" viewBox="0 0 50 50">
-        {/* Фон круга */}
-        <Circle
-          cx="25"
-          cy="25"
-          r={radius}
-          stroke={colors.border}
-          strokeWidth="3"
-          fill="none"
-        />
-
-        {/* Прогресс, движется ПО часовой стрелке */}
-        <Circle
-          cx="25"
-          cy="25"
-          r={radius}
-          stroke={getTimerColor()}
-          strokeWidth="3"
-          fill="none"
-          strokeDasharray={circumference}
-          strokeDashoffset={strokeDashoffset}
-          strokeLinecap="round"
-          transform="rotate(-90 25 25)" // Начинаем с верхней точки
-        />
-      </Svg>
-      <Text style={styles.timeText}>{formatTime(remainingTime)}</Text>
+    <View style={{ flexDirection: "row", alignItems: "center", gap: 8 }}>
+      <Clock size={20} color={timeColor} />
+      <Text style={{ fontSize: 18, fontWeight: "600", color: timeColor }}>
+        {minutes.toString().padStart(2, "0")}:
+        {seconds.toString().padStart(2, "0")}
+      </Text>
     </View>
   );
 }

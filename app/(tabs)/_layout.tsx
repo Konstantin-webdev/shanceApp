@@ -74,7 +74,7 @@ export default function TabLayout() {
         }}
       >
         <Tabs.Screen
-          name="TrainingScreen"
+          name="index"
           options={{
             title: "Тренировка",
             tabBarIcon: ({ focused, size }) => (

@@ -1,6 +1,6 @@
-import { View, Text, TouchableOpacity } from "react-native";
-import { ArrowLeft, ArrowRight } from "lucide-react-native";
 import { useTheme } from "@/components/ThemeProvider";
+import { ArrowLeft, ArrowRight } from "lucide-react-native";
+import { Text, TouchableOpacity, View } from "react-native";
 
 interface QuestionNavigationProps {
   onPrev: () => void;
@@ -63,6 +63,7 @@ export function QuestionNavigation({
     finishButton: {
       backgroundColor: colors.success,
       marginLeft: 8,
+      textAlign: "center" as const,
     },
     disabledButton: {
       backgroundColor: colors.muted,
@@ -72,6 +73,7 @@ export function QuestionNavigation({
       color: "#FFFFFF",
       fontSize: 16,
       fontWeight: "600" as const,
+      textAlign: "center" as const,
     },
     prevButtonText: {
       color: colors.text,

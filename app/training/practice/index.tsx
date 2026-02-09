@@ -14,8 +14,8 @@ import {
 import NotImplementedScreen from "@/components/NotImplementedScreen";
 import { ProgressTracker } from "@/components/Training/practice/ProgressTracker";
 import { QuestionNavigation } from "@/components/Training/practice/QuestionNavigation";
-import { TrainingHeader } from "@/components/Training/practice/TrainingHeader";
 import TrainingContinueModal from "@/components/Training/practice/TrainingContinueModal";
+import { TrainingHeader } from "@/components/Training/practice/TrainingHeader";
 import TrainingLoadingScreen from "@/components/Training/practice/TrainingLoadingScreen";
 import type { IQuestion } from "@/components/types/questions";
 import { useTrainingProgress } from "@/hooks/useTrainingProgress";
@@ -60,7 +60,7 @@ export default function PracticeScreen() {
 
   const loadData = async () => {
     if (!selectedProfession) {
-      router.replace("/(tabs)/TrainingScreen");
+      router.replace("/(tabs)");
       return;
     }
 
