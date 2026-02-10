@@ -1,4 +1,3 @@
-// app/exam/session.tsx
 import { useRouter } from "expo-router";
 import { ArrowLeft } from "lucide-react-native";
 import { useEffect, useState } from "react";
@@ -21,13 +20,11 @@ export default function ExamSessionScreen() {
   const exam = useExamSession(selectedProfession?.id || 0);
   const examTime = useExamTime();
 
-  // Обработчик истечения времени
   const handleTimeUp = () => {
     setIsTimeUp(true);
     finishExam(true);
   };
 
-  // Функция завершения экзамена
   const finishExam = (timeUp: boolean = false) => {
     const results = exam.getResults();
     if (!results || !selectedProfession) return;
@@ -59,38 +56,75 @@ export default function ExamSessionScreen() {
     }
   };
 
-  // Если время вышло - сразу завершаем
   useEffect(() => {
     if (isTimeUp) {
       finishExam(true);
     }
   }, [isTimeUp]);
 
-  // Проверка профессии
   if (!selectedProfession) {
     return (
-      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <Text style={{ color: colors.text }}>
+      <View
+        style={{
+          flex: 1,
+          justifyContent: "center",
+          alignItems: "center",
+          backgroundColor: colors.background,
+        }}
+      >
+        <Text
+          style={{
+            color: colors.text,
+            fontSize: 16,
+            opacity: 0.7,
+          }}
+        >
           Выберите профессию в настройках
         </Text>
       </View>
     );
   }
 
-  // Загрузка
   if (exam.isLoading) {
     return (
-      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <Text style={{ color: colors.text }}>Загрузка вопросов...</Text>
+      <View
+        style={{
+          flex: 1,
+          justifyContent: "center",
+          alignItems: "center",
+          backgroundColor: colors.background,
+        }}
+      >
+        <Text
+          style={{
+            color: colors.text,
+            fontSize: 16,
+            opacity: 0.7,
+          }}
+        >
+          Загрузка вопросов...
+        </Text>
       </View>
     );
   }
 
-  // Нет вопросов
   if (!exam.currentQuestion) {
     return (
-      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <Text style={{ color: colors.text }}>
+      <View
+        style={{
+          flex: 1,
+          justifyContent: "center",
+          alignItems: "center",
+          backgroundColor: colors.background,
+        }}
+      >
+        <Text
+          style={{
+            color: colors.text,
+            fontSize: 16,
+            opacity: 0.7,
+          }}
+        >
           Нет доступных вопросов для этой профессии
         </Text>
       </View>
@@ -99,13 +133,19 @@ export default function ExamSessionScreen() {
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
-      {/* Шапка */}
       <View
         style={{
-          padding: 16,
-          borderBottomWidth: 1,
-          borderBottomColor: colors.border,
+          paddingVertical: 8,
+          paddingHorizontal: 8,
           backgroundColor: colors.card,
+          borderBottomLeftRadius: 20,
+          borderBottomRightRadius: 20,
+          shadowColor: colors.text,
+          shadowOffset: { width: 0, height: 2 },
+          shadowOpacity: 0.1,
+          shadowRadius: 8,
+          elevation: 4,
+          marginBottom: 4,
         }}
       >
         <View
@@ -117,134 +157,248 @@ export default function ExamSessionScreen() {
         >
           <TouchableOpacity
             onPress={() => router.replace("/(tabs)/ExamScreen")}
-            hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+            hitSlop={{ top: 20, bottom: 20, left: 20, right: 20 }}
+            style={{
+              width: 44,
+              height: 44,
+              borderRadius: 22,
+              backgroundColor: colors.background,
+              justifyContent: "center",
+              alignItems: "center",
+              borderWidth: 1,
+              borderColor: colors.border,
+            }}
           >
-            <ArrowLeft size={24} color={colors.text} />
+            <ArrowLeft size={22} color={colors.text} />
           </TouchableOpacity>
 
-          {/* Таймер */}
           <ExamTimer durationMinutes={10} onTimeUp={handleTimeUp} />
-
-          <Text
+          <View
             style={{
-              color: colors.text,
-              fontSize: 16,
-              fontWeight: "600",
-              minWidth: 60,
-              textAlign: "right",
-            }}
-          >
-            {exam.currentIndex + 1}/{exam.totalQuestions}
-          </Text>
-        </View>
-      </View>
-
-      {/* Вопрос */}
-      <ScrollView
-        style={{ flex: 1 }}
-        contentContainerStyle={{ padding: 16 }}
-        showsVerticalScrollIndicator={false}
-      >
-        <Text
-          style={{
-            fontSize: 18,
-            fontWeight: "600",
-            color: colors.text,
-            marginBottom: 24,
-            lineHeight: 24,
-          }}
-        >
-          {exam.currentQuestion.text}
-        </Text>
-
-        {/* Варианты ответов */}
-        {exam.currentQuestion.options.map((answer, index) => (
-          <TouchableOpacity
-            key={index}
-            style={{
-              padding: 16,
-              marginBottom: 12,
-              borderRadius: 12,
-              backgroundColor:
-                exam.answers[exam.currentIndex] === answer.id
-                  ? colors.primary
-                  : colors.card,
+              width: 44,
+              height: 44,
+              borderRadius: 22,
+              backgroundColor: colors.background,
+              justifyContent: "center",
+              alignItems: "center",
               borderWidth: 1,
-              borderColor:
-                exam.answers[exam.currentIndex] === answer.id
-                  ? colors.primary
-                  : colors.border,
+              borderColor: colors.primary,
             }}
-            onPress={() => !isTimeUp && exam.handleAnswer(answer.id)}
-            disabled={isTimeUp}
-            activeOpacity={0.7}
           >
             <Text
               style={{
-                color:
-                  exam.answers[exam.currentIndex] === answer.id
-                    ? "#FFFFFF"
-                    : colors.text,
+                color: colors.primary,
                 fontSize: 16,
-                lineHeight: 22,
+                fontWeight: "700",
               }}
             >
-              {answer.text}
+              {exam.currentIndex + 1}/{exam.totalQuestions}
             </Text>
-          </TouchableOpacity>
-        ))}
-      </ScrollView>
+          </View>
+        </View>
+      </View>
 
-      {/* Кнопка навигации */}
+      <View style={{ flex: 1, paddingHorizontal: 16, paddingTop: 16 }}>
+        <View
+          style={{
+            backgroundColor: colors.card,
+            borderRadius: 20,
+            padding: 16,
+            marginBottom: 16,
+            shadowColor: colors.text,
+            shadowOffset: { width: 0, height: 2 },
+            shadowOpacity: 0.05,
+            shadowRadius: 6,
+            elevation: 2,
+            borderWidth: 2,
+            borderColor: colors.primary,
+          }}
+        >
+          <Text
+            style={{
+              fontSize: 16,
+              fontWeight: "700",
+              color: colors.text,
+              lineHeight: 24,
+              textAlign: "center",
+            }}
+          >
+            {exam.currentQuestion.text}
+          </Text>
+        </View>
+
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{ paddingBottom: 24 }}
+        >
+          {exam.currentQuestion.options.map((answer, index) => (
+            <TouchableOpacity
+              key={index}
+              style={{
+                padding: 16,
+                marginBottom: 12,
+                borderRadius: 16,
+                backgroundColor:
+                  exam.answers[exam.currentIndex] === answer.id
+                    ? colors.primary
+                    : colors.card,
+                borderWidth: 2,
+                borderColor:
+                  exam.answers[exam.currentIndex] === answer.id
+                    ? colors.primary
+                    : colors.border,
+                shadowColor: colors.text,
+                shadowOffset: { width: 0, height: 2 },
+                shadowOpacity:
+                  exam.answers[exam.currentIndex] === answer.id ? 0.2 : 0.05,
+                shadowRadius:
+                  exam.answers[exam.currentIndex] === answer.id ? 8 : 4,
+                elevation:
+                  exam.answers[exam.currentIndex] === answer.id ? 4 : 2,
+              }}
+              onPress={() => !isTimeUp && exam.handleAnswer(answer.id)}
+              disabled={isTimeUp}
+              activeOpacity={0.7}
+            >
+              <View style={{ flexDirection: "row", alignItems: "center" }}>
+                <View
+                  style={{
+                    width: 32,
+                    height: 32,
+                    borderRadius: 16,
+                    backgroundColor:
+                      exam.answers[exam.currentIndex] === answer.id
+                        ? "rgba(255, 255, 255, 0.2)"
+                        : colors.background,
+                    justifyContent: "center",
+                    alignItems: "center",
+                    marginRight: 16,
+                  }}
+                >
+                  <Text
+                    style={{
+                      color:
+                        exam.answers[exam.currentIndex] === answer.id
+                          ? "#FFFFFF"
+                          : colors.text,
+                      fontSize: 14,
+                      fontWeight: "700",
+                    }}
+                  >
+                    {String.fromCharCode(65 + index)}
+                  </Text>
+                </View>
+
+                <Text
+                  style={{
+                    color:
+                      exam.answers[exam.currentIndex] === answer.id
+                        ? "#FFFFFF"
+                        : colors.text,
+                    fontSize: 16,
+                    lineHeight: 22,
+                    fontWeight: "500",
+                    flex: 1,
+                  }}
+                >
+                  {answer.text}
+                </Text>
+              </View>
+            </TouchableOpacity>
+          ))}
+        </ScrollView>
+      </View>
+
+      {/* Панель кнопок */}
       <View
         style={{
-          padding: 16,
-          borderTopWidth: 1,
-          borderTopColor: colors.border,
+          padding: 20,
           backgroundColor: colors.card,
+          borderTopLeftRadius: 24,
+          borderTopRightRadius: 24,
+          shadowColor: colors.text,
+          shadowOffset: { width: 0, height: -4 },
+          shadowOpacity: 0.1,
+          shadowRadius: 12,
+          elevation: 8,
+          borderTopWidth: 1,
+          borderLeftWidth: 1,
+          borderRightWidth: 1,
+          borderColor: colors.border,
         }}
       >
         {exam.isLastQuestion ? (
           <TouchableOpacity
             style={{
-              backgroundColor: exam.isAnswered ? colors.success : colors.border,
-              padding: 18,
-              borderRadius: 12,
+              backgroundColor: exam.isAnswered
+                ? isTimeUp
+                  ? colors.warning
+                  : colors.success
+                : colors.border,
+              paddingVertical: 18,
+              paddingHorizontal: 24,
+              borderRadius: 16,
               alignItems: "center",
-              opacity: exam.isAnswered ? 1 : 0.6,
+              shadowColor: exam.isAnswered ? colors.success : colors.border,
+              shadowOffset: { width: 0, height: 4 },
+              shadowOpacity: exam.isAnswered ? 0.3 : 0,
+              shadowRadius: 8,
+              elevation: exam.isAnswered ? 4 : 0,
             }}
             onPress={handleFinish}
-            disabled={!exam.isAnswered}
+            disabled={!exam.isAnswered || isTimeUp}
             activeOpacity={0.8}
           >
             <Text
               style={{
                 color: "#FFFFFF",
-                fontSize: 16,
-                fontWeight: "600",
+                fontSize: 18,
+                fontWeight: "700",
+                letterSpacing: 0.5,
               }}
             >
-              Завершить экзамен
+              {isTimeUp ? "Время вышло!" : "Завершить экзамен"}
             </Text>
+            {isTimeUp && (
+              <Text
+                style={{
+                  color: "rgba(255, 255, 255, 0.9)",
+                  fontSize: 14,
+                  marginTop: 4,
+                  opacity: 0.9,
+                }}
+              >
+                Результаты будут сохранены
+              </Text>
+            )}
           </TouchableOpacity>
         ) : (
           <TouchableOpacity
             style={{
               backgroundColor: exam.isAnswered ? colors.primary : colors.border,
-              padding: 18,
-              borderRadius: 12,
+              paddingVertical: 18,
+              paddingHorizontal: 24,
+              borderRadius: 16,
               alignItems: "center",
-              opacity: exam.isAnswered ? 1 : 0.6,
+              flexDirection: "row",
+              justifyContent: "center",
+              gap: 12,
+              shadowColor: exam.isAnswered ? colors.primary : colors.border,
+              shadowOffset: { width: 0, height: 4 },
+              shadowOpacity: exam.isAnswered ? 0.3 : 0,
+              shadowRadius: 8,
+              elevation: exam.isAnswered ? 4 : 0,
             }}
             onPress={exam.nextQuestion}
-            disabled={!exam.isAnswered}
+            disabled={!exam.isAnswered || isTimeUp}
             activeOpacity={0.8}
           >
             <Text
               style={{
                 color: "#FFFFFF",
-                fontSize: 16,
-                fontWeight: "600",
+                fontSize: 18,
+                fontWeight: "700",
+                letterSpacing: 0.5,
               }}
             >
               Следующий вопрос
