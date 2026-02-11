@@ -19,7 +19,6 @@ export const professions: IProfession[] = [
   { id: 55, name: "Кладовщик", questionCount: 85 }, //done
   { id: 54, name: "Зав. складом", questionCount: 145 }, //done
   { id: 32, name: "Оператор АЗС", questionCount: 96 }, //done
-
   { id: 21, name: "Стропальщик", questionCount: 236 },
 
   /*  { id: 4, name: "Оператор котельной", questionCount: 232 },

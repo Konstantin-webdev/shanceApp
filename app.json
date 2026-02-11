@@ -16,13 +16,34 @@
         "foregroundImage": "./assets/images/newIcon.png"
       },
       "edgeToEdgeEnabled": true,
-      "package": "ru.ot.test"
+      "package": "ru.ot.test",
+      "permissions": [],
+      "blockedPermissions": [
+        "SYSTEM_ALERT_WINDOW",
+        "READ_EXTERNAL_STORAGE",
+        "WRITE_EXTERNAL_STORAGE"
+      ]
     },
     "web": {
       "output": "static",
       "favicon": "./assets/images/favicon.png"
     },
     "plugins": [
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "enableProguardInReleaseBuilds": true,
+            "enableShrinkResourcesInReleaseBuilds": true,
+            "predictiveBackGesture": false,
+            "useLegacyPackaging": false,
+            "packagingOptions": {
+              "pickFirst": ["**/libc++_shared.so"]
+            },
+            "buildArchs": ["arm64-v8a"]
+          }
+        }
+      ],
       "expo-router",
       [
         "expo-splash-screen",
@@ -33,23 +54,6 @@
           "dark": {
             "backgroundColor": "#000000",
             "image": "./assets/images/splashicon2.png"
-          }
-        }
-      ],
-      [
-        "expo-build-properties",
-        {
-          "android": {
-            "enableProguardInReleaseBuilds": true,
-            "enableShrinkResourcesInReleaseBuilds": true,
-            "predictiveBackGesture": false,
-            "optimizeImageResources": true,
-            "packagingOptions": {
-              "pickFirst": ["**/libc++_shared.so"]
-            },
-            "ndk": {
-              "abiFilters": ["arm64-v8a"]
-            }
           }
         }
       ]
