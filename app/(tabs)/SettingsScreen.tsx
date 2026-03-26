@@ -1,12 +1,12 @@
 import ProfessionSelector from "@/components/ProfessionSelector";
 import { createSettingsStyles } from "@/components/Settings/styles";
+import UserNameEditor from "@/components/Settings/UserNameEditor";
 import { useOnboardingStore } from "@/components/store/useOnboardingStore";
 import { useProfessionStore } from "@/components/store/useProfessionStore";
 import { useUserStore } from "@/components/store/useUserStore";
 import { useTheme } from "@/components/ThemeProvider";
 import ThemeSelector from "@/components/ThemeSelector";
-import { useRouter } from "expo-router";
-import { ArrowLeft, Trash2 } from "lucide-react-native";
+import { Trash2 } from "lucide-react-native";
 import React, { useState } from "react";
 import {
   Alert,
@@ -14,50 +14,19 @@ import {
   Platform,
   ScrollView,
   Text,
-  TextInput,
   TouchableOpacity,
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function SettingsScreen() {
-  const { userName, setUserName, clearUserName } = useUserStore();
+  const { userName, clearUserName } = useUserStore();
   const { setSelectedProfession } = useProfessionStore();
   const [newName, setNewName] = useState(userName || "");
-  const router = useRouter();
   const { resetOnboarding } = useOnboardingStore();
 
   const { colors, isDark } = useTheme();
   const styles = createSettingsStyles(colors, isDark);
-
-  const handleSaveName = () => {
-    if (!newName.trim()) {
-      Alert.alert("Ошибка", "Имя не может быть пустым");
-      return;
-    }
-
-    setUserName(newName.trim());
-    Alert.alert("Успешно", "Имя обновлено");
-  };
-
-  const handleClearName = () => {
-    Alert.alert(
-      "Сброс имени",
-      "Вы уверены, что хотите сбросить имя? При следующем запуске приложение запросит его снова.",
-      [
-        { text: "Отмена", style: "cancel" },
-        {
-          text: "Сбросить",
-          style: "destructive",
-          onPress: () => {
-            clearUserName();
-            setNewName("");
-            Alert.alert("Успешно", "Имя сброшено");
-          },
-        },
-      ],
-    );
-  };
 
   const handleResetAll = () => {
     Alert.alert(
@@ -93,49 +62,16 @@ export default function SettingsScreen() {
         >
           {/* Заголовок */}
           <View style={styles.header}>
-            <TouchableOpacity
-              onPress={() => router.back()}
-              style={styles.backButton}
-              activeOpacity={0.7}
-            >
-              <ArrowLeft size={24} color={colors.primary} />
-            </TouchableOpacity>
             <Text style={styles.title}>Настройки</Text>
+            <Text style={styles.titleSubtitle}>
+              Управление профилем и приложением
+            </Text>
           </View>
 
           {/* Блок с именем пользователя */}
           <View style={styles.sectionContainer}>
             <Text style={styles.sectionTitle}>Личные данные</Text>
-            <View style={styles.card}>
-              <View style={styles.inputGroup}>
-                <Text style={styles.label}>Ваше имя</Text>
-                <View style={styles.inputContainer}>
-                  <TextInput
-                    style={styles.input}
-                    value={newName}
-                    onChangeText={setNewName}
-                    placeholder="Введите ваше имя"
-                    placeholderTextColor={colors.muted + "80"}
-                    maxLength={50}
-                    returnKeyType="done"
-                    onSubmitEditing={handleSaveName}
-                  />
-                  <TouchableOpacity
-                    style={[
-                      styles.saveButtonInline,
-                      !newName.trim() && styles.saveButtonInlineDisabled,
-                    ]}
-                    onPress={handleSaveName}
-                    disabled={!newName.trim()}
-                    activeOpacity={0.8}
-                  >
-                    <Text style={styles.saveButtonInlineText}>
-                      {userName ? "Обновить" : "Сохранить"}
-                    </Text>
-                  </TouchableOpacity>
-                </View>
-              </View>
-            </View>
+            <UserNameEditor />
           </View>
 
           {/* Блок выбора профессии */}

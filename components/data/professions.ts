@@ -7,10 +7,10 @@ export const professions: IProfession[] = [
     questionCount: 216,
   }, //done
   { id: 38, name: "Электромонтер по ремонту ВЛЭП", questionCount: 201 }, //done
-  { id: 2, name: "Водитель", questionCount: 370 }, //done
+  { id: 2, name: "Водитель", questionCount: 150 }, // refresh
   { id: 20, name: "Слесарь-ремонтник", questionCount: 235 }, //done
   { id: 3, name: "Слесарь АВР", questionCount: 237 }, //done
-  { id: 16, name: "Электрогазосварщик", questionCount: 295 }, //done
+  { id: 16, name: "Электрогазосварщик", questionCount: 150 }, // refresh
   { id: 25, name: "Уборщик", questionCount: 85 }, //done
   { id: 42, name: "Крановщик", questionCount: 210 }, //done
   { id: 35, name: "Машинист экскаватора", questionCount: 180 }, //done

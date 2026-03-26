@@ -3,7 +3,6 @@ import { useState } from "react";
 import {
   Alert,
   KeyboardAvoidingView,
-  Platform,
   StyleSheet,
   Text,
   TextInput,
@@ -42,7 +41,6 @@ export default function WelcomeScreen() {
       borderTopRightRadius: 32,
       padding: 24,
       justifyContent: "center",
-      marginTop: 60, // Отступ от верха для красивого отображения
     },
     title: {
       fontSize: 32,
@@ -85,10 +83,7 @@ export default function WelcomeScreen() {
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-        style={styles.container}
-      >
+      <KeyboardAvoidingView behavior="padding" style={styles.container}>
         <View style={styles.content}>
           <Text style={styles.title}>Добро пожаловать!</Text>
           <Text style={styles.subtitle}>

@@ -23,7 +23,6 @@ export type ThemeColors = {
   tabSettings: string;
 };
 
-// Светлая тема - нейтральные приглушенные цвета
 const lightColors: ThemeColors = {
   background: "#F8F9FA",
   card: "#FFFFFF",
@@ -90,7 +89,6 @@ export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
   const isDark = currentTheme === "dark";
   const colors = isDark ? darkColors : lightColors;
 
-  // ТОЛЬКО настройка StatusBar - упрощаем
   useEffect(() => {
     if (Platform.OS === "android") {
       StatusBar.setBackgroundColor(colors.background);

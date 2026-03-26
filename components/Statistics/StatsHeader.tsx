@@ -34,10 +34,11 @@ export function StatsHeader({
 
 const styles = StyleSheet.create({
   header: {
-    paddingHorizontal: 20,
-    paddingTop: 12,
-    paddingBottom: 16,
-    marginBottom: 16,
+    padding: 20,
+    borderRadius: 12,
+    margin: 16,
+    borderWidth: 1,
+    borderColor: "#E5E5EA",
   },
   title: {
     textAlign: "center",
