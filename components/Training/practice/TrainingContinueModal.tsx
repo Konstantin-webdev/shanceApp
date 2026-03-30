@@ -6,14 +6,12 @@ interface TrainingContinueModalProps {
   visible: boolean;
   onContinue: () => void;
   onRestart: () => void;
-  onCancel: () => void;
 }
 
 export default function TrainingContinueModal({
   visible,
   onContinue,
   onRestart,
-  onCancel,
 }: TrainingContinueModalProps) {
   const { colors } = useTheme();
 
@@ -80,12 +78,7 @@ export default function TrainingContinueModal({
   });
 
   return (
-    <Modal
-      transparent
-      visible={visible}
-      animationType="fade"
-      onRequestClose={onCancel}
-    >
+    <Modal transparent visible={visible} animationType="fade">
       <View style={styles.modalOverlay}>
         <View style={styles.modalContent}>
           <Text style={styles.modalTitle}>Продолжить тренировку?</Text>

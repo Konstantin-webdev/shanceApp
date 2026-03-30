@@ -1,4 +1,3 @@
-// Вариант 2: С учетом того что practice - это группа
 import { Stack } from "expo-router";
 
 export default function TrainingLayout() {

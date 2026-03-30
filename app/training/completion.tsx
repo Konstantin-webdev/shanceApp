@@ -9,7 +9,6 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function TrainingCompletionScreen() {
   const router = useRouter();
@@ -22,7 +21,7 @@ export default function TrainingCompletionScreen() {
 
   const correctAnswers = parseInt(params.correctAnswers || "0");
   const totalQuestions = parseInt(params.totalQuestions || "0");
-  const professionName = params.professionName || "";
+  const professionName = params.professionName || "пользователь";
 
   const percentage =
     totalQuestions > 0
@@ -52,128 +51,116 @@ export default function TrainingCompletionScreen() {
   const styles = createStyles(colors, getPerformanceColor());
 
   return (
-    <SafeAreaView style={styles.container}>
-      <ScrollView showsVerticalScrollIndicator={false}>
-        <View style={styles.content}>
-          {/* Анимированный значок успеха */}
-          <View style={styles.iconContainer}>
-            <View style={styles.iconBackground}>
-              <CheckCircle size={80} color={colors.success} strokeWidth={1.5} />
+    <ScrollView showsVerticalScrollIndicator={false}>
+      <View style={styles.content}>
+        <View style={styles.iconContainer}>
+          <View style={styles.iconBackground}>
+            <CheckCircle size={80} color={colors.success} strokeWidth={1.5} />
+          </View>
+          <View style={styles.iconGlow} />
+        </View>
+
+        <Text style={styles.heading}>Тренировка завершена!</Text>
+        <Text style={styles.performanceText}>{getPerformanceText()}</Text>
+
+        <View style={styles.professionCard}>
+          <Text style={styles.professionName}>{professionName}</Text>
+        </View>
+
+        {/* Основная статистика */}
+        <View style={styles.statsContainer}>
+          <View style={styles.statRow}>
+            <View style={styles.statItem}>
+              <Text style={styles.statNumber}>{correctAnswers}</Text>
+              <Text style={styles.statLabel}>Правильных ответов</Text>
+              <View
+                style={[
+                  styles.statBar,
+                  { width: `${Math.min(percentage, 100)}%` },
+                ]}
+              />
             </View>
-            <View style={styles.iconGlow} />
+
+            <View style={styles.statDividerVertical} />
+
+            <View style={styles.statItem}>
+              <Text style={styles.statNumber}>{totalQuestions}</Text>
+              <Text style={styles.statLabel}>Всего вопросов</Text>
+            </View>
           </View>
 
-          <Text style={styles.heading}>Тренировка завершена!</Text>
-          <Text style={styles.performanceText}>{getPerformanceText()}</Text>
-
-          <View style={styles.professionCard}>
-            <Text style={styles.professionName}>{professionName}</Text>
-          </View>
-
-          {/* Основная статистика */}
-          <View style={styles.statsContainer}>
-            <View style={styles.statRow}>
-              <View style={styles.statItem}>
-                <Text style={styles.statNumber}>{correctAnswers}</Text>
-                <Text style={styles.statLabel}>Правильных ответов</Text>
+          {/* Процентный результат с цветовым акцентом */}
+          <View style={styles.percentageContainer}>
+            <Text style={styles.percentageLabel}>Ваш результат</Text>
+            <View style={styles.percentageCircle}>
+              <Text style={styles.percentageText}>{percentage}%</Text>
+            </View>
+            <View style={styles.percentageScale}>
+              <View style={styles.scaleItem}>
+                <View
+                  style={[styles.scaleDot, { backgroundColor: colors.danger }]}
+                />
+                <Text style={styles.scaleText}>0-39%</Text>
+              </View>
+              <View style={styles.scaleItem}>
+                <View
+                  style={[styles.scaleDot, { backgroundColor: colors.warning }]}
+                />
+                <Text style={styles.scaleText}>40-59%</Text>
+              </View>
+              <View style={styles.scaleItem}>
                 <View
                   style={[
-                    styles.statBar,
-                    { width: `${Math.min(percentage, 100)}%` },
+                    styles.scaleDot,
+                    { backgroundColor: colors.tabTraining },
                   ]}
                 />
+                <Text style={styles.scaleText}>60-79%</Text>
               </View>
-
-              <View style={styles.statDividerVertical} />
-
-              <View style={styles.statItem}>
-                <Text style={styles.statNumber}>{totalQuestions}</Text>
-                <Text style={styles.statLabel}>Всего вопросов</Text>
-              </View>
-            </View>
-
-            {/* Процентный результат с цветовым акцентом */}
-            <View style={styles.percentageContainer}>
-              <Text style={styles.percentageLabel}>Ваш результат</Text>
-              <View style={styles.percentageCircle}>
-                <Text style={styles.percentageText}>{percentage}%</Text>
-              </View>
-              <View style={styles.percentageScale}>
-                <View style={styles.scaleItem}>
-                  <View
-                    style={[
-                      styles.scaleDot,
-                      { backgroundColor: colors.danger },
-                    ]}
-                  />
-                  <Text style={styles.scaleText}>0-39%</Text>
-                </View>
-                <View style={styles.scaleItem}>
-                  <View
-                    style={[
-                      styles.scaleDot,
-                      { backgroundColor: colors.warning },
-                    ]}
-                  />
-                  <Text style={styles.scaleText}>40-59%</Text>
-                </View>
-                <View style={styles.scaleItem}>
-                  <View
-                    style={[
-                      styles.scaleDot,
-                      { backgroundColor: colors.tabTraining },
-                    ]}
-                  />
-                  <Text style={styles.scaleText}>60-79%</Text>
-                </View>
-                <View style={styles.scaleItem}>
-                  <View
-                    style={[
-                      styles.scaleDot,
-                      { backgroundColor: colors.success },
-                    ]}
-                  />
-                  <Text style={styles.scaleText}>80-100%</Text>
-                </View>
+              <View style={styles.scaleItem}>
+                <View
+                  style={[styles.scaleDot, { backgroundColor: colors.success }]}
+                />
+                <Text style={styles.scaleText}>80-100%</Text>
               </View>
             </View>
           </View>
-
-          {/* Дополнительная информация */}
-          <View style={styles.tipsContainer}>
-            <Text style={styles.tipsTitle}>Советы для улучшения:</Text>
-            <View style={styles.tipItem}>
-              <View style={styles.tipDot} />
-              <Text style={styles.tipText}>
-                Повторите сложные вопросы в разделе "Тренировка"
-              </Text>
-            </View>
-            <View style={styles.tipItem}>
-              <View style={styles.tipDot} />
-              <Text style={styles.tipText}>
-                Пройдите экзамен для проверки знаний без подсказок
-              </Text>
-            </View>
-            <View style={styles.tipItem}>
-              <View style={styles.tipDot} />
-              <Text style={styles.tipText}>
-                Следите за прогрессом в разделе "Статистика"
-              </Text>
-            </View>
-          </View>
-
-          {/* Кнопка действий */}
-          <TouchableOpacity
-            style={styles.button}
-            onPress={handleGoHome}
-            activeOpacity={0.7}
-          >
-            <Home size={22} color={colors.card} style={styles.buttonIcon} />
-            <Text style={styles.buttonText}>На главный экран</Text>
-          </TouchableOpacity>
         </View>
-      </ScrollView>
-    </SafeAreaView>
+
+        {/* Дополнительная информация */}
+        <View style={styles.tipsContainer}>
+          <Text style={styles.tipsTitle}>Советы для улучшения:</Text>
+          <View style={styles.tipItem}>
+            <View style={styles.tipDot} />
+            <Text style={styles.tipText}>
+              Повторите сложные вопросы в разделе "Тренировка"
+            </Text>
+          </View>
+          <View style={styles.tipItem}>
+            <View style={styles.tipDot} />
+            <Text style={styles.tipText}>
+              Пройдите экзамен для проверки знаний без подсказок
+            </Text>
+          </View>
+          <View style={styles.tipItem}>
+            <View style={styles.tipDot} />
+            <Text style={styles.tipText}>
+              Следите за прогрессом в разделе "Статистика"
+            </Text>
+          </View>
+        </View>
+
+        {/* Кнопка действий */}
+        <TouchableOpacity
+          style={styles.button}
+          onPress={handleGoHome}
+          activeOpacity={0.7}
+        >
+          <Home size={22} color={colors.card} style={styles.buttonIcon} />
+          <Text style={styles.buttonText}>На главный экран</Text>
+        </TouchableOpacity>
+      </View>
+    </ScrollView>
   );
 }
 
