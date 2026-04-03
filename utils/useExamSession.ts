@@ -1,84 +1,99 @@
-
 import type { IQuestion } from "@/components/types/questions";
 import { getExamQuestions } from "@/utils/getRandomQuestions";
 import { useCallback, useEffect, useState } from "react";
 
 export const useExamSession = (professionId: number) => {
-    const [questions, setQuestions] = useState<IQuestion[]>([]);
-    const [currentIndex, setCurrentIndex] = useState(0);
-    const [answers, setAnswers] = useState<Record<number, string>>({});
-    const [isLoading, setIsLoading] = useState(true);
+  const [questions, setQuestions] = useState<IQuestion[]>([]);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [answers, setAnswers] = useState<Record<number, string>>({});
+  const [isLoading, setIsLoading] = useState(true);
 
-    // Инициализация экзамена
-    useEffect(() => {
-        if (!professionId) return;
+  const shuffleArray = <T>(array: T[]): T[] => {
+    const shuffled = [...array];
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+    return shuffled;
+  };
 
-        setIsLoading(true);
-        try {
-            // Используем новую функцию
-            const examQuestions = getExamQuestions(professionId, 10);
-            setQuestions(examQuestions);
-            setCurrentIndex(0);
-            setAnswers({});
-        } catch (error) {
-            console.error("Failed to load questions:", error);
-        } finally {
-            setIsLoading(false);
-        }
-    }, [professionId]);
+  // Инициализация экзамена
+  useEffect(() => {
+    if (!professionId) return;
 
-    const currentQuestion = questions[currentIndex];
-    const isLastQuestion = currentIndex === questions.length - 1;
-    const isAnswered = !!answers[currentIndex];
+    setIsLoading(true);
+    try {
+      const examQuestions = getExamQuestions(professionId, 10).map(
+        (question) => ({
+          ...question,
+          options: shuffleArray(question.options), // 👈 перемешиваем ответы
+        }),
+      );
+      setQuestions(examQuestions);
+      setCurrentIndex(0);
+      setAnswers({});
+    } catch (error) {
+      console.error("Failed to load questions:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  }, [professionId]);
 
-    const handleAnswer = useCallback((answerId: string) => {
-        setAnswers(prev => ({
-            ...prev,
-            [currentIndex]: answerId,
-        }));
-    }, [currentIndex]);
+  const currentQuestion = questions[currentIndex];
+  const isLastQuestion = currentIndex === questions.length - 1;
+  const isAnswered = !!answers[currentIndex];
 
-    const nextQuestion = useCallback(() => {
-        if (isLastQuestion || !isAnswered) return;
-        setCurrentIndex(prev => prev + 1);
-    }, [isLastQuestion, isAnswered]);
+  const handleAnswer = useCallback(
+    (answerId: string) => {
+      setAnswers((prev) => ({
+        ...prev,
+        [currentIndex]: answerId,
+      }));
+    },
+    [currentIndex],
+  );
 
-    const getResults = useCallback(() => {
-        if (questions.length === 0) return null;
+  const nextQuestion = useCallback(() => {
+    if (isLastQuestion || !isAnswered) return;
+    setCurrentIndex((prev) => prev + 1);
+  }, [isLastQuestion, isAnswered]);
 
-        let correctCount = 0;
+  const getResults = useCallback(() => {
+    if (questions.length === 0) return null;
 
-        questions.forEach((question, index) => {
-            const userAnswer = answers[index];
-            if (userAnswer && userAnswer === question.correctAnswer) {
-                correctCount++;
-            }
-        });
+    let correctCount = 0;
 
-        const total = questions.length;
-        const score = Math.round((correctCount / total) * 100);
+    questions.forEach((question, index) => {
+      const userAnswer = answers[index];
+      if (userAnswer && userAnswer === question.correctAnswer) {
+        correctCount++;
+      }
+    });
 
-        return {
-            correctCount,
-            total,
-            score,
-            passed: score >= 70,
-            answers: { ...answers },
-            questions: [...questions],
-        };
-    }, [questions, answers]);
+    const total = questions.length;
+    const score = Math.round((correctCount / total) * 100);
 
     return {
-        questions,
-        currentQuestion,
-        currentIndex,
-        answers,
-        isLoading,
-        isLastQuestion,
-        isAnswered,
-        handleAnswer,
-        nextQuestion,
-        getResults,
-        totalQuestions: questions.length,
+      correctCount,
+      total,
+      score,
+      passed: score >= 70,
+      answers: { ...answers },
+      questions: [...questions],
     };
+  }, [questions, answers]);
+
+  return {
+    questions,
+    currentQuestion,
+    currentIndex,
+    answers,
+    isLoading,
+    isLastQuestion,
+    isAnswered,
+    handleAnswer,
+    nextQuestion,
+    getResults,
+    totalQuestions: questions.length,
+  };
 };

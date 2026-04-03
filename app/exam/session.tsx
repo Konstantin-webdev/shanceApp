@@ -177,18 +177,15 @@ export default function ExamSessionScreen() {
             style={{
               width: 44,
               height: 44,
-              borderRadius: 22,
-              backgroundColor: colors.background,
               justifyContent: "center",
               alignItems: "center",
-              borderWidth: 1,
               borderColor: colors.primary,
             }}
           >
             <Text
               style={{
                 color: colors.primary,
-                fontSize: 16,
+                fontSize: 20,
                 fontWeight: "700",
               }}
             >

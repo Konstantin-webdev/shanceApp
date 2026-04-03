@@ -7,7 +7,6 @@ import { useTheme } from "@/components/ThemeProvider";
 import { TrainingScreenStyles } from "@/styles/training/TrainingScreen.styles";
 import { Play } from "lucide-react-native";
 import { ScrollView, Text, TouchableOpacity, View } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function TrainingScreen() {
   const router = useRouter();
@@ -28,12 +27,8 @@ export default function TrainingScreen() {
   };
 
   return (
-    <SafeAreaView style={styles.safeArea}>
-      <ScrollView
-        style={styles.container}
-        contentContainerStyle={styles.scrollContent}
-        showsVerticalScrollIndicator={false}
-      >
+    <View style={styles.safeArea}>
+      <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
         <View style={styles.header}>
           <Text style={styles.title}>Тренировка</Text>
           <Text style={styles.subtitle}>
@@ -66,21 +61,6 @@ export default function TrainingScreen() {
             )}
           </View>
 
-          <TouchableOpacity
-            style={[
-              styles.startButton,
-              (!selectedProfession || isLoading) && styles.disabledButton,
-            ]}
-            onPress={handleStartTraining}
-            disabled={!selectedProfession || isLoading}
-            activeOpacity={0.8}
-          >
-            <Play size={24} color={colors.background || "#FFFFFF"} />
-            <Text style={styles.startButtonText}>
-              {isLoading ? "Загрузка..." : "Начать тренировку"}
-            </Text>
-          </TouchableOpacity>
-
           <View style={styles.instructions}>
             <Text style={styles.instructionsTitle}>Как это работает:</Text>
             <View style={styles.instructionItem}>
@@ -106,10 +86,22 @@ export default function TrainingScreen() {
               </Text>
             </View>
           </View>
-
-          <View style={styles.bottomSpacer} />
+          <TouchableOpacity
+            style={[
+              styles.startButton,
+              (!selectedProfession || isLoading) && styles.disabledButton,
+            ]}
+            onPress={handleStartTraining}
+            disabled={!selectedProfession || isLoading}
+            activeOpacity={0.8}
+          >
+            <Play size={24} color={colors.background || "#FFFFFF"} />
+            <Text style={styles.startButtonText}>
+              {isLoading ? "Загрузка..." : "Начать тренировку"}
+            </Text>
+          </TouchableOpacity>
         </View>
       </ScrollView>
-    </SafeAreaView>
+    </View>
   );
 }

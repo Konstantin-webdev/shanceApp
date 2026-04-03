@@ -47,21 +47,6 @@ export default function ExamScreen() {
             </View>
           )}
 
-          <TouchableOpacity
-            style={[
-              styles.startButton,
-              (!selectedProfession || isNavigating) && styles.disabledButton,
-            ]}
-            onPress={handleStartExam}
-            disabled={!selectedProfession || isNavigating}
-            activeOpacity={0.8}
-          >
-            <Play size={24} color="#FFFFFF" />
-            <Text style={styles.startButtonText}>
-              {isNavigating ? "Загрузка..." : "Начать экзамен"}
-            </Text>
-          </TouchableOpacity>
-
           <View style={styles.featuresCard}>
             <Text style={styles.featuresTitle}>Особенности экзамена:</Text>
 
@@ -89,6 +74,20 @@ export default function ExamScreen() {
               ))}
             </View>
           </View>
+          <TouchableOpacity
+            style={[
+              styles.startButton,
+              (!selectedProfession || isNavigating) && styles.disabledButton,
+            ]}
+            onPress={handleStartExam}
+            disabled={!selectedProfession || isNavigating}
+            activeOpacity={0.8}
+          >
+            <Play size={24} color="#FFFFFF" />
+            <Text style={styles.startButtonText}>
+              {isNavigating ? "Загрузка..." : "Начать экзамен"}
+            </Text>
+          </TouchableOpacity>
         </View>
       </ScrollView>
     </View>

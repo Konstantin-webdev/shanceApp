@@ -1,5 +1,5 @@
-import { StyleSheet } from "react-native";
 import { ThemeColors } from "@/components/ThemeProvider";
+import { StyleSheet } from "react-native";
 
 export const ExamScreenStyles = (colors: ThemeColors) =>
   StyleSheet.create({
@@ -78,6 +78,7 @@ export const ExamScreenStyles = (colors: ThemeColors) =>
       borderRadius: 12,
       borderWidth: 1,
       borderColor: colors.border,
+      marginBottom: 32,
     },
     featuresTitle: {
       fontSize: 18,

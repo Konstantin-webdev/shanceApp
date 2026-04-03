@@ -5,13 +5,9 @@ export const TrainingScreenStyles = (colors: any) =>
     safeArea: {
       flex: 1,
       backgroundColor: colors.background,
-      marginTop: -30,
     },
     container: {
       flex: 1,
-    },
-    scrollContent: {
-      flexGrow: 1,
     },
     header: {
       backgroundColor: colors.card,
@@ -65,19 +61,7 @@ export const TrainingScreenStyles = (colors: any) =>
       color: colors.muted,
       fontStyle: "italic" as const,
     },
-    settingsButton: {
-      marginTop: 12,
-      paddingVertical: 10,
-      paddingHorizontal: 16,
-      backgroundColor: `${colors.primary}1A`, // 10% opacity в hex
-      borderRadius: 8,
-      alignSelf: "flex-start" as const,
-    },
-    settingsButtonText: {
-      color: colors.primary,
-      fontSize: 14,
-      fontWeight: "600" as const,
-    },
+
     startButton: {
       backgroundColor: colors.primary,
       flexDirection: "row" as const,
@@ -98,7 +82,7 @@ export const TrainingScreenStyles = (colors: any) =>
       fontWeight: "600" as const,
     },
     instructions: {
-      marginTop: 32,
+      marginTop: 16,
       backgroundColor: colors.card,
       padding: 20,
       borderRadius: 12,
@@ -131,8 +115,5 @@ export const TrainingScreenStyles = (colors: any) =>
       fontSize: 15,
       color: colors.text,
       flex: 1,
-    },
-    bottomSpacer: {
-      height: 40,
     },
   });

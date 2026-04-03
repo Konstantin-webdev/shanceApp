@@ -2,7 +2,7 @@
 import { useTheme } from "@/components/ThemeProvider";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useEffect } from "react";
-import { ScrollView, StatusBar, View } from "react-native";
+import { ScrollView, StatusBar, View, Text } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import { ActionButtons } from "@/components/Exam/ActionButtons";
@@ -13,6 +13,7 @@ import { StatsCard } from "@/components/Exam/StatsCard";
 import { saveExamResult } from "@/components/data/examResults";
 import { styles } from "@/components/Exam/styles";
 import { parseExamResults } from "@/utils/examResultsParser";
+import { SpecialistNotice } from "@/components/Exam/SpecialistNotice";
 
 export default function ExamResultsScreen() {
   const router = useRouter();
@@ -95,6 +96,7 @@ export default function ExamResultsScreen() {
               questionsData={questionsData}
               answersData={answersData}
             />
+            <SpecialistNotice />
 
             {/* Кнопки действий */}
             <ActionButtons

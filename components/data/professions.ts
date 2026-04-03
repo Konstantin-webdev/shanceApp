@@ -1,27 +1,36 @@
 import { IProfession } from "../types/profession";
 
 export const professions: IProfession[] = [
+  ////Отправил Тертичному на ревью
+
+  { id: 1, name: "Слесарь-сантехник", questionCount: 150 }, // refresh
+  { id: 2, name: "Водитель", questionCount: 150 }, // refresh
+  { id: 38, name: "Электромонтер по ремонту ВЛЭП", questionCount: 150 }, // refresh
+  { id: 16, name: "Электрогазосварщик", questionCount: 150 }, // refresh
+
+  ////Отправил Тертичному на ревью
+
   {
     id: 78,
     name: "Электромонтер по ремонту электрооборудования",
-    questionCount: 216,
-  }, //done
-  { id: 38, name: "Электромонтер по ремонту ВЛЭП", questionCount: 201 }, //done
-  { id: 2, name: "Водитель", questionCount: 150 }, // refresh
-  { id: 20, name: "Слесарь-ремонтник", questionCount: 235 }, //done
-  { id: 3, name: "Слесарь АВР", questionCount: 237 }, //done
-  { id: 16, name: "Электрогазосварщик", questionCount: 150 }, // refresh
-  { id: 25, name: "Уборщик", questionCount: 85 }, //done
-  { id: 42, name: "Крановщик", questionCount: 210 }, //done
-  { id: 35, name: "Машинист экскаватора", questionCount: 180 }, //done
-  { id: 73, name: "Машинист компрессорных установок", questionCount: 245 }, //done
-  { id: 29, name: "Бульдозерист", questionCount: 152 }, //done
-  { id: 55, name: "Кладовщик", questionCount: 85 }, //done
+    questionCount: 150,
+  }, // refresh
+  { id: 3, name: "Изоливщировщик-пленочник", questionCount: 150 }, // refresh
+  { id: 4, name: "Монтажник наружных трубопроводов", questionCount: 150 }, // refresh
+  { id: 25, name: "Уборщик помещений", questionCount: 150 }, // refresh
+  { id: 42, name: "Машинист крана (крановщик)", questionCount: 150 }, //   refresh
+  { id: 73, name: "Машинист компрессорных установок", questionCount: 150 }, // refresh
+  { id: 35, name: "Машинист экскаватора", questionCount: 150 }, // refresh
+  { id: 29, name: "Машинист бульдозера", questionCount: 150 }, // refresh
+  { id: 55, name: "Кладовщик", questionCount: 150 }, // refresh
+
   { id: 54, name: "Зав. складом", questionCount: 145 }, //done
   { id: 32, name: "Оператор АЗС", questionCount: 96 }, //done
   { id: 21, name: "Стропальщик", questionCount: 236 },
 
   /*  { id: 4, name: "Оператор котельной", questionCount: 232 },
+  { id: 20, name: "Слесарь-ремонтник", questionCount: 235 },
+    { id: 3, name: "Слесарь АВР", questionCount: 237 }, 
   { id: 5, name: "Приборист", questionCount: 244 },
   { id: 58, name: "Экономист", questionCount: 57 },
   { id: 59, name: "Главный бухгалтер", questionCount: 57 },

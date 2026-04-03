@@ -2,7 +2,7 @@ import { IQuestion } from "../../types/questions";
 
 export const questionsProfession16: IQuestion[] = [
   {
-    id: "egs_0",
+    id: "16_0",
     text: "Какой нормативный документ устанавливает основные требования охраны труда при выполнении электросварочных и газосварочных работ?",
     options: [
       { id: "1", text: "1. Трудовой кодекс РФ." },
@@ -20,7 +20,7 @@ export const questionsProfession16: IQuestion[] = [
     correctAnswer: "5",
   },
   {
-    id: "egs_1",
+    id: "16_1",
     text: "Какой вид инструктажа проводится с электрогазосварщиком перед выполнением огневых работ в пожароопасной зоне?",
     options: [
       { id: "1", text: "1. Вводный." },
@@ -32,7 +32,7 @@ export const questionsProfession16: IQuestion[] = [
     correctAnswer: "5",
   },
   {
-    id: "egs_2",
+    id: "16_2",
     text: "Как часто электрогазосварщик должен проходить обучение по оказанию первой помощи?",
     options: [
       { id: "1", text: "1. Ежегодно." },
@@ -44,7 +44,7 @@ export const questionsProfession16: IQuestion[] = [
     correctAnswer: "3",
   },
   {
-    id: "egs_3",
+    id: "16_3",
     text: "Какие медицинские осмотры обязан проходить электрогазосварщик?",
     options: [
       { id: "1", text: "1. Только предварительный при приеме на работу." },
@@ -56,7 +56,7 @@ export const questionsProfession16: IQuestion[] = [
     correctAnswer: "5",
   },
   {
-    id: "egs_4",
+    id: "16_4",
     text: "Кто несет ответственность за проведение целевого инструктажа электрогазосварщика перед началом огневых работ?",
     options: [
       { id: "1", text: "1. Сам работник." },
@@ -68,7 +68,7 @@ export const questionsProfession16: IQuestion[] = [
     correctAnswer: "3",
   },
   {
-    id: "egs_5",
+    id: "16_5",
     text: "Какова нормальная продолжительность рабочего времени электрогазосварщика в неделю?",
     options: [
       { id: "1", text: "1. Не более 36 часов." },
@@ -80,7 +80,7 @@ export const questionsProfession16: IQuestion[] = [
     correctAnswer: "2",
   },
   {
-    id: "egs_6",
+    id: "16_6",
     text: "Что должен сделать электрогазосварщик перед началом электросварочных работ?",
     options: [
       { id: "1", text: "1. Только надеть спецодежду." },
@@ -95,7 +95,7 @@ export const questionsProfession16: IQuestion[] = [
     correctAnswer: "2",
   },
   {
-    id: "egs_7",
+    id: "16_7",
     text: "Разрешается ли электрогазосварщику выполнять работы при неисправном заземлении сварочного оборудования?",
     options: [
       { id: "1", text: "1. Разрешается при работе с напряжением до 42 В." },
@@ -110,7 +110,7 @@ export const questionsProfession16: IQuestion[] = [
     correctAnswer: "4",
   },
   {
-    id: "egs_8",
+    id: "16_8",
     text: "Какие средства индивидуальной защиты обязательно должен иметь электрогазосварщик при выполнении электросварочных работ?",
     options: [
       { id: "1", text: "1. Только сварочная маска." },
@@ -125,7 +125,7 @@ export const questionsProfession16: IQuestion[] = [
     correctAnswer: "2",
   },
   {
-    id: "egs_9",
+    id: "16_9",
     text: "Как часто должно проводиться техническое обслуживание сварочного оборудования?",
     options: [
       { id: "1", text: "1. Только при появлении неисправностей." },
@@ -140,7 +140,7 @@ export const questionsProfession16: IQuestion[] = [
     correctAnswer: "2",
   },
   {
-    id: "egs_10",
+    id: "16_10",
     text: "Что должен сделать электрогазосварщик при обнаружении неисправности сварочного аппарата в процессе работы?",
     options: [
       { id: "1", text: "1. Продолжить работу до завершения шва." },
@@ -164,7 +164,7 @@ export const questionsProfession16: IQuestion[] = [
     correctAnswer: "2",
   },
   {
-    id: "egs_11",
+    id: "16_11",
     text: "Какой документ должен быть оформлен при выполнении огневых работ на временных местах?",
     options: [
       { id: "1", text: "1. Только устное распоряжение." },
@@ -176,7 +176,7 @@ export const questionsProfession16: IQuestion[] = [
     correctAnswer: "2",
   },
   {
-    id: "egs_12",
+    id: "16_12",
     text: "Кто имеет право допускать электрогазосварщика к выполнению огневых работ по наряду-допуску?",
     options: [
       { id: "1", text: "1. Любой работник предприятия." },
@@ -191,7 +191,7 @@ export const questionsProfession16: IQuestion[] = [
     correctAnswer: "3",
   },
   {
-    id: "egs_13",
+    id: "16_13",
     text: "Какие требования предъявляются к огнетушителю на месте выполнения сварочных работ?",
     options: [
       { id: "1", text: "1. Должен быть любого типа и срока годности." },
@@ -206,7 +206,7 @@ export const questionsProfession16: IQuestion[] = [
     correctAnswer: "2",
   },
   {
-    id: "egs_14",
+    id: "16_14",
     text: "Что входит в комплект средств пожаротушения на месте выполнения сварочных работ?",
     options: [
       { id: "1", text: "1. Только огнетушитель." },
@@ -221,7 +221,7 @@ export const questionsProfession16: IQuestion[] = [
     correctAnswer: "2",
   },
   {
-    id: "egs_15",
+    id: "16_15",
     text: "Каков порядок действий при оказании первой помощи пострадавшему от электрического тока?",
     options: [
       { id: "1", text: "1. Немедленно начать искусственное дыхание." },
@@ -239,7 +239,7 @@ export const questionsProfession16: IQuestion[] = [
     correctAnswer: "2",
   },
   {
-    id: "egs_16",
+    id: "16_16",
     text: "При каких условиях разрешается выполнение сварочных работ внутри металлических емкостей?",
     options: [
       { id: "1", text: "1. При наличии естественной вентиляции." },
@@ -254,7 +254,7 @@ export const questionsProfession16: IQuestion[] = [
     correctAnswer: "2",
   },
   {
-    id: "egs_17",
+    id: "16_17",
     text: "Какова максимальная продолжительность непрерывной работы электрогазосварщика внутри замкнутого пространства?",
     options: [
       { id: "1", text: "1. Не более 15 минут." },
@@ -269,7 +269,7 @@ export const questionsProfession16: IQuestion[] = [
     correctAnswer: "2",
   },
   {
-    id: "egs_18",
+    id: "16_18",
     text: "Что должен сделать электрогазосварщик при выполнении работ в условиях повышенной опасности поражения электрическим током?",
     options: [
       { id: "1", text: "1. Продолжить работу с повышенной осторожностью." },
@@ -284,7 +284,7 @@ export const questionsProfession16: IQuestion[] = [
     correctAnswer: "2",
   },
   {
-    id: "egs_19",
+    id: "16_19",
     text: "В каком случае электрогазосварщик обязан пройти внеочередную проверку знаний по охране труда?",
     options: [
       { id: "1", text: "1. Только при приеме на работу." },
@@ -299,7 +299,7 @@ export const questionsProfession16: IQuestion[] = [
     correctAnswer: "2",
   },
   {
-    id: "egs_20",
+    id: "16_20",
     text: "Какой документ подтверждает прохождение электрогазосварщиком обучения и проверки знаний?",
     options: [
       { id: "1", text: "1. Удостоверение сварщика." },
@@ -314,7 +314,7 @@ export const questionsProfession16: IQuestion[] = [
     correctAnswer: "2",
   },
   {
-    id: "egs_21",
+    id: "16_21",
     text: "Разрешается ли электрогазосварщику курить в зоне выполнения сварочных работ?",
     options: [
       { id: "1", text: "1. Разрешается." },
@@ -332,7 +332,7 @@ export const questionsProfession16: IQuestion[] = [
     correctAnswer: "3",
   },
   {
-    id: "egs_22",
+    id: "16_22",
     text: "Какие действия запрещены электрогазосварщику при выполнении сварочных работ?",
     options: [
       { id: "1", text: "1. Работать без защитной маски или щитка." },
@@ -347,7 +347,7 @@ export const questionsProfession16: IQuestion[] = [
     correctAnswer: "4",
   },
   {
-    id: "egs_23",
+    id: "16_23",
     text: "Что должен сделать электрогазосварщик перед началом газосварочных работ?",
     options: [
       { id: "1", text: "1. Только проверить наличие газа в баллонах." },
@@ -362,7 +362,7 @@ export const questionsProfession16: IQuestion[] = [
     correctAnswer: "2",
   },
   {
-    id: "egs_24",
+    id: "16_24",
     text: "На каком расстоянии от места выполнения сварочных работ должны находиться баллоны с кислородом и горючими газами?",
     options: [
       { id: "1", text: "1. Не регламентируется." },
@@ -377,7 +377,7 @@ export const questionsProfession16: IQuestion[] = [
     correctAnswer: "4",
   },
   {
-    id: "egs_25",
+    id: "16_25",
     text: "Какие требования предъявляются к хранению и транспортировке баллонов с газами?",
     options: [
       { id: "1", text: "1. Достаточно обычного кузова автомобиля." },
@@ -392,7 +392,7 @@ export const questionsProfession16: IQuestion[] = [
     correctAnswer: "2",
   },
   {
-    id: "egs_26",
+    id: "16_26",
     text: "Какой стаж работы сварщиком требуется для допуска к выполнению ответственных сварочных работ?",
     options: [
       { id: "1", text: "1. Не менее 1 года." },
@@ -404,7 +404,7 @@ export const questionsProfession16: IQuestion[] = [
     correctAnswer: "3",
   },
   {
-    id: "egs_27",
+    id: "16_27",
     text: "Что должен сделать электрогазосварщик при возникновении пожара в зоне выполнения работ?",
     options: [
       { id: "1", text: "1. Немедленно покинуть место пожара." },
@@ -419,7 +419,7 @@ export const questionsProfession16: IQuestion[] = [
     correctAnswer: "2",
   },
   {
-    id: "egs_28",
+    id: "16_28",
     text: "В течение какого времени работодатель должен расследовать несчастный случай с электрогазосварщиком?",
     options: [
       { id: "1", text: "1. В течение 24 часов." },
@@ -431,7 +431,7 @@ export const questionsProfession16: IQuestion[] = [
     correctAnswer: "2",
   },
   {
-    id: "egs_29",
+    id: "16_29",
     text: "Какой документ составляется по результатам расследования несчастного случая на производстве?",
     options: [
       { id: "1", text: "1. Акт по форме Н-1." },
@@ -443,7 +443,7 @@ export const questionsProfession16: IQuestion[] = [
     correctAnswer: "1",
   },
   {
-    id: "egs_30",
+    id: "16_30",
     text: "Кто имеет право проводить специальную оценку условий труда на рабочем месте электрогазосварщика?",
     options: [
       { id: "1", text: "1. Любой сотрудник предприятия." },
@@ -458,7 +458,7 @@ export const questionsProfession16: IQuestion[] = [
     correctAnswer: "3",
   },
   {
-    id: "egs_31",
+    id: "16_31",
     text: "Какие гарантии предоставляются электрогазосварщику, если на его рабочем месте выявлены вредные условия труда?",
     options: [
       { id: "1", text: "1. Никакие." },
@@ -473,7 +473,7 @@ export const questionsProfession16: IQuestion[] = [
     correctAnswer: "3",
   },
   {
-    id: "egs_32",
+    id: "16_32",
     text: "Разрешается ли электрогазосварщику выполнять работы в состоянии утомления?",
     options: [
       {
@@ -488,7 +488,7 @@ export const questionsProfession16: IQuestion[] = [
     correctAnswer: "3",
   },
   {
-    id: "egs_33",
+    id: "16_33",
     text: "Какова минимальная продолжительность перерыва для отдыха в течение рабочей смены электрогазосварщика?",
     options: [
       { id: "1", text: "1. Не менее 10 минут каждый час." },
@@ -500,7 +500,7 @@ export const questionsProfession16: IQuestion[] = [
     correctAnswer: "2",
   },
   {
-    id: "egs_34",
+    id: "16_34",
     text: "Что должен сделать электрогазосварщик перед выполнением сварочных работ на высоте?",
     options: [
       { id: "1", text: "1. Просто пристегнуть страховочный пояс." },
@@ -515,7 +515,7 @@ export const questionsProfession16: IQuestion[] = [
     correctAnswer: "2",
   },
   {
-    id: "egs_35",
+    id: "16_35",
     text: "Какие требования предъявляются к выполнению сварочных работ в присутствии других работников?",
     options: [
       { id: "1", text: "1. Разрешается при наличии сварочной маски." },
@@ -530,7 +530,7 @@ export const questionsProfession16: IQuestion[] = [
     correctAnswer: "2",
   },
   {
-    id: "egs_36",
+    id: "16_36",
     text: "Какой тип огнетушителя рекомендуется для тушения пожаров в электроустановках под напряжением?",
     options: [
       { id: "1", text: "1. Водный." },
@@ -545,7 +545,7 @@ export const questionsProfession16: IQuestion[] = [
     correctAnswer: "2",
   },
   {
-    id: "egs_37",
+    id: "16_37",
     text: "На каком расстоянии от сварочных работ должен быть установлен знак «Осторожно! Идут сварочные работы»?",
     options: [
       { id: "1", text: "1. Не менее 5 м." },
@@ -557,7 +557,7 @@ export const questionsProfession16: IQuestion[] = [
     correctAnswer: "2",
   },
   {
-    id: "egs_38",
+    id: "16_38",
     text: "Какие действия должен предпринять электрогазосварщик при возгорании сварочных рукавов или кабелей?",
     options: [
       {
@@ -572,7 +572,7 @@ export const questionsProfession16: IQuestion[] = [
     correctAnswer: "1",
   },
   {
-    id: "egs_39",
+    id: "16_39",
     text: "Разрешается ли выполнять сварочные работы при наличии в зоне работ легковоспламеняющихся жидкостей?",
     options: [
       { id: "1", text: "1. Разрешается." },
@@ -587,7 +587,7 @@ export const questionsProfession16: IQuestion[] = [
     correctAnswer: "3",
   },
   {
-    id: "egs_40",
+    id: "16_40",
     text: "Какие требования предъявляются к состоянию сварочных кабелей?",
     options: [
       { id: "1", text: "1. Достаточно, чтобы кабели были подключены." },
@@ -602,7 +602,7 @@ export const questionsProfession16: IQuestion[] = [
     correctAnswer: "2",
   },
   {
-    id: "egs_41",
+    id: "16_41",
     text: "Какова минимальная площадь сечения сварочного кабеля для тока 200 А?",
     options: [
       { id: "1", text: "1. Не менее 16 мм²." },
@@ -614,7 +614,7 @@ export const questionsProfession16: IQuestion[] = [
     correctAnswer: "3",
   },
   {
-    id: "egs_42",
+    id: "16_42",
     text: "Что должен сделать электрогазосварщик при выполнении сварочных работ с применением сжатых газов?",
     options: [
       { id: "1", text: "1. Только закрепить баллоны." },
@@ -629,7 +629,7 @@ export const questionsProfession16: IQuestion[] = [
     correctAnswer: "2",
   },
   {
-    id: "egs_43",
+    id: "16_43",
     text: "Разрешается ли электрогазосварщику передавать управление сварочным оборудованием другому лицу?",
     options: [
       { id: "1", text: "1. Разрешается любому лицу." },
@@ -644,7 +644,7 @@ export const questionsProfession16: IQuestion[] = [
     correctAnswer: "2",
   },
   {
-    id: "egs_44",
+    id: "16_44",
     text: "Какие требования предъявляются к освещению рабочего места электрогазосварщика?",
     options: [
       { id: "1", text: "1. Освещение не требуется." },
@@ -659,7 +659,7 @@ export const questionsProfession16: IQuestion[] = [
     correctAnswer: "2",
   },
   {
-    id: "egs_45",
+    id: "16_45",
     text: "Что должен сделать электрогазосварщик при обнаружении утечки газа из баллона или рукава?",
     options: [
       { id: "1", text: "1. Продолжить работу до завершения шва." },
@@ -674,7 +674,7 @@ export const questionsProfession16: IQuestion[] = [
     correctAnswer: "2",
   },
   {
-    id: "egs_46",
+    id: "16_46",
     text: "Какие документы должны находиться у электрогазосварщика при выполнении работ?",
     options: [
       { id: "1", text: "1. Только удостоверение сварщика." },
@@ -689,7 +689,7 @@ export const questionsProfession16: IQuestion[] = [
     correctAnswer: "2",
   },
   {
-    id: "egs_47",
+    id: "16_47",
     text: "Разрешается ли эксплуатация сварочного оборудования с неисправной системой вентиляции?",
     options: [
       { id: "1", text: "1. Разрешается." },
@@ -701,7 +701,7 @@ export const questionsProfession16: IQuestion[] = [
     correctAnswer: "3",
   },
   {
-    id: "egs_48",
+    id: "16_48",
     text: "Какой порядок действий при оказании первой помощи при ожоге сварочной дугой?",
     options: [
       {
@@ -716,7 +716,7 @@ export const questionsProfession16: IQuestion[] = [
     correctAnswer: "1",
   },
   {
-    id: "egs_49",
+    id: "16_49",
     text: "Через какое время необходимо делать перерыв при выполнении сварочных работ в замкнутом пространстве?",
     options: [
       { id: "1", text: "1. Каждые 15 минут." },
@@ -728,7 +728,7 @@ export const questionsProfession16: IQuestion[] = [
     correctAnswer: "2",
   },
   {
-    id: "egs_50",
+    id: "16_50",
     text: "Какое минимальное расстояние должно быть между местом сварочных работ и баллонами с кислородом?",
     options: [
       { id: "1", text: "1. Не менее 3 метров." },
@@ -740,7 +740,7 @@ export const questionsProfession16: IQuestion[] = [
     correctAnswer: "2",
   },
   {
-    id: "egs_51",
+    id: "16_51",
     text: "Какое минимальное расстояние должно быть между баллонами с кислородом и баллонами с горючими газами при хранении?",
     options: [
       { id: "1", text: "1. Не менее 3 метров." },
@@ -752,7 +752,7 @@ export const questionsProfession16: IQuestion[] = [
     correctAnswer: "4",
   },
   {
-    id: "egs_52",
+    id: "16_52",
     text: "Какое остаточное давление должно оставаться в кислородном баллоне после использования?",
     options: [
       { id: "1", text: "1. Не менее 0,1 МПа (1 кгс/см²)." },
@@ -764,7 +764,7 @@ export const questionsProfession16: IQuestion[] = [
     correctAnswer: "2",
   },
   {
-    id: "egs_53",
+    id: "16_53",
     text: "Какое остаточное давление должно оставаться в ацетиленовом баллоне при температуре 20°C?",
     options: [
       { id: "1", text: "1. Не менее 0,05 МПа (0,5 кгс/см²)." },
@@ -776,7 +776,7 @@ export const questionsProfession16: IQuestion[] = [
     correctAnswer: "3",
   },
   {
-    id: "egs_54",
+    id: "16_54",
     text: "Через какой срок должны проходить гидравлическое испытание баллоны для кислорода?",
     options: [
       { id: "1", text: "1. Через 3 года." },
@@ -788,7 +788,7 @@ export const questionsProfession16: IQuestion[] = [
     correctAnswer: "2",
   },
   {
-    id: "egs_55",
+    id: "16_55",
     text: "Какой цвет должен иметь кислородный баллон по стандартам РФ?",
     options: [
       { id: "1", text: "1. Красный." },
@@ -800,7 +800,7 @@ export const questionsProfession16: IQuestion[] = [
     correctAnswer: "2",
   },
   {
-    id: "egs_56",
+    id: "16_56",
     text: "Какой цвет должен иметь ацетиленовый баллон по стандартам РФ?",
     options: [
       { id: "1", text: "1. Красный." },
@@ -812,7 +812,7 @@ export const questionsProfession16: IQuestion[] = [
     correctAnswer: "3",
   },
   {
-    id: "egs_57",
+    id: "16_57",
     text: "Какая резьба должна быть на вентилях баллонов с горючими газами?",
     options: [
       { id: "1", text: "1. Правая." },
@@ -824,7 +824,7 @@ export const questionsProfession16: IQuestion[] = [
     correctAnswer: "2",
   },
   {
-    id: "egs_58",
+    id: "16_58",
     text: "Какая резьба должна быть на вентилях баллонов с кислородом?",
     options: [
       { id: "1", text: "1. Правая." },
@@ -836,7 +836,7 @@ export const questionsProfession16: IQuestion[] = [
     correctAnswer: "1",
   },
   {
-    id: "egs_59",
+    id: "16_59",
     text: "Разрешается ли переносить газовые баллоны на руках или плечах?",
     options: [
       { id: "1", text: "1. Разрешается." },
@@ -848,7 +848,7 @@ export const questionsProfession16: IQuestion[] = [
     correctAnswer: "3",
   },
   {
-    id: "egs_60",
+    id: "16_60",
     text: "Как должны транспортироваться газовые баллоны к месту сварочных работ?",
     options: [
       { id: "1", text: "1. На специальных тележках с закреплением." },
@@ -860,7 +860,7 @@ export const questionsProfession16: IQuestion[] = [
     correctAnswer: "1",
   },
   {
-    id: "egs_61",
+    id: "16_61",
     text: "На каком расстоянии от источников тепла с открытым огнем должны находиться газовые баллоны?",
     options: [
       { id: "1", text: "1. Не менее 3 метров." },
@@ -872,7 +872,7 @@ export const questionsProfession16: IQuestion[] = [
     correctAnswer: "2",
   },
   {
-    id: "egs_62",
+    id: "16_62",
     text: "Разрешается ли использовать газовые баллоны без предохранительных колпаков?",
     options: [
       { id: "1", text: "1. Разрешается при хранении." },
@@ -887,7 +887,7 @@ export const questionsProfession16: IQuestion[] = [
     correctAnswer: "3",
   },
   {
-    id: "egs_63",
+    id: "16_63",
     text: "Каким прибором должна проверяться герметичность газовых соединений перед началом работы?",
     options: [
       { id: "1", text: "1. Мыльным раствором." },
@@ -899,7 +899,7 @@ export const questionsProfession16: IQuestion[] = [
     correctAnswer: "1",
   },
   {
-    id: "egs_64",
+    id: "16_64",
     text: "Запрещается ли проверять герметичность газовых соединений открытым огнем?",
     options: [
       { id: "1", text: "1. Разрешается." },
@@ -911,7 +911,7 @@ export const questionsProfession16: IQuestion[] = [
     correctAnswer: "2",
   },
   {
-    id: "egs_65",
+    id: "16_65",
     text: "Какое напряжение холостого хода допускается для источников сварочного тока переменного тока?",
     options: [
       { id: "1", text: "1. Не более 60 В." },
@@ -923,7 +923,7 @@ export const questionsProfession16: IQuestion[] = [
     correctAnswer: "2",
   },
   {
-    id: "egs_66",
+    id: "16_66",
     text: "Какая группа по электробезопасности должна быть у электросварщика?",
     options: [
       { id: "1", text: "1. Не ниже I группы." },
@@ -935,7 +935,7 @@ export const questionsProfession16: IQuestion[] = [
     correctAnswer: "2",
   },
   {
-    id: "egs_67",
+    id: "16_67",
     text: "Должен ли быть заземлен корпус сварочного аппарата?",
     options: [
       { id: "1", text: "1. Не должен." },
@@ -947,7 +947,7 @@ export const questionsProfession16: IQuestion[] = [
     correctAnswer: "2",
   },
   {
-    id: "egs_68",
+    id: "16_68",
     text: "Каким должно быть сечение сварочного кабеля для тока 300 А?",
     options: [
       { id: "1", text: "1. Не менее 25 мм²." },
@@ -959,7 +959,7 @@ export const questionsProfession16: IQuestion[] = [
     correctAnswer: "3",
   },
   {
-    id: "egs_69",
+    id: "16_69",
     text: "Разрешается ли использовать провода с поврежденной изоляцией для сварочных работ?",
     options: [
       { id: "1", text: "1. Разрешается." },
@@ -971,7 +971,7 @@ export const questionsProfession16: IQuestion[] = [
     correctAnswer: "3",
   },
   {
-    id: "egs_70",
+    id: "16_70",
     text: "Как должен подключаться обратный провод к свариваемой детали?",
     options: [
       { id: "1", text: "1. С помощью струбцины с надежным контактом." },
@@ -983,7 +983,7 @@ export const questionsProfession16: IQuestion[] = [
     correctAnswer: "1",
   },
   {
-    id: "egs_71",
+    id: "16_71",
     text: "Запрещается ли использовать трубопроводы, строительные конструкции и оборудование в качестве обратного провода?",
     options: [
       { id: "1", text: "1. Разрешается." },
@@ -995,7 +995,7 @@ export const questionsProfession16: IQuestion[] = [
     correctAnswer: "2",
   },
   {
-    id: "egs_72",
+    id: "16_72",
     text: "Какое минимальное расстояние должно быть между сварочным трансформатором и стеной?",
     options: [
       { id: "1", text: "1. Не менее 0,3 м." },
@@ -1007,7 +1007,7 @@ export const questionsProfession16: IQuestion[] = [
     correctAnswer: "2",
   },
   {
-    id: "egs_73",
+    id: "16_73",
     text: "Разрешается ли производить сварочные работы внутри замкнутых емкостей без вентиляции?",
     options: [
       { id: "1", text: "1. Разрешается." },
@@ -1019,7 +1019,7 @@ export const questionsProfession16: IQuestion[] = [
     correctAnswer: "3",
   },
   {
-    id: "egs_74",
+    id: "16_74",
     text: "Какой минимальный состав бригады требуется для сварочных работ внутри резервуаров?",
     options: [
       { id: "1", text: "1. Один сварщик." },
@@ -1034,7 +1034,7 @@ export const questionsProfession16: IQuestion[] = [
     correctAnswer: "2",
   },
   {
-    id: "egs_75",
+    id: "16_75",
     text: "Каким напряжением должно осуществляться освещение при сварочных работах внутри металлических емкостей?",
     options: [
       { id: "1", text: "1. Не выше 220 В." },
@@ -1046,7 +1046,7 @@ export const questionsProfession16: IQuestion[] = [
     correctAnswer: "4",
   },
   {
-    id: "egs_76",
+    id: "16_76",
     text: "Какой тип светильников должен применяться при сварочных работах внутри емкостей?",
     options: [
       { id: "1", text: "1. Обычные переносные светильники." },
@@ -1058,7 +1058,7 @@ export const questionsProfession16: IQuestion[] = [
     correctAnswer: "2",
   },
   {
-    id: "egs_77",
+    id: "16_77",
     text: "Разрешается ли одновременно выполнять электросварочные и газосварочные работы внутри одной емкости?",
     options: [
       { id: "1", text: "1. Разрешается." },
@@ -1070,7 +1070,7 @@ export const questionsProfession16: IQuestion[] = [
     correctAnswer: "3",
   },
   {
-    id: "egs_78",
+    id: "16_78",
     text: "Как должен храниться электрододержатель во время перерыва в работе?",
     options: [
       { id: "1", text: "1. На свариваемой детали." },
@@ -1082,7 +1082,7 @@ export const questionsProfession16: IQuestion[] = [
     correctAnswer: "2",
   },
   {
-    id: "egs_79",
+    id: "16_79",
     text: "Должен ли отключаться сварочный аппарат во время перерыва в работе?",
     options: [
       { id: "1", text: "1. Не должен." },
@@ -1094,7 +1094,7 @@ export const questionsProfession16: IQuestion[] = [
     correctAnswer: "2",
   },
   {
-    id: "egs_80",
+    id: "16_80",
     text: "Какой светофильтр должен применяться при сварке током 150-250 А?",
     options: [
       { id: "1", text: "1. Номер 8-10." },
@@ -1106,7 +1106,7 @@ export const questionsProfession16: IQuestion[] = [
     correctAnswer: "2",
   },
   {
-    id: "egs_81",
+    id: "16_81",
     text: "От чего зависит выбор номера светофильтра сварочной маски?",
     options: [
       { id: "1", text: "1. От времени суток." },
@@ -1118,7 +1118,7 @@ export const questionsProfession16: IQuestion[] = [
     correctAnswer: "2",
   },
   {
-    id: "egs_82",
+    id: "16_82",
     text: "Разрешается ли работать сварщику с трещинами на смотровом стекле маски?",
     options: [
       { id: "1", text: "1. Разрешается." },
@@ -1130,7 +1130,7 @@ export const questionsProfession16: IQuestion[] = [
     correctAnswer: "3",
   },
   {
-    id: "egs_83",
+    id: "16_83",
     text: "Какие средства защиты органов дыхания должны применяться при сварке оцинкованных металлов?",
     options: [
       { id: "1", text: "1. Обычный респиратор." },
@@ -1145,7 +1145,7 @@ export const questionsProfession16: IQuestion[] = [
     correctAnswer: "2",
   },
   {
-    id: "egs_84",
+    id: "16_84",
     text: "Разрешается ли курить в зоне выполнения сварочных работ?",
     options: [
       { id: "1", text: "1. Разрешается." },
@@ -1157,7 +1157,7 @@ export const questionsProfession16: IQuestion[] = [
     correctAnswer: "3",
   },
   {
-    id: "egs_85",
+    id: "16_85",
     text: "На каком расстоянии от сварочных работ должны находиться легковоспламеняющиеся жидкости?",
     options: [
       { id: "1", text: "1. Не менее 3 метров." },
@@ -1169,7 +1169,7 @@ export const questionsProfession16: IQuestion[] = [
     correctAnswer: "5",
   },
   {
-    id: "egs_86",
+    id: "16_86",
     text: "Какими средствами пожаротушения должно быть обеспечено место сварочных работ?",
     options: [
       { id: "1", text: "1. Огнетушителем и ящиком с песком." },
@@ -1181,7 +1181,7 @@ export const questionsProfession16: IQuestion[] = [
     correctAnswer: "1",
   },
   {
-    id: "egs_87",
+    id: "16_87",
     text: "Разрешается ли производить сварочные работы на высоте без предохранительного пояса?",
     options: [
       { id: "1", text: "1. Разрешается." },
@@ -1196,7 +1196,7 @@ export const questionsProfession16: IQuestion[] = [
     correctAnswer: "3",
   },
   {
-    id: "egs_88",
+    id: "16_88",
     text: "Как должны быть защищены деревянные конструкции при сварочных работах вблизи них?",
     options: [
       { id: "1", text: "1. Политы водой." },
@@ -1208,7 +1208,7 @@ export const questionsProfession16: IQuestion[] = [
     correctAnswer: "2",
   },
   {
-    id: "egs_89",
+    id: "16_89",
     text: "Разрешается ли оставлять без присмотра зажженную горелку или электрододержатель?",
     options: [
       { id: "1", text: "1. Разрешается." },
@@ -1220,7 +1220,7 @@ export const questionsProfession16: IQuestion[] = [
     correctAnswer: "3",
   },
   {
-    id: "egs_90",
+    id: "16_90",
     text: "Что должен сделать сварщик при возникновении хлопка в горелке?",
     options: [
       {
@@ -1238,7 +1238,7 @@ export const questionsProfession16: IQuestion[] = [
     correctAnswer: "1",
   },
   {
-    id: "egs_91",
+    id: "16_91",
     text: "Как должен зажигаться ручной резак (горелка)?",
     options: [
       { id: "1", text: "1. Сначала кислород, затем горючий газ." },
@@ -1250,7 +1250,7 @@ export const questionsProfession16: IQuestion[] = [
     correctAnswer: "2",
   },
   {
-    id: "egs_92",
+    id: "16_92",
     text: "Как должен тушиться ручной резак (горелка)?",
     options: [
       { id: "1", text: "1. Сначала горючий газ, затем кислород." },
@@ -1262,7 +1262,7 @@ export const questionsProfession16: IQuestion[] = [
     correctAnswer: "1",
   },
   {
-    id: "egs_93",
+    id: "16_93",
     text: "Разрешается ли перемещаться с зажженной горелкой по лестницам и лесам?",
     options: [
       { id: "1", text: "1. Разрешается." },
@@ -1274,7 +1274,7 @@ export const questionsProfession16: IQuestion[] = [
     correctAnswer: "3",
   },
   {
-    id: "egs_94",
+    id: "16_94",
     text: "Как часто должен проводиться осмотр газовых рукавов на наличие повреждений?",
     options: [
       { id: "1", text: "1. Ежедневно перед работой." },
@@ -1286,7 +1286,7 @@ export const questionsProfession16: IQuestion[] = [
     correctAnswer: "1",
   },
   {
-    id: "egs_95",
+    id: "16_95",
     text: "Разрешается ли использовать газовые рукава с повреждениями изоляции?",
     options: [
       { id: "1", text: "1. Разрешается." },
@@ -1298,7 +1298,7 @@ export const questionsProfession16: IQuestion[] = [
     correctAnswer: "3",
   },
   {
-    id: "egs_96",
+    id: "16_96",
     text: "Как должны закрепляться газовые рукава на ниппелях горелок и редукторов?",
     options: [
       { id: "1", text: "1. Стяжными хомутами или отожженной проволокой." },
@@ -1310,7 +1310,7 @@ export const questionsProfession16: IQuestion[] = [
     correctAnswer: "1",
   },
   {
-    id: "egs_97",
+    id: "16_97",
     text: "Какова максимальная допустимая длина газовых рукавов для сварки и резки?",
     options: [
       { id: "1", text: "1. Не более 20 метров." },
@@ -1322,7 +1322,7 @@ export const questionsProfession16: IQuestion[] = [
     correctAnswer: "2",
   },
   {
-    id: "egs_98",
+    id: "16_98",
     text: "Что должно быть сделано с газовыми рукавами перед присоединением к горелке?",
     options: [
       { id: "1", text: "1. Продуты рабочим газом." },
@@ -1334,7 +1334,7 @@ export const questionsProfession16: IQuestion[] = [
     correctAnswer: "1",
   },
   {
-    id: "egs_99",
+    id: "16_99",
     text: "Разрешается ли использовать кислород для продувки одежды или рабочих мест?",
     options: [
       { id: "1", text: "1. Разрешается." },
@@ -1346,7 +1346,7 @@ export const questionsProfession16: IQuestion[] = [
     correctAnswer: "3",
   },
   {
-    id: "egs_100",
+    id: "16_100",
     text: "Какой минимальный класс защиты должен иметь сварочный щиток при использовании современных сварочных инверторов?",
     options: [
       { id: "1", text: "1. Класс защиты IP20." },
@@ -1358,7 +1358,7 @@ export const questionsProfession16: IQuestion[] = [
     correctAnswer: "3",
   },
   {
-    id: "egs_101",
+    id: "16_101",
     text: "Какой тип светофильтра рекомендуется использовать при сварке методом MIG/MAG?",
     options: [
       { id: "1", text: "1. Стандартный темный светофильтр." },
@@ -1373,7 +1373,7 @@ export const questionsProfession16: IQuestion[] = [
     correctAnswer: "2",
   },
   {
-    id: "egs_102",
+    id: "16_102",
     text: "Какое минимальное расстояние должно быть между сварочным постом и местом хранения баллонов с газом в современном сварочном цехе?",
     options: [
       { id: "1", text: "1. Не менее 3 метров." },
@@ -1385,7 +1385,7 @@ export const questionsProfession16: IQuestion[] = [
     correctAnswer: "3",
   },
   {
-    id: "egs_103",
+    id: "16_103",
     text: "Какой документ должен сопровождать сварочные материалы (электроды, проволоку) при их получении со склада?",
     options: [
       { id: "1", text: "1. Только товарная накладная." },
@@ -1397,7 +1397,7 @@ export const questionsProfession16: IQuestion[] = [
     correctAnswer: "2",
   },
   {
-    id: "egs_104",
+    id: "16_104",
     text: "Какой срок хранения имеют электроды с основным видом покрытия после прокалки при соблюдении условий хранения?",
     options: [
       { id: "1", text: "1. Не более 24 часов." },
@@ -1409,7 +1409,7 @@ export const questionsProfession16: IQuestion[] = [
     correctAnswer: "2",
   },
   {
-    id: "egs_105",
+    id: "16_105",
     text: "Какая температура прокалки требуется для электродов с основным видом покрытия перед использованием?",
     options: [
       { id: "1", text: "1. 150-200°C." },
@@ -1421,7 +1421,7 @@ export const questionsProfession16: IQuestion[] = [
     correctAnswer: "3",
   },
   {
-    id: "egs_106",
+    id: "16_106",
     text: "Какой минимальный уровень освещенности должен быть на рабочем месте сварщика?",
     options: [
       { id: "1", text: "1. Не менее 100 лк." },
@@ -1433,7 +1433,7 @@ export const questionsProfession16: IQuestion[] = [
     correctAnswer: "3",
   },
   {
-    id: "egs_107",
+    id: "16_107",
     text: "Какой тип вентиляции обязателен при сварке в замкнутых пространствах?",
     options: [
       { id: "1", text: "1. Естественная вентиляция." },
@@ -1445,7 +1445,7 @@ export const questionsProfession16: IQuestion[] = [
     correctAnswer: "4",
   },
   {
-    id: "egs_108",
+    id: "16_108",
     text: "Какой максимальный уровень шума допускается на рабочем месте сварщика?",
     options: [
       { id: "1", text: "1. Не более 70 дБ." },
@@ -1457,7 +1457,7 @@ export const questionsProfession16: IQuestion[] = [
     correctAnswer: "3",
   },
   {
-    id: "egs_109",
+    id: "16_109",
     text: "Какой тип спецодежды рекомендуется для электросварщика при работе с современными сварочными аппаратами?",
     options: [
       { id: "1", text: "1. Хлопчатобумажная одежда." },
@@ -1469,7 +1469,7 @@ export const questionsProfession16: IQuestion[] = [
     correctAnswer: "2",
   },
   {
-    id: "egs_110",
+    id: "16_110",
     text: "Какой минимальный стаж работы требуется для допуска сварщика к работе с сосудами под давлением?",
     options: [
       { id: "1", text: "1. Не менее 6 месяцев." },
@@ -1481,7 +1481,7 @@ export const questionsProfession16: IQuestion[] = [
     correctAnswer: "3",
   },
   {
-    id: "egs_111",
+    id: "16_111",
     text: "Какой документ подтверждает квалификацию сварщика для выполнения ответственных работ?",
     options: [
       { id: "1", text: "1. Трудовая книжка." },
@@ -1493,7 +1493,7 @@ export const questionsProfession16: IQuestion[] = [
     correctAnswer: "2",
   },
   {
-    id: "egs_112",
+    id: "16_112",
     text: "Как часто сварщик должен проходить периодическую аттестацию?",
     options: [
       { id: "1", text: "1. Не реже 1 раза в год." },
@@ -1505,7 +1505,7 @@ export const questionsProfession16: IQuestion[] = [
     correctAnswer: "2",
   },
   {
-    id: "egs_113",
+    id: "16_113",
     text: "Какой тип заземления требуется для сварочного оборудования?",
     options: [
       { id: "1", text: "1. Рабочее заземление." },
@@ -1517,7 +1517,7 @@ export const questionsProfession16: IQuestion[] = [
     correctAnswer: "2",
   },
   {
-    id: "egs_114",
+    id: "16_114",
     text: "Какой максимальный ток утечки допускается для сварочного оборудования?",
     options: [
       { id: "1", text: "1. Не более 1 мА." },
@@ -1529,7 +1529,7 @@ export const questionsProfession16: IQuestion[] = [
     correctAnswer: "3",
   },
   {
-    id: "egs_115",
+    id: "16_115",
     text: "Какой тип огнетушителя рекомендуется для тушения пожаров в сварочном оборудовании?",
     options: [
       { id: "1", text: "1. Водный огнетушитель." },
@@ -1541,7 +1541,7 @@ export const questionsProfession16: IQuestion[] = [
     correctAnswer: "3",
   },
   {
-    id: "egs_116",
+    id: "16_116",
     text: "Какой минимальный запас огнетушителей должен быть на сварочном посту?",
     options: [
       { id: "1", text: "1. Один огнетушитель." },
@@ -1553,7 +1553,7 @@ export const questionsProfession16: IQuestion[] = [
     correctAnswer: "2",
   },
   {
-    id: "egs_117",
+    id: "16_117",
     text: "Какой документ должен быть оформлен при выполнении сварочных работ в пожароопасной зоне?",
     options: [
       { id: "1", text: "1. Только устное распоряжение." },
@@ -1565,7 +1565,7 @@ export const questionsProfession16: IQuestion[] = [
     correctAnswer: "2",
   },
   {
-    id: "egs_118",
+    id: "16_118",
     text: "Какой срок действия имеет наряд-допуск на выполнение огневых работ?",
     options: [
       { id: "1", text: "1. На одну смену." },
@@ -1577,7 +1577,7 @@ export const questionsProfession16: IQuestion[] = [
     correctAnswer: "3",
   },
   {
-    id: "egs_119",
+    id: "16_119",
     text: "Какой минимальный состав бригады требуется при выполнении сварочных работ в замкнутых пространствах?",
     options: [
       { id: "1", text: "1. Один сварщик." },
@@ -1589,7 +1589,7 @@ export const questionsProfession16: IQuestion[] = [
     correctAnswer: "2",
   },
   {
-    id: "egs_120",
+    id: "16_120",
     text: "Какой тип дыхания должен использовать сварщик при работе в условиях запыленности?",
     options: [
       { id: "1", text: "1. Обычный респиратор." },
@@ -1601,7 +1601,7 @@ export const questionsProfession16: IQuestion[] = [
     correctAnswer: "2",
   },
   {
-    id: "egs_121",
+    id: "16_121",
     text: "Какой максимальный уровень ультрафиолетового излучения допускается на рабочем месте сварщика?",
     options: [
       { id: "1", text: "1. Не более 0,1 мкВт/см²." },
@@ -1613,7 +1613,7 @@ export const questionsProfession16: IQuestion[] = [
     correctAnswer: "3",
   },
   {
-    id: "egs_122",
+    id: "16_122",
     text: "Какой тип экрана должен устанавливаться вокруг сварочного поста?",
     options: [
       { id: "1", text: "1. Прозрачный экран." },
@@ -1625,7 +1625,7 @@ export const questionsProfession16: IQuestion[] = [
     correctAnswer: "2",
   },
   {
-    id: "egs_123",
+    id: "16_123",
     text: "Какой минимальный размер должен иметь сварочный экран?",
     options: [
       { id: "1", text: "1. Не менее 1,5 м в высоту." },
@@ -1637,7 +1637,7 @@ export const questionsProfession16: IQuestion[] = [
     correctAnswer: "2",
   },
   {
-    id: "egs_124",
+    id: "16_124",
     text: "Какой цвет должен иметь сварочный экран для защиты от излучения?",
     options: [
       { id: "1", text: "1. Белый." },
@@ -1649,7 +1649,7 @@ export const questionsProfession16: IQuestion[] = [
     correctAnswer: "4",
   },
   {
-    id: "egs_125",
+    id: "16_125",
     text: "Какой документ должен вестись для учета выдачи сварочных материалов?",
     options: [
       { id: "1", text: "1. Журнал учета выдачи электродов." },
@@ -1661,7 +1661,7 @@ export const questionsProfession16: IQuestion[] = [
     correctAnswer: "1",
   },
   {
-    id: "egs_126",
+    id: "16_126",
     text: "Какой минимальный зазор должен быть между сварочным кабелем и трубопроводами с горючими веществами?",
     options: [
       { id: "1", text: "1. Не менее 0,5 м." },
@@ -1673,7 +1673,7 @@ export const questionsProfession16: IQuestion[] = [
     correctAnswer: "2",
   },
   {
-    id: "egs_127",
+    id: "16_127",
     text: "Какой тип соединения сварочных кабелей допускается?",
     options: [
       { id: "1", text: "1. Скрутка." },
@@ -1685,7 +1685,7 @@ export const questionsProfession16: IQuestion[] = [
     correctAnswer: "2",
   },
   {
-    id: "egs_128",
+    id: "16_128",
     text: "Какой максимальный перепад напряжения допускается в сварочной цепи?",
     options: [
       { id: "1", text: "1. Не более 2%." },
@@ -1697,7 +1697,7 @@ export const questionsProfession16: IQuestion[] = [
     correctAnswer: "2",
   },
   {
-    id: "egs_129",
+    id: "16_129",
     text: "Какой минимальный класс защиты должен иметь сварочный аппарат для работы на открытом воздухе?",
     options: [
       { id: "1", text: "1. IP20." },
@@ -1709,7 +1709,7 @@ export const questionsProfession16: IQuestion[] = [
     correctAnswer: "3",
   },
   {
-    id: "egs_130",
+    id: "16_130",
     text: "Какой тип сварки требует обязательного использования защитных газов?",
     options: [
       { id: "1", text: "1. Ручная дуговая сварка." },
@@ -1721,7 +1721,7 @@ export const questionsProfession16: IQuestion[] = [
     correctAnswer: "2",
   },
   {
-    id: "egs_131",
+    id: "16_131",
     text: "Какой газ используется в качестве защитного при TIG сварке нержавеющей стали?",
     options: [
       { id: "1", text: "1. Кислород." },
@@ -1733,7 +1733,7 @@ export const questionsProfession16: IQuestion[] = [
     correctAnswer: "3",
   },
   {
-    id: "egs_132",
+    id: "16_132",
     text: "Какой минимальный расход защитного газа требуется при TIG сварке?",
     options: [
       { id: "1", text: "1. 3-5 л/мин." },
@@ -1745,7 +1745,7 @@ export const questionsProfession16: IQuestion[] = [
     correctAnswer: "2",
   },
   {
-    id: "egs_133",
+    id: "16_133",
     text: "Какой тип вольфрамового электрода рекомендуется для сварки алюминия?",
     options: [
       { id: "1", text: "1. Чистый вольфрам." },
@@ -1757,7 +1757,7 @@ export const questionsProfession16: IQuestion[] = [
     correctAnswer: "3",
   },
   {
-    id: "egs_134",
+    id: "16_134",
     text: "Какой угол заточки вольфрамового электрода рекомендуется для TIG сварки?",
     options: [
       { id: "1", text: "1. 15-20 градусов." },
@@ -1769,7 +1769,7 @@ export const questionsProfession16: IQuestion[] = [
     correctAnswer: "2",
   },
   {
-    id: "egs_135",
+    id: "16_135",
     text: "Какой минимальный уровень квалификации требуется для сварщика, выполняющего сварку трубопроводов под давлением?",
     options: [
       { id: "1", text: "1. 3 разряд." },
@@ -1781,7 +1781,7 @@ export const questionsProfession16: IQuestion[] = [
     correctAnswer: "3",
   },
   {
-    id: "egs_136",
+    id: "16_136",
     text: "Какой документ должен сопровождать каждый сварной шов на ответственных конструкциях?",
     options: [
       { id: "1", text: "1. Только визуальный осмотр." },
@@ -1796,7 +1796,7 @@ export const questionsProfession16: IQuestion[] = [
     correctAnswer: "2",
   },
   {
-    id: "egs_137",
+    id: "16_137",
     text: "Какой метод контроля сварных швов является обязательным для ответственных конструкций?",
     options: [
       { id: "1", text: "1. Только визуальный контроль." },
@@ -1808,7 +1808,7 @@ export const questionsProfession16: IQuestion[] = [
     correctAnswer: "3",
   },
   {
-    id: "egs_138",
+    id: "16_138",
     text: "Какой процент сварных швов должен контролироваться неразрушающими методами на ответственных конструкциях?",
     options: [
       { id: "1", text: "1. 10%." },
@@ -1820,7 +1820,7 @@ export const questionsProfession16: IQuestion[] = [
     correctAnswer: "5",
   },
   {
-    id: "egs_139",
+    id: "16_139",
     text: "Какой документ должен быть оформлен при обнаружении дефектов в сварном шве?",
     options: [
       { id: "1", text: "1. Акт о дефектах сварного шва." },
@@ -1832,7 +1832,7 @@ export const questionsProfession16: IQuestion[] = [
     correctAnswer: "4",
   },
   {
-    id: "egs_140",
+    id: "16_140",
     text: "Какой максимальный размер пор допускается в сварном шве ответственных конструкций?",
     options: [
       { id: "1", text: "1. Не более 0,5 мм." },
@@ -1844,7 +1844,7 @@ export const questionsProfession16: IQuestion[] = [
     correctAnswer: "5",
   },
   {
-    id: "egs_141",
+    id: "16_141",
     text: "Какой минимальный перерыв требуется между сварочными проходами при многослойной сварке?",
     options: [
       { id: "1", text: "1. Не менее 5 минут." },
@@ -1856,7 +1856,7 @@ export const questionsProfession16: IQuestion[] = [
     correctAnswer: "5",
   },
   {
-    id: "egs_142",
+    id: "16_142",
     text: "Какая максимальная температура межпроходного нагрева допускается при сварке низколегированных сталей?",
     options: [
       { id: "1", text: "1. Не более 150°C." },
@@ -1868,7 +1868,7 @@ export const questionsProfession16: IQuestion[] = [
     correctAnswer: "5",
   },
   {
-    id: "egs_143",
+    id: "16_143",
     text: "Какой документ должен вестись для учета проведения сварочных работ на объекте?",
     options: [
       { id: "1", text: "1. Журнал сварочных работ." },
@@ -1880,7 +1880,7 @@ export const questionsProfession16: IQuestion[] = [
     correctAnswer: "4",
   },
   {
-    id: "egs_144",
+    id: "16_144",
     text: "Какой тип маркировки должен наноситься на сварные швы ответственных конструкций?",
     options: [
       { id: "1", text: "1. Клеймо сварщика." },
@@ -1892,7 +1892,7 @@ export const questionsProfession16: IQuestion[] = [
     correctAnswer: "4",
   },
   {
-    id: "egs_145",
+    id: "16_145",
     text: "Какой минимальный срок хранения документации по сварочным работам на ответственных объектах?",
     options: [
       { id: "1", text: "1. Не менее 1 года." },
@@ -1904,7 +1904,7 @@ export const questionsProfession16: IQuestion[] = [
     correctAnswer: "5",
   },
   {
-    id: "egs_146",
+    id: "16_146",
     text: "Какой тип обучения должен проходить сварщик при внедрении новых сварочных технологий?",
     options: [
       { id: "1", text: "1. Вводный инструктаж." },
@@ -1916,7 +1916,7 @@ export const questionsProfession16: IQuestion[] = [
     correctAnswer: "3",
   },
   {
-    id: "egs_147",
+    id: "16_147",
     text: "Какой документ должен подтверждать право сварщика на выполнение работ с применением новых технологий?",
     options: [
       { id: "1", text: "1. Удостоверение о повышении квалификации." },
@@ -1928,7 +1928,7 @@ export const questionsProfession16: IQuestion[] = [
     correctAnswer: "4",
   },
   {
-    id: "egs_148",
+    id: "16_148",
     text: "Какой минимальный период адаптации требуется сварщику при переходе на новое сварочное оборудование?",
     options: [
       { id: "1", text: "1. Не менее 1 смены." },
@@ -1940,7 +1940,7 @@ export const questionsProfession16: IQuestion[] = [
     correctAnswer: "5",
   },
   {
-    id: "egs_149",
+    id: "16_149",
     text: "Какой документ должен оформляться при завершении сварочных работ на объекте?",
     options: [
       { id: "1", text: "1. Акт выполненных сварочных работ." },
