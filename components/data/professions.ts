@@ -4,31 +4,49 @@ export const professions: IProfession[] = [
   ////Отправил Тертичному на ревью
 
   { id: 1, name: "Слесарь-сантехник", questionCount: 150 }, // refresh
-  { id: 2, name: "Водитель", questionCount: 150 }, // refresh
+  { id: 2, name: "Водитель автомобиля", questionCount: 150 }, // refresh
   { id: 38, name: "Электромонтер по ремонту ВЛЭП", questionCount: 150 }, // refresh
-  { id: 16, name: "Электрогазосварщик", questionCount: 150 }, // refresh
-
-  ////Отправил Тертичному на ревью
-
+  { id: 16, name: "Электросварщик ручной сварки", questionCount: 150 }, // refresh
   {
     id: 78,
     name: "Электромонтер по ремонту электрооборудования",
     questionCount: 150,
   }, // refresh
   { id: 3, name: "Изоливщировщик-пленочник", questionCount: 150 }, // refresh
-  { id: 4, name: "Монтажник наружных трубопроводов", questionCount: 150 }, // refresh
-  { id: 25, name: "Уборщик помещений", questionCount: 150 }, // refresh
-  { id: 42, name: "Машинист крана (крановщик)", questionCount: 150 }, //   refresh
-  { id: 73, name: "Машинист компрессорных установок", questionCount: 150 }, // refresh
-  { id: 35, name: "Машинист экскаватора", questionCount: 150 }, // refresh
-  { id: 29, name: "Машинист бульдозера", questionCount: 150 }, // refresh
-  { id: 55, name: "Кладовщик", questionCount: 150 }, // refresh
 
-  { id: 54, name: "Зав. складом", questionCount: 145 }, //done
-  { id: 32, name: "Оператор АЗС", questionCount: 96 }, //done
-  { id: 21, name: "Стропальщик", questionCount: 236 },
+  ////Отправил Тертичному на ревью
 
-  /*  { id: 4, name: "Оператор котельной", questionCount: 232 },
+  { id: 4, name: "Монтажник наружных трубопроводов", questionCount: 150 }, // refresh, word
+  { id: 25, name: "Уборщик помещений", questionCount: 150 }, // refresh, word
+  { id: 42, name: "Машинист крана автомобильного", questionCount: 150 }, //  refresh, word
+  { id: 73, name: "Машинист компрессорных установок", questionCount: 150 }, // refresh, word
+  { id: 29, name: "Машинист бульдозера", questionCount: 150 }, //  refresh, word
+  { id: 35, name: "Машинист экскаватора", questionCount: 150 }, // refresh, word
+  { id: 55, name: "Кладовщик", questionCount: 150 }, // refresh, word
+  { id: 54, name: "Заведующий складом", questionCount: 145 }, //refresh, word
+  { id: 32, name: "Оператор заправочных станций", questionCount: 150 }, //refresh, word
+  { id: 21, name: "Стропальщик", questionCount: 150 }, // refresh, word
+
+  /* 
+  
+  1. Водитель автомобиля
+2. Заведующий складом
+3. Изоливщировщик-пленочник
+4. Кладовщик
+5. Машинист бульдозера
+6. Машинист компрессорных установок
+7. Машинист крана автомобильного
+8. Машинист экскаватора
+9. Монтажник наружных трубопроводов
+10. Оператор заправочных станций
+11. Слесарь-сантехник
+12. Стропальщик
+13. Уборщик помещений
+14. Электромонтер по ремонту ВЛЭП
+15. Электромонтер по ремонту электрооборудования
+16. Электросварщик ручной сварки
+  
+  { id: 4, name: "Оператор котельной", questionCount: 232 },
   { id: 20, name: "Слесарь-ремонтник", questionCount: 235 },
     { id: 3, name: "Слесарь АВР", questionCount: 237 }, 
   { id: 5, name: "Приборист", questionCount: 244 },
