@@ -1,8 +1,9 @@
 import { useTheme } from "@/components/ThemeProvider";
 import type { IProfession } from "@/components/types/profession";
+import { formatDate, formatTime } from "@/utils/examResultsStorage";
 import React from "react";
 import { Alert, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import { ExamResult, formatDate, formatTime } from "../data/examResults";
+import type { ExamResult } from "@/utils/examResultsStorage";
 
 interface ResultHistoryProps {
   results: ExamResult[];
@@ -39,9 +40,7 @@ export function ResultHistory({
   };
 
   const filteredResults = selectedProfession
-    ? results.filter(
-        (result) => result.professionId === selectedProfession.id.toString(),
-      )
+    ? results.filter((result) => result.professionId === selectedProfession.id)
     : results;
 
   return (

@@ -11,8 +11,8 @@ import {
   View,
 } from "react-native";
 import { professions, searchProfessions } from "./data/professions";
-import type { IProfession } from "./types/profession";
 import { useProfessionStore } from "./store/useProfessionStore";
+import type { IProfession } from "./types/profession";
 
 const ProfessionSelector = () => {
   const { selectedProfession, setSelectedProfession } = useProfessionStore();

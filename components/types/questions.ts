@@ -1,6 +1,6 @@
 export interface IQuestionOption {
-  id: string; // 'a', 'b', 'c', 'd', 'e'
-  text: string; // Текст ответа
+  id: string;
+  text: string;
 }
 
 export interface IQuestion {

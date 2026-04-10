@@ -42,18 +42,18 @@ const styles = StyleSheet.create({
   },
   title: {
     textAlign: "center",
-    fontSize: 28,
+    fontSize: 32,
     fontWeight: "bold",
     marginBottom: 10,
   },
   userName: {
     textAlign: "center",
-    fontSize: 14,
+    fontSize: 16,
     marginBottom: 4,
   },
   selectedProfession: {
     textAlign: "center",
-    fontSize: 14,
+    fontSize: 16,
     fontWeight: "500",
     marginBottom: 4,
   },

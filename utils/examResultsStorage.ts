@@ -1,18 +1,6 @@
+import { useUserStore } from "@/components/store/useUserStore";
+import { PersistedExamResult } from "@/components/types/exam";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useUserStore } from "../store/useUserStore";
-
-export interface ExamResult {
-  id: string;
-  professionId: string;
-  professionName: string;
-  correctAnswers: number;
-  totalQuestions: number;
-  score: number;
-  passed: boolean;
-  date: string; // ISO string
-  timeSpent: number; // в секундах
-  userName: string | null;
-}
 
 const STORAGE_KEY = "@exam_results";
 
@@ -57,14 +45,14 @@ const formatTime = (seconds: number): string => {
 };
 
 export const saveExamResult = async (
-  result: Omit<ExamResult, "id" | "date" | "userName">,
-): Promise<ExamResult> => {
+  result: Omit<PersistedExamResult, "id" | "date" | "userName">,
+): Promise<PersistedExamResult> => {
   try {
     const { userName } = useUserStore.getState();
 
-    const examResult: ExamResult = {
+    const examResult: PersistedExamResult = {
       ...result,
-      id: Date.now().toString(),
+      id: Date.now(),
       date: new Date().toISOString(),
       userName: userName || "Пользователь",
     };
@@ -80,12 +68,12 @@ export const saveExamResult = async (
   }
 };
 
-export const getExamResults = async (): Promise<ExamResult[]> => {
+export const getExamResults = async (): Promise<PersistedExamResult[]> => {
   try {
     const resultsJson = await AsyncStorage.getItem(STORAGE_KEY);
     if (!resultsJson) return [];
 
-    const results = JSON.parse(resultsJson) as ExamResult[];
+    const results = JSON.parse(resultsJson) as PersistedExamResult[];
 
     // Сортируем по дате (новые первыми)
     return results.sort(
@@ -137,5 +125,4 @@ export const clearExamResults = async (): Promise<void> => {
   }
 };
 
-// Экспортируем утилиты форматирования
 export { formatDate, formatTime };

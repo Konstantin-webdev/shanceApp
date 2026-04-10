@@ -2,6 +2,8 @@ import { AdditionalStats } from "@/components/Statistics/AdditionalStats";
 import { MainStats } from "@/components/Statistics/MainStats";
 import { ResultHistory } from "@/components/Statistics/ResultHistory";
 import { StatsHeader } from "@/components/Statistics/StatsHeader";
+import { useProfessionStore } from "@/components/store/useProfessionStore";
+import { useUserStore } from "@/components/store/useUserStore";
 import { useTheme } from "@/components/ThemeProvider";
 import React, { useEffect, useState } from "react";
 import {
@@ -12,16 +14,12 @@ import {
   Text,
   View,
 } from "react-native";
-import {
-  clearExamResults,
-  ExamResult,
-  getStatistics,
-} from "../../components/data/examResults";
-import { useUserStore } from "@/components/store/useUserStore";
-import { useProfessionStore } from "@/components/store/useProfessionStore";
+
+import type { PersistedExamResult } from "@/components/types/exam";
+import { clearExamResults, getStatistics } from "@/utils/examResultsStorage";
 
 export default function StatsScreen() {
-  const [results, setResults] = useState<ExamResult[]>([]);
+  const [results, setResults] = useState<PersistedExamResult[]>([]);
   const [stats, setStats] = useState({
     totalTests: 0,
     averageScore: 0,

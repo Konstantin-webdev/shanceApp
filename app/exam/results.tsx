@@ -1,72 +1,51 @@
-// app/exam/results.tsx
 import { useTheme } from "@/components/ThemeProvider";
-import { useLocalSearchParams, useRouter } from "expo-router";
-import React, { useEffect } from "react";
-import { ScrollView, StatusBar, View, Text } from "react-native";
+import { useRouter } from "expo-router";
+import React, { useEffect, useState } from "react";
+import { ScrollView, StatusBar, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-import { ActionButtons } from "@/components/Exam/ActionButtons";
-import { QuestionDetails } from "@/components/Exam/QuestionDetails";
-import { ResultHeader } from "@/components/Exam/ResultHeader";
-import { StatsCard } from "@/components/Exam/StatsCard";
-
-import { saveExamResult } from "@/components/data/examResults";
+import { ActionButtons } from "@/components/Exam/result/ResultFooterButtons";
+import { ResultHeader } from "@/components/Exam/result/ResultHeader";
+import { QuestionDetails } from "@/components/Exam/result/ResultQuestionDetails";
+import { StatsCard } from "@/components/Exam/result/ResultStats";
+import { SpecialistNotice } from "@/components/Exam/result/SpecialistNotice";
 import { styles } from "@/components/Exam/styles";
-import { parseExamResults } from "@/utils/examResultsParser";
-import { SpecialistNotice } from "@/components/Exam/SpecialistNotice";
+import { useExamResultStore } from "@/components/store/examResultStore";
+import { saveExamResult } from "@/utils/examResultsStorage";
 
 export default function ExamResultsScreen() {
   const router = useRouter();
   const { colors, isDark } = useTheme();
-  const rawParams = useLocalSearchParams();
-
-  const {
-    correctAnswers,
-    totalQuestions,
-    professionName,
-    professionId,
-    score,
-    passed,
-    timeSpent,
-    questionsData,
-    answersData,
-    saved,
-  } = parseExamResults(rawParams);
+  const { result, clearResult } = useExamResultStore();
+  const [hasSaved, setHasSaved] = useState(false);
 
   useEffect(() => {
-    const saveResult = async () => {
-      if (!saved) {
-        try {
-          await saveExamResult({
-            professionId,
-            professionName,
-            correctAnswers,
-            totalQuestions,
-            score,
-            passed,
-            timeSpent,
-          });
-        } catch (error) {
-          console.error("Ошибка при сохранении результата:", error);
-        }
-      }
-    };
+    if (result && !hasSaved) {
+      saveExamResult(result).catch((error) => {
+        console.error("Ошибка при сохранении результата:", error);
+      });
+      setHasSaved(true);
+    }
+  }, [result, hasSaved]);
 
-    saveResult();
-  }, [
-    saved,
-    professionId,
-    professionName,
-    correctAnswers,
-    totalQuestions,
-    score,
-    passed,
-    timeSpent,
-  ]);
+  const handleGoHome = () => {
+    clearResult();
+    router.push("/(tabs)/ExamScreen");
+  };
 
-  const handleGoHome = () => router.push("/(tabs)/ExamScreen");
-  const handleRetry = () => router.push("/exam/session");
-  const handleViewStats = () => router.push("/(tabs)/StatsScreen");
+  const handleRetry = () => {
+    clearResult();
+    router.push("/exam/session");
+  };
+
+  const handleViewStats = () => {
+    router.push("/(tabs)/StatsScreen");
+  };
+
+  if (!result) {
+    // Пока проверяем, можно показать лоадер или null
+    return null;
+  }
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
@@ -79,26 +58,26 @@ export default function ExamResultsScreen() {
           contentContainerStyle={styles.scrollContent}
         >
           <View style={styles.content}>
-            {/* Заголовок с иконкой */}
-            <ResultHeader passed={passed} professionName={professionName} />
+            <ResultHeader
+              passed={result.passed}
+              professionName={result.professionName}
+            />
 
-            {/* Карточка со статистикой */}
             <StatsCard
-              correctAnswers={correctAnswers}
-              totalQuestions={totalQuestions}
-              score={score}
-              timeSpent={timeSpent}
-              passed={passed}
+              correctAnswers={result.correctAnswers}
+              totalQuestions={result.totalQuestions}
+              score={result.score}
+              timeSpent={result.timeSpent}
+              passed={result.passed}
             />
 
-            {/* Детали по вопросам */}
             <QuestionDetails
-              questionsData={questionsData}
-              answersData={answersData}
+              questionsData={result.questionsData}
+              answersData={result.answersData}
             />
+
             <SpecialistNotice />
 
-            {/* Кнопки действий */}
             <ActionButtons
               onViewStats={handleViewStats}
               onRetry={handleRetry}

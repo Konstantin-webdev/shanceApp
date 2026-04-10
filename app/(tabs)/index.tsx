@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useProfessionStore } from "@/components/store/useProfessionStore";
 import { useTheme } from "@/components/ThemeProvider";
 
+import { ProfessionInfo } from "@/components/ProfessionInfo";
 import { TrainingScreenStyles } from "@/styles/training/TrainingScreen.styles";
 import { Play } from "lucide-react-native";
 import { ScrollView, Text, TouchableOpacity, View } from "react-native";
@@ -37,29 +38,9 @@ export default function TrainingScreen() {
         </View>
 
         <View style={styles.content}>
-          <View style={styles.professionCard}>
-            {selectedProfession ? (
-              <>
-                <Text style={styles.professionTitle}>Текущая профессия:</Text>
-                <Text style={styles.professionName}>
-                  {selectedProfession.name}
-                </Text>
-                <Text style={styles.professionStats}>
-                  {selectedProfession.questionCount} вопросов для изучения
-                </Text>
-                <Text style={styles.professionHint}>
-                  Чтобы изменить профессию, перейдите в настройки
-                </Text>
-              </>
-            ) : (
-              <>
-                <Text style={styles.professionTitle}>Профессия не выбрана</Text>
-                <Text style={styles.professionHint}>
-                  Выберите профессию в настройках, чтобы начать обучение
-                </Text>
-              </>
-            )}
-          </View>
+          {selectedProfession && (
+            <ProfessionInfo profession={selectedProfession} />
+          )}
 
           <View style={styles.instructions}>
             <Text style={styles.instructionsTitle}>Как это работает:</Text>

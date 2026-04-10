@@ -19,9 +19,12 @@ export const useExamSession = (professionId: number) => {
 
   // Инициализация экзамена
   useEffect(() => {
-    if (!professionId) return;
+    if (!professionId) {
+      return;
+    }
 
     setIsLoading(true);
+
     try {
       const examQuestions = getExamQuestions(professionId, 10).map(
         (question) => ({

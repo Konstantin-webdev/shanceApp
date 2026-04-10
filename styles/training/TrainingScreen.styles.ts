@@ -14,6 +14,7 @@ export const TrainingScreenStyles = (colors: any) =>
       padding: 20,
       borderRadius: 12,
       margin: 16,
+      marginBottom: 0,
       borderWidth: 1,
       borderColor: colors.border,
     },
@@ -82,7 +83,6 @@ export const TrainingScreenStyles = (colors: any) =>
       fontWeight: "600" as const,
     },
     instructions: {
-      marginTop: 16,
       backgroundColor: colors.card,
       padding: 20,
       borderRadius: 12,

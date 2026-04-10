@@ -3,6 +3,7 @@ import { Play } from "lucide-react-native";
 import { useState } from "react";
 import { ScrollView, Text, TouchableOpacity, View } from "react-native";
 
+import { ProfessionInfo } from "@/components/ProfessionInfo";
 import { useProfessionStore } from "@/components/store/useProfessionStore";
 import { useTheme } from "@/components/ThemeProvider";
 import { FEATURE_CONFIGS, RULES } from "@/constants/examStart";
@@ -37,14 +38,7 @@ export default function ExamScreen() {
 
         <View style={styles.content}>
           {selectedProfession && (
-            <View style={styles.professionInfo}>
-              <Text style={styles.professionName}>
-                {selectedProfession.name}
-              </Text>
-              <Text style={styles.professionStats}>
-                {selectedProfession.questionCount} вопросов доступно
-              </Text>
-            </View>
+            <ProfessionInfo profession={selectedProfession} />
           )}
 
           <View style={styles.featuresCard}>

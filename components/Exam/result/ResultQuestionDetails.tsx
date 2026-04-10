@@ -1,17 +1,10 @@
+import { ThemeColors, useTheme } from "@/components/ThemeProvider";
+import { IQuestion } from "@/components/types/questions";
 import React from "react";
-import { View, Text, StyleSheet } from "react-native";
-import { useTheme } from "@/components/ThemeProvider";
-
-interface QuestionData {
-  id: string;
-  text: string;
-  options: Array<{ id: string; text: string }>;
-  correctAnswer: string;
-  professionId: number;
-}
+import { StyleSheet, Text, View } from "react-native";
 
 interface QuestionDetailsProps {
-  questionsData: QuestionData[];
+  questionsData: IQuestion[];
   answersData: Record<number, string>;
 }
 
@@ -62,12 +55,12 @@ export const QuestionDetails: React.FC<QuestionDetailsProps> = ({
 
 interface QuestionItemProps {
   index: number;
-  question: QuestionData;
+  question: IQuestion;
   isCorrect: boolean;
   userOption?: { id: string; text: string };
   correctOption?: { id: string; text: string };
   isDark: boolean;
-  colors: any;
+  colors: ThemeColors;
 }
 
 const QuestionItem: React.FC<QuestionItemProps> = ({
