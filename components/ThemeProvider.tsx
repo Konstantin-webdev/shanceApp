@@ -8,6 +8,7 @@ export type ThemeColors = {
   text: string;
   border: string;
   primary: string;
+  primaryRGB: string;
   secondary: string;
   danger: string;
   warning: string;
@@ -29,6 +30,7 @@ const lightColors: ThemeColors = {
   text: "#1C1C1E",
   border: "#E5E5EA",
   primary: "#3B82F6", // Синий основной
+  primaryRGB: "59, 130, 246",
   secondary: "#8B5CF6", // Фиолетовый
   danger: "#EF4444",
   warning: "#F59E0B",
@@ -53,6 +55,7 @@ const darkColors: ThemeColors = {
   text: "#FFFFFF",
   border: "#2C2C2E",
   primary: "#60A5FA", // Светлее на 20%
+  primaryRGB: "96, 165, 250",
   secondary: "#A78BFA", // Светлее на 20%
   danger: "#F87171",
   warning: "#FBBF24",

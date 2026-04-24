@@ -1,4 +1,4 @@
-import { useRouter, useLocalSearchParams } from "expo-router";
+import { useRouter } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useTheme } from "@/components/ThemeProvider";
 import { useProfessionStore } from "@/components/store/useProfessionStore";
@@ -11,7 +11,6 @@ import { TopicList } from "@/components/Training/topics/TopicList";
 
 export default function TopicSelectionScreen() {
   const router = useRouter();
-  const params = useLocalSearchParams<{ professionId: string }>();
   const { colors } = useTheme();
   const { selectedProfession } = useProfessionStore();
 
@@ -32,7 +31,7 @@ export default function TopicSelectionScreen() {
   };
 
   if (isLoading) return <LoadingState />;
-  if (error) return <ErrorState error={error} />; // Можно добавить
+  if (error) return <ErrorState error={error} />;
   if (topics.length === 0) return <EmptyState />;
 
   return (
