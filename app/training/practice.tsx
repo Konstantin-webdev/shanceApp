@@ -1,28 +1,36 @@
 import { useProfessionStore } from "@/components/store/useProfessionStore";
 import { useTheme } from "@/components/ThemeProvider";
-import { useRouter } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import { AppState, ScrollView, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-import QuestionItem from "@/components/QuestionItem";
-import {
-  getQuestionsByProfessionId,
-  hasQuestionsForProfession,
-} from "@/components/data/questions";
+import { hasQuestionsForProfession } from "@/components/data/questions";
+import { getQuestionsByProfessionAndTopic } from "@/components/data/questionsByTopic";
 import NotImplementedScreen from "@/components/NotImplementedScreen";
+import QuestionItem from "@/components/QuestionItem";
 import { ProgressTracker } from "@/components/Training/practice/ProgressTracker";
 import { QuestionNavigation } from "@/components/Training/practice/QuestionNavigation";
 import TrainingContinueModal from "@/components/Training/practice/TrainingContinueModal";
 import { TrainingHeader } from "@/components/Training/practice/TrainingHeader";
 import TrainingLoadingScreen from "@/components/Training/practice/TrainingLoadingScreen";
+import { ErrorState } from "@/components/Training/topics/ErrorState";
 import type { IQuestion } from "@/components/types/questions";
 import { clearBookmark, loadBookmark, saveBookmark } from "@/utils/bookmark";
 
 export default function PracticeScreen() {
   const router = useRouter();
-  const { selectedProfession } = useProfessionStore();
+  const params = useLocalSearchParams<{
+    topicKey: string;
+  }>();
+
   const { colors } = useTheme();
+
+  const { selectedProfession } = useProfessionStore();
+
+  if (!selectedProfession) {
+    return <ErrorState error="Профессия не выбрана" />;
+  }
 
   const [questions, setQuestions] = useState<IQuestion[]>([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
@@ -44,7 +52,10 @@ export default function PracticeScreen() {
         return;
       }
 
-      const loadedQuestions = getQuestionsByProfessionId(selectedProfession.id);
+      const loadedQuestions = getQuestionsByProfessionAndTopic(
+        selectedProfession.id,
+        params.topicKey,
+      );
       setQuestions(loadedQuestions);
 
       const savedIndex = await loadBookmark(selectedProfession.id);
@@ -124,7 +135,6 @@ export default function PracticeScreen() {
       params: {
         correctAnswers: correctAnswers.toString(),
         totalQuestions: questions.length.toString(),
-        professionName: selectedProfession.name,
       },
     });
   };

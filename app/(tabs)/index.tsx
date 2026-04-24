@@ -18,13 +18,10 @@ export default function TrainingScreen() {
   const styles = TrainingScreenStyles(colors);
 
   const handleStartTraining = () => {
-    if (isLoading || !selectedProfession) return;
-    setIsLoading(true);
-    router.push("/training/practice");
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-    }, 1000);
-    return () => clearTimeout(timer);
+    if (!selectedProfession) return;
+    router.push({
+      pathname: "/training/topics",
+    });
   };
 
   return (

@@ -5,6 +5,7 @@ export default function TrainingLayout() {
     <Stack screenOptions={{ headerShown: false }}>
       <Stack.Screen name="practice" />
       <Stack.Screen name="completion" />
+      <Stack.Screen name="topics" />
     </Stack>
   );
 }
