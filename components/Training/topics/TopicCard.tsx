@@ -5,16 +5,16 @@ import { CheckCircle, ChevronRight } from "lucide-react-native";
 import { Text, TouchableOpacity, View } from "react-native";
 
 interface TopicCardProps {
-  key: string;
+  topicKey: string;
   answered: number;
   total: number;
   onPress: () => void;
 }
 
-export function TopicCard({ key, answered, total, onPress }: TopicCardProps) {
+export function TopicCard({ topicKey, answered, total, onPress }: TopicCardProps) {
   const { colors } = useTheme();
   const percent = Math.round((answered / total) * 100) || 0;
-  const title = topicTitles[key] || key;
+  const title = topicTitles[topicKey] || topicKey;
 
   return (
     <TouchableOpacity

@@ -19,7 +19,6 @@ export const ExamContent = ({
 }: ExamContentProps) => {
   const { colors } = useTheme();
 
-  console.log("questionText", questionText);
 
   return (
     <View style={{ flex: 1, paddingHorizontal: 16, paddingTop: 16 }}>

@@ -1,84 +1,102 @@
-// utils/progressStorage.ts
+// @/utils/progressStorage.ts
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-// Функция для создания ключа
-const getProgressKey = (
-  professionId: number,
-  topicKey: string,
-  questionNumber: number,
-) => {
-  return `progress_${professionId}_${topicKey}_${questionNumber}`;
+const PROGRESS_PREFIX = "training_progress_";
+
+// 🔑 Уникальный ключ: профессия + тема
+const getProgressKey = (professionId: number | string, topicKey: string) => {
+  return `${PROGRESS_PREFIX}${String(professionId)}_${topicKey}`;
 };
 
-// Функция для сохранения прогресса вопроса
-export const saveQuestionProgress = async (
-  professionId: number,
+/**
+ * Сохраняет прогресс: индекс последнего отвеченного вопроса
+ * @param answeredCount - количество отвеченных вопросов (1-based)
+ */
+export const saveTopicProgress = async (
+  professionId: number | string,
   topicKey: string,
-  questionNumber: number,
+  answeredCount: number
 ) => {
   try {
-    const key = getProgressKey(professionId, topicKey, questionNumber);
-    await AsyncStorage.setItem(key, "true");
-    console.log(`✅ Сохранен вопрос: ${key}`);
+    const key = getProgressKey(professionId, topicKey);
+    await AsyncStorage.setItem(key, answeredCount.toString());
   } catch (error) {
-    console.error("Ошибка сохранения:", error);
+    console.error("❌ Ошибка сохранения прогресса:", error);
   }
 };
 
-// Функция для проверки отвечен ли конкретный вопрос
-export const isQuestionAnswered = async (
-  professionId: number,
-  topicKey: string,
-  questionNumber: number,
-): Promise<boolean> => {
-  try {
-    const key = getProgressKey(professionId, topicKey, questionNumber);
-    const value = await AsyncStorage.getItem(key);
-    return value !== null;
-  } catch (error) {
-    console.error("Ошибка проверки:", error);
-    return false;
-  }
-};
-
-// Функция для получения количества отвеченных вопросов по теме
+/**
+ * Получает количество отвеченных вопросов по теме
+ * @returns число от 0 до total
+ */
 export const getTopicProgress = async (
-  professionId: number,
+  professionId: number | string,
   topicKey: string,
-  totalQuestions: number,
+  total: number
 ): Promise<number> => {
   try {
-    let answered = 0;
+    const key = getProgressKey(professionId, topicKey);
+    const value = await AsyncStorage.getItem(key);
+    if (!value) return 0;
 
-    // Проверяем каждый вопрос в теме
-    for (let i = 1; i <= totalQuestions; i++) {
-      const key = getProgressKey(professionId, topicKey, i);
-      const value = await AsyncStorage.getItem(key);
-      if (value !== null) answered++;
-    }
-
-    return answered;
+    const answered = parseInt(value, 10);
+    // Защита от некорректных данных
+    return isNaN(answered) ? 0 : Math.min(answered, total);
   } catch (error) {
-    console.error("Ошибка получения прогресса:", error);
+    console.error("❌ Ошибка чтения прогресса:", error);
     return 0;
   }
 };
 
-// Функция для получения прогресса всех тем профессии
+/**
+ * Получает прогресс по всем темам профессии
+ */
 export const getAllTopicsProgress = async (
-  professionId: number,
+  professionId: number | string,
   topics: Array<{
     topicKey: string;
     range: { startIndex: number; endIndex: number };
-  }>,
+  }>
 ): Promise<Record<string, { answered: number; total: number }>> => {
-  const progress: Record<string, { answered: number; total: number }> = {};
+  const result: Record<string, { answered: number; total: number }> = {};
 
   for (const { topicKey, range } of topics) {
     const total = range.endIndex - range.startIndex + 1;
     const answered = await getTopicProgress(professionId, topicKey, total);
-    progress[topicKey] = { answered, total };
+    result[topicKey] = { answered, total };
   }
 
-  return progress;
+  return result;
+};
+
+/**
+ * Очищает прогресс по теме (при перезапуске тренировки)
+ */
+export const clearTopicProgress = async (
+  professionId: number | string,
+  topicKey: string
+) => {
+  try {
+    const key = getProgressKey(professionId, topicKey);
+    await AsyncStorage.removeItem(key);
+  } catch (error) {
+    console.error("❌ Ошибка очистки прогресса:", error);
+  }
+};
+
+export const clearProfessionProgress = async (
+  professionId: number | string
+): Promise<void> => {
+  try {
+    const keys = await AsyncStorage.getAllKeys();
+    const prefix = `${PROGRESS_PREFIX}${String(professionId)}_`;
+    const professionKeys = keys.filter((key) => key.startsWith(prefix));
+
+    if (professionKeys.length > 0) {
+      await AsyncStorage.multiRemove(professionKeys);
+      console.log(`🗑️ Удалено прогресса для профессии ${professionId}: ${professionKeys.length} записей`);
+    }
+  } catch (error) {
+    console.error("❌ Ошибка при очистке прогресса профессии:", error);
+  }
 };

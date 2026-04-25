@@ -1,6 +1,6 @@
 import { IQuestion } from "@/components/types/questions";
 
-export const topicValkaLesa_questions: IQuestion[] = [
+export const ValkaLesa_questions: IQuestion[] = [
   {
     id: "VALKA_1",
     text: "С какого возраста допускается выполнять работы по валке леса в особо опасных условиях?",

@@ -1,4 +1,5 @@
 import { useTheme } from "@/components/ThemeProvider";
+import { useExamHints } from "@/hooks/useExamHints"; // 👈 1. Импортируем хук
 import { Check, X } from "lucide-react-native";
 import React from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
@@ -22,10 +23,17 @@ export default function QuestionItem({
   const { colors } = useTheme();
   const hasAnswered = userAnswer !== undefined;
 
+  // 👈 2. Подключаем хук и получаем обработанные опции с подсказками
+  const { getHintsForQuestion } = useExamHints();
+  const optionsWithHints = getHintsForQuestion(
+    question.options,
+    question.correctAnswer // ✅ correctAnswer — это ID варианта ('a', 'b' и т.д.)
+  );
+
   const styles = StyleSheet.create({
     container: {
       flex: 1,
-      paddingHorizontal: 16, // Добавляем отступы по бокам
+      paddingHorizontal: 16,
       paddingTop: 16,
     },
     questionCard: {
@@ -33,7 +41,7 @@ export default function QuestionItem({
       padding: 20,
       borderRadius: 12,
       marginBottom: 20,
-      borderWidth: 1, // Фиксированная ширина границы
+      borderWidth: 1,
       borderColor: colors.border,
     },
     questionText: {
@@ -50,7 +58,7 @@ export default function QuestionItem({
       backgroundColor: colors.card,
       padding: 16,
       borderRadius: 12,
-      borderWidth: 1, // Фиксированная ширина границы!
+      borderWidth: 1,
       borderColor: colors.border,
     },
     selectedOption: {
@@ -110,7 +118,8 @@ export default function QuestionItem({
       </View>
 
       <View style={styles.optionsContainer}>
-        {question.options.map((option) => {
+        {/* 👈 3. Используем optionsWithHints вместо question.options */}
+        {optionsWithHints.map((option) => {
           const isSelected = userAnswer === option.id;
           const isActuallyCorrect = option.id === question.correctAnswer;
           const isWrongSelected = isSelected && !isActuallyCorrect;
@@ -133,6 +142,7 @@ export default function QuestionItem({
                     {option.id.toUpperCase()}
                   </Text>
                 </View>
+                {/* 👈 4. Рендерим option.text из ОБРАБОТАННОГО массива (с подсказкой) */}
                 <Text style={styles.optionText}>{option.text}</Text>
 
                 {hasAnswered && (

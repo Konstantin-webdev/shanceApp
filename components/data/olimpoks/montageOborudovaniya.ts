@@ -1,6 +1,6 @@
 import { IQuestion } from "@/components/types/questions";
 
-export const MOUNTING_questions: IQuestion[] = [
+export const MontageOborudovaniya_questions: IQuestion[] = [
   {
     id: "MOUNTING_1",
     text: "Что должно быть определено в наряде-допуске?",

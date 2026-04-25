@@ -30,6 +30,7 @@ export function TopicList({
         return (
           <TopicCard
             key={topicKey}
+            topicKey={topicKey}
             answered={progress.answered}
             total={progress.total}
             onPress={() => onSelectTopic(topicKey)}

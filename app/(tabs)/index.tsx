@@ -9,6 +9,7 @@ import { TrainingScreenStyles } from "@/styles/training/TrainingScreen.styles";
 import { Play } from "lucide-react-native";
 import { ScrollView, Text, TouchableOpacity, View } from "react-native";
 
+
 export default function TrainingScreen() {
   const router = useRouter();
   const { selectedProfession } = useProfessionStore();
@@ -23,6 +24,7 @@ export default function TrainingScreen() {
       pathname: "/training/topics",
     });
   };
+
 
   return (
     <View style={styles.safeArea}>
