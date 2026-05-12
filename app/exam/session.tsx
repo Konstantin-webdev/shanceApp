@@ -59,6 +59,14 @@ export default function ExamSessionScreen() {
   const handleNext = () => exam.nextQuestion();
   const handleAnswer = (answerId: string) => exam.handleAnswer(answerId);
 
+  if (exam.isLoading) {
+    return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: colors.background }}>
+        <Text style={{ color: colors.text }}>Загрузка вопросов...</Text>
+      </View>
+    );
+  }
+
   if (!exam.currentQuestion) {
     return (
       <View
@@ -92,6 +100,7 @@ export default function ExamSessionScreen() {
         selectedAnswerId={exam.answers[exam.currentIndex]}
         isTimeUp={isTimeUp}
         onAnswer={handleAnswer}
+        correctAnswerId={exam.currentQuestion.correctAnswer}
       />
 
       <ExamFooter

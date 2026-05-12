@@ -12,14 +12,8 @@ export const useExamHints = () => {
         if (!shouldShowHint || !isCorrect) {
             return answerText;
         }
-
-        // Удаляем последний символ (если он есть) и добавляем точку с запятой
-        if (answerText.length > 0) {
-            const textWithoutLastChar = answerText.slice(0, -1);
-            return textWithoutLastChar + ";";
-        }
-
-        return answerText;
+        // Просто добавляем точку с запятой в конец, не удаляя символы
+        return answerText + ";";
     };
 
     // Функция для обработки всех вариантов ответа

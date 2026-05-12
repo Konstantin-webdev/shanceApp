@@ -14,7 +14,9 @@ interface TopicCardProps {
 export function TopicCard({ topicKey, answered, total, onPress }: TopicCardProps) {
   const { colors } = useTheme();
   const percent = Math.round((answered / total) * 100) || 0;
+
   const title = topicTitles[topicKey] || topicKey;
+  console.log(title);
 
   return (
     <TouchableOpacity

@@ -1,7 +1,7 @@
-// components/ProfessionInfo.tsx
+
 import { useTheme } from "@/components/ThemeProvider";
 import { StyleSheet, Text, View } from "react-native";
-import { getQuestionsByProfessionId } from "./data/questions";
+import { professionTopicMapping } from "./data/professionTopicMapping";
 import type { IProfession } from "./types/profession";
 
 interface ProfessionInfoProps {
@@ -11,7 +11,17 @@ interface ProfessionInfoProps {
 export const ProfessionInfo = ({ profession }: ProfessionInfoProps) => {
   const { colors } = useTheme();
 
-  const actualQuestionCount = getQuestionsByProfessionId(profession.id).length;
+
+  const getProfessionQuestionCount = (professionId: number): number => {
+    const topics = professionTopicMapping[professionId];
+    if (!topics) return 0;
+    return topics.reduce((total, topic) => {
+      const { startIndex, endIndex } = topic.range;
+      return total + (endIndex - startIndex + 1);
+    }, 0);
+  };
+
+  const actualQuestionCount = getProfessionQuestionCount(profession.id);
 
   const styles = StyleSheet.create({
     professionInfo: {

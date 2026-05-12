@@ -1,7 +1,7 @@
-import { ScrollView } from "react-native";
-import { TopicCard } from "./TopicCard";
 import { ProfessionInfo } from "@/components/ProfessionInfo";
 import { IProfession } from "@/components/types/profession";
+import { ScrollView } from "react-native";
+import { TopicCard } from "./TopicCard";
 
 interface TopicListProps {
   profession: IProfession | null;
@@ -21,6 +21,7 @@ export function TopicList({
 }: TopicListProps) {
   return (
     <ScrollView style={{ padding: 16 }} showsVerticalScrollIndicator={false}>
+
       {profession && <ProfessionInfo profession={profession} />}
 
       {topics.map(({ topicKey, range }) => {

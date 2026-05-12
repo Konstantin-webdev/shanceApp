@@ -82,7 +82,6 @@ export const professionTopicMapping: Record<number, TopicMapping[]> = {
   // 25. Уборщик помещений (~150)
   25: [
     { topicKey: "general", range: { startIndex: 1, endIndex: 30 } },
-    { topicKey: "gasDangerous", range: { startIndex: 1, endIndex: 40 } },  // 40 из 80
     { topicKey: "siz", range: { startIndex: 1, endIndex: 30 } },
     { topicKey: "opas", range: { startIndex: 1, endIndex: 30 } },
     { topicKey: "first_aid", range: { startIndex: 1, endIndex: 20 } },
@@ -180,4 +179,5 @@ export const topicTitles: Record<string, string> = {
   pressure: "Работы под избыточным давлением",
   pogruzka: "Погрузочно-разгрузочные работы",
   ognevye: "Огневые работы",
+  montageOborudovaniya: "Монтаж оборудования",
 };

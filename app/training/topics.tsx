@@ -12,6 +12,7 @@ import { useCallback } from "react";
 import { ScrollView, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
+
 export default function TopicSelectionScreen() {
   const router = useRouter();
   const { colors } = useTheme();
@@ -46,6 +47,7 @@ export default function TopicSelectionScreen() {
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
       <ScrollView>
+
         <TopicList
           profession={selectedProfession}
           topics={topics}

@@ -1,5 +1,6 @@
 import { useTheme } from "@/components/ThemeProvider";
 import { IQuestionOption } from "@/components/types/questions";
+import { useExamHints } from "@/hooks/useExamHints";
 import { ScrollView, Text, TouchableOpacity, View } from "react-native";
 
 interface ExamContentProps {
@@ -8,6 +9,7 @@ interface ExamContentProps {
   selectedAnswerId: string | null; // строка: 'a', 'b', ...
   isTimeUp: boolean;
   onAnswer: (answerId: string) => void;
+  correctAnswerId: string;
 }
 
 export const ExamContent = ({
@@ -16,8 +18,11 @@ export const ExamContent = ({
   selectedAnswerId,
   isTimeUp,
   onAnswer,
+  correctAnswerId,
 }: ExamContentProps) => {
   const { colors } = useTheme();
+  const { getHintsForQuestion } = useExamHints(); // добавить
+  const optionsWithHints = getHintsForQuestion(options, correctAnswerId); // добавить
 
 
   return (
@@ -55,7 +60,7 @@ export const ExamContent = ({
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ paddingBottom: 24 }}
       >
-        {options.map((answer, index) => {
+        {optionsWithHints.map((answer, index) => {
           const isSelected = selectedAnswerId === answer.id;
           const letter = String.fromCharCode(65 + index); // A, B, C...
           return (
