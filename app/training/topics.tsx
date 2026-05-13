@@ -44,6 +44,8 @@ export default function TopicSelectionScreen() {
   if (error) return <ErrorState error={error} />;
   if (topics.length === 0) return <EmptyState />;
 
+
+
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
       <ScrollView>
@@ -54,7 +56,7 @@ export default function TopicSelectionScreen() {
           topicsProgress={topicsProgress}
           onSelectTopic={handleSelectTopic}
         />
-        <View style={{ paddingBottom: 16 }} >
+        <View style={{ padding: 16 }} >
           <ResetProgressButton
             professionId={professionId}
             onResetComplete={refresh}

@@ -201,11 +201,6 @@ export const createSettingsStyles = (colors: ThemeColors, isDark: boolean) =>
       shadowRadius: 8,
       elevation: 3,
     },
-    displayLabel: {
-      fontSize: 14,
-      color: colors.muted,
-      marginBottom: 6,
-    },
     displayName: {
       fontSize: 24,
       fontWeight: "700",

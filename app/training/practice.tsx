@@ -156,9 +156,6 @@ export default function PracticeScreen() {
       return userAnswer === question.correctAnswer ? count + 1 : count;
     }, 0);
 
-    // 🔹 Очищаем прогресс после успешного завершения
-    clearTopicProgress(selectedProfession.id, params.topicKey);
-
     router.push({
       pathname: "/training/completion",
       params: {

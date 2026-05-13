@@ -1,7 +1,6 @@
 import { useTheme } from "@/components/ThemeProvider";
 import { topicTitles } from "@/components/data/professionTopicMapping";
 import { LinearGradient } from "expo-linear-gradient";
-import { CheckCircle, ChevronRight } from "lucide-react-native";
 import { Text, TouchableOpacity, View } from "react-native";
 
 interface TopicCardProps {
@@ -14,19 +13,12 @@ interface TopicCardProps {
 export function TopicCard({ topicKey, answered, total, onPress }: TopicCardProps) {
   const { colors } = useTheme();
   const percent = Math.round((answered / total) * 100) || 0;
-
+  const isComplete = percent === 100;
   const title = topicTitles[topicKey] || topicKey;
-  console.log(title);
 
   return (
-    <TouchableOpacity
-      onPress={onPress}
-      activeOpacity={0.7}
-      style={{ marginBottom: 12 }}
-    >
-      <View
-        style={{ borderRadius: 12, overflow: "hidden", position: "relative" }}
-      >
+    <TouchableOpacity onPress={onPress} activeOpacity={0.7} style={{ marginBottom: 12 }}>
+      <View style={{ borderRadius: 12, overflow: "hidden", position: "relative" }}>
         {/* Градиентная заливка по прогрессу */}
         <LinearGradient
           colors={[colors.primary + "40", colors.primary + "10"]}
@@ -40,20 +32,22 @@ export function TopicCard({ topicKey, answered, total, onPress }: TopicCardProps
             width: `${percent}%`,
           }}
         />
-        {/* Основная карточка (поверх градиента) */}
+
+        {/* Основная карточка — рамка зелёная если пройдена */}
         <View
           style={{
             backgroundColor: colors.card,
             borderRadius: 12,
             padding: 16,
-            borderWidth: 1,
-            borderColor: colors.border,
+            borderWidth: 2,
+            borderColor: isComplete ? colors.success : colors.border,
           }}
         >
           <View
             style={{
               flexDirection: "row",
               justifyContent: "space-between",
+              alignItems: "center",
               marginBottom: 12,
             }}
           >
@@ -67,9 +61,9 @@ export function TopicCard({ topicKey, answered, total, onPress }: TopicCardProps
             >
               {title}
             </Text>
-            <ChevronRight size={20} color={colors.muted} />
           </View>
 
+          {/* Полоса прогресса */}
           <View
             style={{
               height: 8,
@@ -89,13 +83,9 @@ export function TopicCard({ topicKey, answered, total, onPress }: TopicCardProps
             />
           </View>
 
-          <Text
-            style={{ fontSize: 12, color: colors.muted, textAlign: "right" }}
-          >
-            {answered} из {total} вопросов ({percent}%)
-            {percent === 100 && (
-              <CheckCircle size={14} color={colors.success} />
-            )}
+          {/* Текст прогресса: сколько пройдено из скольки */}
+          <Text style={{ fontSize: 12, color: colors.muted }}>
+            Пройдено: {answered} из {total} вопросов
           </Text>
         </View>
       </View>

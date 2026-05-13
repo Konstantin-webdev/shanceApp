@@ -4,6 +4,7 @@ import { useState } from "react";
 import { ScrollView, Text, TouchableOpacity, View } from "react-native";
 
 import { ProfessionInfo } from "@/components/ProfessionInfo";
+import { SectionHeader } from "@/components/SectionHeader/SectionHeader";
 import { useProfessionStore } from "@/components/store/useProfessionStore";
 import { useTheme } from "@/components/ThemeProvider";
 import { FEATURE_CONFIGS, RULES } from "@/constants/examStart";
@@ -31,10 +32,7 @@ export default function ExamScreen() {
   return (
     <View style={styles.safeArea}>
       <ScrollView style={styles.container}>
-        <View style={styles.header}>
-          <Text style={styles.title}>Экзамен</Text>
-          <Text style={styles.subtitle}>Режим проверки знаний</Text>
-        </View>
+        <SectionHeader title="Экзамен" titleColor={colors.tabExam} subtitle="Режим проверки знаний" />
 
         <View style={styles.content}>
           {selectedProfession && (

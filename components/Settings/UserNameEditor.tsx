@@ -40,7 +40,6 @@ export default function UserNameEditor() {
         onPress={() => setIsEditing(true)}
         activeOpacity={0.7}
       >
-        <Text style={styles.displayLabel}>Ваше имя</Text>
         <Text style={styles.displayName}>{userName}</Text>
         <Text style={styles.editHint}>Нажмите, чтобы изменить</Text>
       </TouchableOpacity>

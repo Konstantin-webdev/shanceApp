@@ -1,22 +1,13 @@
+import { SectionHeader } from "@/components/SectionHeader/SectionHeader";
 import { AdditionalStats } from "@/components/Statistics/AdditionalStats";
 import { MainStats } from "@/components/Statistics/MainStats";
 import { ResultHistory } from "@/components/Statistics/ResultHistory";
-import { StatsHeader } from "@/components/Statistics/StatsHeader";
 import { useProfessionStore } from "@/components/store/useProfessionStore";
-import { useUserStore } from "@/components/store/useUserStore";
 import { useTheme } from "@/components/ThemeProvider";
-import React, { useEffect, useState } from "react";
-import {
-  Alert,
-  RefreshControl,
-  ScrollView,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native";
-
 import type { PersistedExamResult } from "@/components/types/exam";
 import { clearExamResults, getStatistics } from "@/utils/examResultsStorage";
+import React, { useEffect, useMemo, useState } from "react";
+import { Alert, ScrollView, StyleSheet, Text, View } from "react-native";
 
 export default function StatsScreen() {
   const [results, setResults] = useState<PersistedExamResult[]>([]);
@@ -31,9 +22,32 @@ export default function StatsScreen() {
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
 
-  const { userName } = useUserStore();
   const { selectedProfession } = useProfessionStore();
   const { colors } = useTheme();
+
+  // Стили внутри компонента с useMemo
+  const styles = useMemo(
+    () =>
+      StyleSheet.create({
+        container: {
+          flex: 1,
+          backgroundColor: colors.background,
+        },
+        loadingContainer: {
+          flex: 1,
+          justifyContent: "center",
+          alignItems: "center",
+          backgroundColor: colors.background,
+        },
+        contentContainer: {
+          paddingBottom: 40,
+        },
+        loadingText: {
+          color: colors.text,
+        },
+      }),
+    [colors]
+  );
 
   useEffect(() => {
     loadResults();
@@ -42,7 +56,6 @@ export default function StatsScreen() {
   const loadResults = async () => {
     setLoading(true);
     const { results: examResults, ...statistics } = await getStatistics();
-
     setResults(examResults);
     setStats(statistics);
     setLoading(false);
@@ -57,7 +70,6 @@ export default function StatsScreen() {
   const handleClearStats = async () => {
     try {
       await clearExamResults();
-
       setResults([]);
       setStats({
         totalTests: 0,
@@ -67,8 +79,6 @@ export default function StatsScreen() {
         passedTests: 0,
         accuracy: 0,
       });
-
-      // Показываем уведомление об успехе
       Alert.alert("Успех", "Вся статистика была очищена");
     } catch (error) {
       console.error("Ошибка при очистке статистики:", error);
@@ -78,32 +88,22 @@ export default function StatsScreen() {
 
   if (loading) {
     return (
-      <View
-        style={[
-          styles.loadingContainer,
-          { backgroundColor: colors.background },
-        ]}
-      >
-        <Text style={{ color: colors.text }}>Загрузка статистики...</Text>
+      <View style={styles.loadingContainer}>
+        <Text style={styles.loadingText}>Загрузка статистики...</Text>
       </View>
     );
   }
 
   return (
     <ScrollView
-      style={[styles.container, { backgroundColor: colors.background }]}
-      refreshControl={
-        <RefreshControl
-          refreshing={refreshing}
-          onRefresh={onRefresh}
-          colors={[colors.primary]}
-          tintColor={colors.primary}
-        />
-      }
+      style={styles.container}
+      contentContainerStyle={styles.contentContainer}
+      showsVerticalScrollIndicator={false}
     >
-      <StatsHeader
-        userName={userName}
-        selectedProfession={selectedProfession}
+      <SectionHeader
+        title="Статистика"
+        titleColor={colors.tabStats}
+        subtitle="Результаты прохождения экзаменов"
       />
 
       <MainStats stats={stats} />
@@ -112,25 +112,8 @@ export default function StatsScreen() {
       <ResultHistory
         results={results}
         selectedProfession={selectedProfession}
-        onRefresh={onRefresh}
         onClearStats={handleClearStats}
       />
     </ScrollView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  loadingContainer: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  subtitle: {
-    fontSize: 16,
-    marginBottom: 16,
-    paddingHorizontal: 20,
-  },
-});
