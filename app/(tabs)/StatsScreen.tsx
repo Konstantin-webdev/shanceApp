@@ -79,7 +79,6 @@ export default function StatsScreen() {
         passedTests: 0,
         accuracy: 0,
       });
-      Alert.alert("Успех", "Вся статистика была очищена");
     } catch (error) {
       console.error("Ошибка при очистке статистики:", error);
       Alert.alert("Ошибка", "Не удалось очистить статистику");

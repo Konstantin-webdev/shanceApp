@@ -1,6 +1,7 @@
+
 import { useProfessionStore } from "@/components/store/useProfessionStore";
 import { useTheme } from "@/components/ThemeProvider";
-import { useLocalSearchParams, useRouter } from "expo-router";
+import { useFocusEffect, useLocalSearchParams, useRouter } from "expo-router";
 import { useCallback, useEffect, useState } from "react";
 import { AppState, ScrollView, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -28,64 +29,67 @@ export default function PracticeScreen() {
   const { colors } = useTheme();
   const { selectedProfession } = useProfessionStore();
 
-  // ─────────────────────────────────────────────────────────────
-  // Состояния
-  // ─────────────────────────────────────────────────────────────
   const [questions, setQuestions] = useState<IQuestion[]>([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedAnswers, setSelectedAnswers] = useState<Record<number, string>>({});
   const [isLoading, setIsLoading] = useState(true);
   const [showContinueModal, setShowContinueModal] = useState(false);
 
-  // ─────────────────────────────────────────────────────────────
-  // Инициализация: загрузка вопросов + прогресса
-  // ─────────────────────────────────────────────────────────────
-  useEffect(() => {
-    const init = async () => {
-      if (!selectedProfession || !params.topicKey) {
-        router.replace("/(tabs)");
-        return;
-      }
+  // Инициализация вопросов и прогресса — ТОЛЬКО когда экран в фокусе
+  useFocusEffect(
+    useCallback(() => {
+      let isMounted = true;
 
-      if (!hasQuestionsForProfession(selectedProfession.id)) {
+      const init = async () => {
+        if (!selectedProfession || !params.topicKey) {
+          router.replace("/(tabs)");
+          return;
+        }
+
+        if (!hasQuestionsForProfession(selectedProfession.id)) {
+          if (isMounted) setIsLoading(false);
+          return;
+        }
+
+        const loadedQuestions = getQuestionsByProfessionAndTopic(
+          selectedProfession.id,
+          params.topicKey
+        );
+        if (!isMounted) return;
+        setQuestions(loadedQuestions);
+
+        const total = loadedQuestions.length;
+        const answered = await getTopicProgress(
+          selectedProfession.id,
+          params.topicKey,
+          total
+        );
+
+        // Если есть прогресс — предлагаем продолжить
+        if (answered > 0 && answered <= total) {
+          setCurrentQuestionIndex(answered - 1);
+          setShowContinueModal(true);
+        } else {
+          setCurrentQuestionIndex(0);
+          setShowContinueModal(false);
+        }
+
         setIsLoading(false);
-        return;
-      }
+      };
 
-      const loadedQuestions = getQuestionsByProfessionAndTopic(
-        selectedProfession.id,
-        params.topicKey
-      );
-      setQuestions(loadedQuestions);
+      init();
 
-      // 🔹 Загружаем сохранённый прогресс для этой темы
-      const total = loadedQuestions.length;
-      const answered = await getTopicProgress(
-        selectedProfession.id,
-        params.topicKey,
-        total
-      );
+      return () => {
+        isMounted = false;
+      };
+    }, [selectedProfession, params.topicKey, router])
+  );
 
-      // Если есть прогресс — предлагаем продолжить с последнего вопроса
-      // Индекс = answered - 1 (потому что 1 вопрос = индекс 0)
-      if (answered > 0 && answered <= total) {
-        setCurrentQuestionIndex(answered - 1);
-        setTimeout(() => setShowContinueModal(true), 300);
-      }
-
-      setIsLoading(false);
-    };
-    init();
-  }, [selectedProfession, params.topicKey, router]);
-
-  // ─────────────────────────────────────────────────────────────
-  // Автосохранение прогресса (debounce 500ms)
-  // ─────────────────────────────────────────────────────────────
+  // Автосохранение прогресса (при изменении индекса)
   useEffect(() => {
     if (!selectedProfession || !params.topicKey || isLoading) return;
 
     const timer = setTimeout(() => {
-      // 🔹 Сохраняем: индекс + 1 = количество отвеченных вопросов
       const answeredCount = currentQuestionIndex + 1;
       saveTopicProgress(
         selectedProfession.id,
@@ -97,9 +101,7 @@ export default function PracticeScreen() {
     return () => clearTimeout(timer);
   }, [currentQuestionIndex, selectedProfession, params.topicKey, isLoading]);
 
-  // ─────────────────────────────────────────────────────────────
   // Сохранение при сворачивании приложения
-  // ─────────────────────────────────────────────────────────────
   useEffect(() => {
     if (!selectedProfession || !params.topicKey) return;
 
@@ -117,9 +119,6 @@ export default function PracticeScreen() {
     return () => subscription.remove();
   }, [selectedProfession, params.topicKey, currentQuestionIndex]);
 
-  // ─────────────────────────────────────────────────────────────
-  // Обработчики (useCallback для оптимизации)
-  // ─────────────────────────────────────────────────────────────
   const handleContinue = useCallback(() => {
     setShowContinueModal(false);
   }, []);
@@ -150,7 +149,6 @@ export default function PracticeScreen() {
   const finishTraining = useCallback(() => {
     if (!selectedProfession || !params.topicKey) return;
 
-    // Подсчёт правильных ответов
     const correctAnswers = questions.reduce((count, question, index) => {
       const userAnswer = selectedAnswers[index];
       return userAnswer === question.correctAnswer ? count + 1 : count;
@@ -161,14 +159,12 @@ export default function PracticeScreen() {
       params: {
         correctAnswers: correctAnswers.toString(),
         totalQuestions: questions.length.toString(),
-        topicKey: params.topicKey, // можно использовать для статистики
+        topicKey: params.topicKey,
       },
     });
   }, [selectedProfession, params.topicKey, questions, selectedAnswers, router]);
 
-  // ─────────────────────────────────────────────────────────────
-  // Рендер состояний загрузки / ошибок
-  // ─────────────────────────────────────────────────────────────
+  // Рендер состояний
   if (!selectedProfession) {
     return <ErrorState error="Профессия не выбрана" />;
   }
@@ -181,37 +177,27 @@ export default function PracticeScreen() {
     return <NotImplementedScreen />;
   }
 
-  // ─────────────────────────────────────────────────────────────
-  // Основные данные для рендера
-  // ─────────────────────────────────────────────────────────────
   const currentQuestion = questions[currentQuestionIndex];
   const isLastQuestion = currentQuestionIndex === questions.length - 1;
   const progress = (currentQuestionIndex + 1) / questions.length;
   const hasAnswer = !!selectedAnswers[currentQuestionIndex];
 
-  // ─────────────────────────────────────────────────────────────
-  // UI
-  // ─────────────────────────────────────────────────────────────
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
-      {/* Модальное окно "Продолжить / Начать заново" */}
       <TrainingContinueModal
         visible={showContinueModal}
         onContinue={handleContinue}
         onRestart={handleRestart}
       />
 
-      {/* Шапка с названием профессии и темы */}
       <TrainingHeader
         profession={selectedProfession}
         currentQuestionIndex={currentQuestionIndex}
         totalQuestions={questions.length}
       />
 
-      {/* Полоса прогресса */}
       <ProgressTracker progress={progress} />
 
-      {/* Контент: вопрос + навигация */}
       <View style={{ flex: 1 }}>
         <ScrollView
           style={{ flex: 1 }}
@@ -229,7 +215,6 @@ export default function PracticeScreen() {
           )}
         </ScrollView>
 
-        {/* Кнопки навигации */}
         <QuestionNavigation
           onPrev={handlePrevQuestion}
           onNext={handleNextQuestion}

@@ -113,7 +113,6 @@ export default function SettingsScreen() {
             clearUserName();
             setSelectedProfession(null);
             resetOnboarding();
-            Alert.alert("Успешно", "Все данные сброшены");
           },
         },
       ]

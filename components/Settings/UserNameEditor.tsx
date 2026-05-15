@@ -1,8 +1,8 @@
-import React, { useState } from "react";
-import { Alert, TextInput, TouchableOpacity, View, Text } from "react-native";
 import { useUserStore } from "@/components/store/useUserStore";
-import { ThemeColors, useTheme } from "@/components/ThemeProvider";
+import { useTheme } from "@/components/ThemeProvider";
 import { Check, X } from "lucide-react-native";
+import React, { useState } from "react";
+import { Alert, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { createSettingsStyles } from "./styles";
 
 export default function UserNameEditor() {
@@ -19,13 +19,12 @@ export default function UserNameEditor() {
       Alert.alert("Ошибка", "Имя не может быть пустым");
       return;
     }
-    if (trimmed.length > 50) {
+    if (trimmed.length > 30) {
       Alert.alert("Ошибка", "Имя слишком длинное");
       return;
     }
     setUserName(trimmed);
     setIsEditing(false);
-    Alert.alert("✓ Готово", "Имя обновлено");
   };
 
   const handleCancel = () => {
@@ -54,7 +53,7 @@ export default function UserNameEditor() {
         onChangeText={setValue}
         placeholder="Введите имя"
         placeholderTextColor={colors.muted + "80"}
-        maxLength={50}
+        maxLength={30}
         autoFocus
         returnKeyType="done"
         onSubmitEditing={handleSave}
@@ -82,6 +81,4 @@ export default function UserNameEditor() {
   );
 }
 
-function createUserNameEditorStyles(colors: ThemeColors) {
-  throw new Error("Function not implemented.");
-}
+

@@ -8,7 +8,7 @@ type TopicProgress = {
   total: number;
 };
 
-export function useTopicProgress(professionId: number) {
+export function useTopicProgress(professionId?: number) {
   const [topicsProgress, setTopicsProgress] = useState<Record<string, TopicProgress>>({});
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
@@ -16,6 +16,13 @@ export function useTopicProgress(professionId: number) {
 
   // ✅ Функция загрузки — вынесена отдельно для повторного вызова
   const loadProgress = useCallback(async () => {
+    if (!professionId) {
+      // Нет профессии – прогресс пустой, не грузим
+      setTopicsProgress({});
+      setIsLoading(false);
+      setError(null);
+      return;
+    }
     try {
       setIsLoading(true);
       setError(null);

@@ -31,7 +31,6 @@ export function ResetProgressButton({
                         try {
                             await clearProfessionProgress(professionId);
                             onResetComplete?.();
-                            Alert.alert("Готово", "Прогресс сброшен ✅");
                         } catch (error) {
                             Alert.alert("Ошибка", "Не удалось сбросить прогресс ❌");
                         } finally {
